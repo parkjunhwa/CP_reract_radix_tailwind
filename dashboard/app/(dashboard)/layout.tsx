@@ -7,10 +7,6 @@ import Header from "@/components/layout/Header";
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Close sidebar on route change (mobile)
-  useEffect(() => { setMobileOpen(false); }, []);
-
-  // Trap body scroll when mobile sidebar is open
   useEffect(() => {
     if (mobileOpen) {
       document.body.style.overflow = "hidden";
@@ -21,7 +17,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [mobileOpen]);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#080810] dark:bg-[#080810]">
+    <div className="layout-bg flex h-screen overflow-hidden" style={{ backgroundColor: "var(--luxe-bg)" }}>
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
@@ -31,20 +27,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         />
       )}
 
-      {/* Sidebar — always visible on md+, slide-in on mobile */}
+      {/* Sidebar */}
       <div
         role="navigation"
         aria-label="메인 내비게이션"
-        className={`
-          fixed md:relative inset-y-0 left-0 z-50
-          transition-transform duration-300 ease-in-out
-          ${mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-        `}
+        className={[
+          "fixed md:relative inset-y-0 left-0 z-50",
+          "transition-transform duration-300 ease-in-out",
+          mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
+        ].join(" ")}
       >
         <Sidebar onClose={() => setMobileOpen(false)} />
       </div>
 
-      {/* Main */}
+      {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <Header onMenuToggle={() => setMobileOpen(o => !o)} />
         <main

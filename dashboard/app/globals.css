@@ -3,7 +3,57 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant light (&:is(.light *));
 
+/* ─── Luxe Design Token Palette ─────────────────────────────── */
+:root,
+html.dark {
+  /* surfaces */
+  --luxe-bg:          #080810;
+  --luxe-surface:     #0d0d18;
+  --luxe-surface-2:   #13131f;
+  --luxe-sidebar:     #0a0a0f;
+  --luxe-sidebar-2:   #1a1a2e;
+  /* borders */
+  --luxe-border:      rgba(255,255,255,0.05);
+  --luxe-border-2:    rgba(255,255,255,0.08);
+  --luxe-border-3:    rgba(255,255,255,0.12);
+  /* text */
+  --luxe-text:        #ffffff;
+  --luxe-text-80:     rgba(255,255,255,0.8);
+  --luxe-text-60:     rgba(255,255,255,0.6);
+  --luxe-text-50:     rgba(255,255,255,0.5);
+  --luxe-text-40:     rgba(255,255,255,0.4);
+  --luxe-text-30:     rgba(255,255,255,0.3);
+  --luxe-text-20:     rgba(255,255,255,0.2);
+  /* accent */
+  --luxe-accent:      #7c3aed;
+  --luxe-accent-2:    rgba(124,58,237,0.2);
+  --luxe-scrollbar:   rgba(255,255,255,0.08);
+}
+
+html.light {
+  --luxe-bg:          #f0f2f8;
+  --luxe-surface:     #ffffff;
+  --luxe-surface-2:   #f4f4fc;
+  --luxe-sidebar:     #fafafe;
+  --luxe-sidebar-2:   #eeeef8;
+  --luxe-border:      rgba(0,0,0,0.07);
+  --luxe-border-2:    rgba(0,0,0,0.10);
+  --luxe-border-3:    rgba(0,0,0,0.15);
+  --luxe-text:        #0f0f1a;
+  --luxe-text-80:     #1e1e30;
+  --luxe-text-60:     #3a3a55;
+  --luxe-text-50:     #4e4e6a;
+  --luxe-text-40:     #65657e;
+  --luxe-text-30:     #8888a0;
+  --luxe-text-20:     #aaaabb;
+  --luxe-accent:      #6d28d9;
+  --luxe-accent-2:    rgba(109,40,217,0.12);
+  --luxe-scrollbar:   rgba(0,0,0,0.10);
+}
+
+/* ─── Shadcn/Radix token overrides ─────────────────────────── */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -117,55 +167,42 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-/* Light mode custom overrides */
-.light {
-  --luxe-bg:      #f4f4f8;
-  --luxe-surface: #ffffff;
-  --luxe-border:  rgba(0, 0, 0, 0.07);
-  --luxe-sidebar-bg: #ffffff;
-}
-.dark, :root {
-  --luxe-bg:      #080810;
-  --luxe-surface: #0d0d18;
-  --luxe-border:  rgba(255, 255, 255, 0.05);
-  --luxe-sidebar-bg: #0a0a0f;
-}
-
+/* ─── Base layer ────────────────────────────────────────────── */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
     background-color: var(--luxe-bg);
+    color: var(--luxe-text);
+    @apply antialiased;
   }
   html {
     @apply font-sans;
   }
 
-  /* Focus visible — accessible ring */
+  /* Focus ring — accessible */
   :focus-visible {
-    outline: 2px solid #7c3aed;
+    outline: 2px solid var(--luxe-accent);
     outline-offset: 2px;
   }
 
-  /* Skip-to-content */
+  /* Skip-to-content link */
   .skip-link {
     position: absolute;
     left: -9999px;
     top: 1rem;
     z-index: 9999;
-    padding: 0.5rem 1rem;
-    background: #7c3aed;
+    padding: 0.5rem 1.25rem;
+    background: var(--luxe-accent);
     color: #fff;
     border-radius: 0.5rem;
     font-size: 0.875rem;
     font-weight: 600;
     text-decoration: none;
+    white-space: nowrap;
   }
-  .skip-link:focus {
-    left: 1rem;
-  }
+  .skip-link:focus { left: 1rem; }
 
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
@@ -176,35 +213,58 @@
   }
 }
 
-/* Light-mode surface overrides */
-.light body,
-.light [class*="bg-\[#080810\]"] { background-color: var(--luxe-bg) !important; }
-.light [class*="bg-\[#0d0d18\]"],
-.light [class*="bg-\[#0a0a0f\]"] { background-color: var(--luxe-surface) !important; }
-.light [class*="bg-\[#13131f\]"]  { background-color: #f0f0f8 !important; }
-.light [class*="border-white\/"] { border-color: rgba(0,0,0,0.1) !important; }
-.light [class*="text-white\/"] {
-  --tw-text-opacity: 1;
-}
-.light .text-white    { color: #0f0f1a !important; }
-.light .text-white\/80{ color: #1a1a2e !important; }
-.light .text-white\/70{ color: #2a2a3e !important; }
-.light .text-white\/60{ color: #3a3a4e !important; }
-.light .text-white\/50{ color: #4a4a5e !important; }
-.light .text-white\/40{ color: #6a6a7e !important; }
-.light .text-white\/30{ color: #8a8a9e !important; }
-.light .text-white\/25{ color: #9a9aae !important; }
-.light .text-white\/20{ color: #aaaaae !important; }
+/* ─── Luxe utility classes (theme-aware) ────────────────────── */
+.luxe-bg       { background-color: var(--luxe-bg); }
+.luxe-surface  { background-color: var(--luxe-surface); }
+.luxe-surface-2{ background-color: var(--luxe-surface-2); }
+.luxe-sidebar  { background-color: var(--luxe-sidebar); }
 
-/* Progress bar color override */
-[role="progressbar"] > div {
-  background-color: #7c3aed;
+/* ─── Light-mode structural overrides ──────────────────────── */
+/* Main layout backgrounds */
+html.light .layout-bg       { background-color: var(--luxe-bg) !important; }
+
+/* Cards / panels  */
+html.light .card-surface {
+  background-color: var(--luxe-surface) !important;
+  border-color: var(--luxe-border) !important;
 }
 
-/* Custom scrollbar */
+/* Sidebar */
+html.light .sidebar-panel {
+  background-color: var(--luxe-sidebar) !important;
+  border-color: var(--luxe-border) !important;
+}
+
+/* Header */
+html.light .header-panel {
+  background-color: rgba(250,250,254,0.85) !important;
+  border-color: var(--luxe-border) !important;
+}
+
+/* Table rows */
+html.light tr:hover td { background-color: rgba(0,0,0,0.02) !important; }
+
+/* Generic white-text → dark on light */
+html.light .theme-text        { color: var(--luxe-text) !important; }
+html.light .theme-text-muted  { color: var(--luxe-text-40) !important; }
+
+/* Dividers */
+html.light [aria-hidden="true"].separator-line,
+html.light .separator-line    { background-color: var(--luxe-border) !important; }
+
+/* Popover / dropdown */
+html.light [data-slot="dropdown-menu-content"],
+html.light [role="menu"] {
+  background-color: var(--luxe-surface) !important;
+  border-color: var(--luxe-border-2) !important;
+  color: var(--luxe-text) !important;
+}
+
+/* ─── Progress bar ──────────────────────────────────────────── */
+[role="progressbar"] > div { background-color: var(--luxe-accent); }
+
+/* ─── Scrollbar ─────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
-.light ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); }
-.light ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.2); }
+::-webkit-scrollbar-thumb { background: var(--luxe-scrollbar); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { opacity: 0.8; }
