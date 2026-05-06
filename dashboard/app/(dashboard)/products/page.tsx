@@ -49,7 +49,6 @@ const STATUS_CFG = {
 export default function ProductsPage() {
   const [search, setSearch] = useState("");
   const [cat, setCat] = useState<Category | "All">("All");
-  const [view, setView] = useState<"table" | "grid">("table");
 
   const filtered = useMemo(() =>
     PRODUCTS.filter(p =>
@@ -60,7 +59,7 @@ export default function ProductsPage() {
   const fmt = (v: number) => v >= 1_000_000 ? `$${(v/1_000_000).toFixed(2)}M` : v >= 1000 ? `$${(v/1000).toFixed(0)}K` : `$${v.toLocaleString()}`;
 
   return (
-    <div className="space-y-5 pb-6">
+    <div className="space-y-4 pb-4">
       {/* Summary cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
@@ -69,35 +68,39 @@ export default function ProductsPage() {
           { label:"Low Stock Alerts", value: PRODUCTS.filter(p=>p.status==="low_stock").length, icon: AlertTriangle, color:"text-amber-400" },
           { label:"Out of Stock", value: PRODUCTS.filter(p=>p.status==="out_of_stock").length, icon: Package, color:"text-red-400" },
         ].map(({ label, value, icon: Icon, color }) => (
-          <div key={label} className="rounded-xl border border-white/8 bg-[#0d0d18] p-4 flex items-center gap-3">
-            <Icon className={cn("w-5 h-5 flex-shrink-0", color)} />
+          <div key={label} className="panel p-4 flex items-center gap-3">
+            <Icon className={cn("w-5 h-5 flex-shrink-0", color)} aria-hidden="true" />
             <div>
-              <p className="text-white font-bold text-xl">{value}</p>
-              <p className="text-white/40 text-xs">{label}</p>
+              <p className="t-text font-bold text-xl">{value}</p>
+              <p className="t-text-40 text-xs">{label}</p>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="rounded-xl border border-white/8 bg-[#0d0d18]">
+      <div className="panel">
         {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-3 px-5 py-4 border-b border-white/5">
-          <div className="flex items-center gap-2 h-9 px-3 rounded-lg bg-white/5 border border-white/8 flex-1 min-w-[200px]">
-            <Search className="w-3.5 h-3.5 text-white/30" />
+        <div className="flex flex-wrap items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
+          <div className="flex items-center gap-2 h-9 px-3 rounded-lg border flex-1 min-w-[200px]" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
+            <Search className="w-3.5 h-3.5 t-text-30" aria-hidden="true" />
             <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search products or SKU…"
-              className="flex-1 bg-transparent text-xs text-white placeholder:text-white/25 outline-none" />
+              className="flex-1 bg-transparent text-xs outline-none text-[color:var(--t-text-70)] placeholder:text-[color:var(--t-text-30)]" />
           </div>
           <div className="flex gap-1">
             {CATS.map(c => (
               <button key={c} onClick={() => setCat(c)}
                 className={cn("px-3 h-9 rounded-lg text-xs font-medium transition-colors",
-                  cat === c ? "bg-violet-600 text-white" : "text-white/40 hover:text-white hover:bg-white/5 border border-white/8")}>
+                  cat === c ? "text-white" : "t-text-40 hover:t-text-80 hover:bg-[var(--t-hover)] border")}
+                style={cat === c ? { backgroundColor: "var(--t-accent)" } : { borderColor: "var(--t-border-2)" }}
+              >
                 {c}
               </button>
             ))}
           </div>
-          <button className="h-9 px-3 rounded-lg bg-white/5 border border-white/8 text-white/50 hover:text-white text-xs flex items-center gap-1.5 transition-colors">
-            <Download className="w-3.5 h-3.5" /> Export
+          <button className="h-9 px-3 rounded-lg border text-xs flex items-center gap-1.5 transition-colors hover:bg-[var(--t-hover)]"
+            style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text-60)" }}
+          >
+            <Download className="w-3.5 h-3.5" aria-hidden="true" /> Export
           </button>
           <button className="h-9 px-3 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs flex items-center gap-1.5 transition-colors font-medium">
             <Plus className="w-3.5 h-3.5" /> Add Product
@@ -107,49 +110,49 @@ export default function ProductsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/5">
+              <tr style={{ borderBottom: "1px solid var(--t-border)" }}>
                 {["Product","SKU","Category","Price","Margin","Stock","Sold","Revenue","Trend","Status",""].map(h => (
-                  <th key={h} className="text-left text-[11px] font-medium text-white/25 uppercase tracking-wider px-5 py-3">{h}</th>
+                  <th key={h} className="text-left text-[11px] font-medium t-text-30 uppercase tracking-wider px-5 py-3">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {filtered.map((p, i) => {
+              {filtered.map((p) => {
                 const margin = Math.round(((p.price - p.cost) / p.price) * 100);
                 const stockPct = Math.round((p.stock / p.maxStock) * 100);
                 const { label, cls } = STATUS_CFG[p.status];
                 return (
-                  <tr key={p.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors group">
+                  <tr key={p.id} className="t-hover transition-colors group" style={{ borderBottom: "1px solid var(--t-border)" }}>
                     <td className="px-5 py-3.5">
-                      <p className="text-white/80 text-xs font-medium truncate max-w-[200px] group-hover:text-white transition-colors">{p.name}</p>
+                      <p className="t-text-80 text-xs font-medium truncate max-w-[200px] group-hover:t-text transition-colors">{p.name}</p>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="font-mono text-[11px] text-white/40">{p.sku}</span>
+                      <span className="font-mono text-[11px] t-text-40">{p.sku}</span>
                     </td>
                     <td className="px-5 py-3.5">
                       <Badge className={cn("text-[10px] px-2 border", CAT_COLOR[p.category])}>{p.category}</Badge>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white text-sm font-semibold">{fmt(p.price)}</span>
+                      <span className="t-text text-sm font-semibold">{fmt(p.price)}</span>
                     </td>
                     <td className="px-5 py-3.5">
                       <span className="text-emerald-400 text-xs font-semibold">{margin}%</span>
                     </td>
                     <td className="px-5 py-3.5 w-32">
                       <div className="flex items-center gap-2">
-                        <Progress value={stockPct} className="h-1 flex-1 bg-white/5" />
-                        <span className={cn("text-xs w-5 text-right", p.stock === 0 ? "text-red-400" : p.stock <= 3 ? "text-amber-400" : "text-white/50")}>{p.stock}</span>
+                        <Progress value={stockPct} className="h-1 flex-1 t-surface-2" />
+                        <span className={cn("text-xs w-5 text-right", p.stock === 0 ? "text-red-400" : p.stock <= 3 ? "text-amber-400" : "t-text-50")}>{p.stock}</span>
                       </div>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white/50 text-xs">{p.sold}</span>
+                      <span className="t-text-50 text-xs">{p.sold}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white text-sm font-semibold">{fmt(p.revenue)}</span>
+                      <span className="t-text text-sm font-semibold">{fmt(p.revenue)}</span>
                     </td>
                     <td className="px-5 py-3.5">
                       <div className={cn("flex items-center gap-0.5 text-xs font-semibold", p.trend >= 0 ? "text-emerald-400" : "text-red-400")}>
-                        {p.trend >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                        {p.trend >= 0 ? <TrendingUp className="w-3 h-3" aria-hidden="true" /> : <TrendingDown className="w-3 h-3" aria-hidden="true" />}
                         {p.trend >= 0 ? "+" : ""}{p.trend}%
                       </div>
                     </td>
@@ -157,8 +160,8 @@ export default function ProductsPage() {
                       <Badge className={cn("text-[10px] px-2 border", cls)}>{label}</Badge>
                     </td>
                     <td className="px-3 py-3.5">
-                      <button className="text-white/20 hover:text-white/70 transition-colors">
-                        <MoreHorizontal className="w-4 h-4" />
+                      <button className="t-text-30 hover:t-text-70 transition-colors" aria-label="More actions">
+                        <MoreHorizontal className="w-4 h-4" aria-hidden="true" />
                       </button>
                     </td>
                   </tr>
@@ -167,8 +170,8 @@ export default function ProductsPage() {
             </tbody>
           </table>
         </div>
-        <div className="px-5 py-3 border-t border-white/5">
-          <span className="text-white/30 text-xs">{filtered.length} products</span>
+        <div className="px-5 py-3" style={{ borderTop: "1px solid var(--t-border)" }}>
+          <span className="t-text-30 text-xs">{filtered.length} products</span>
         </div>
       </div>
     </div>

@@ -33,7 +33,7 @@ export default function MarketsPage() {
   const totalRevenue = regions.reduce((s,r)=>s+r.revenue,0);
 
   return (
-    <div className="space-y-5 pb-6">
+    <div className="space-y-4 pb-4">
       {/* Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
@@ -42,11 +42,11 @@ export default function MarketsPage() {
           { label:"Total Revenue", value:fmt(totalRevenue), icon:TrendingUp, cls:"text-emerald-400" },
           { label:"Avg. Growth", value:`+${(regions.reduce((s,r)=>s+r.growth,0)/regions.length).toFixed(1)}%`, icon:TrendingUp, cls:"text-amber-400" },
         ].map(({ label, value, icon: Icon, cls }) => (
-          <div key={label} className="rounded-xl border border-white/8 bg-[#0d0d18] p-4 flex items-center gap-3">
-            <Icon className={cn("w-5 h-5 flex-shrink-0", cls)} />
+          <div key={label} className="panel p-4 flex items-center gap-3">
+            <Icon className={cn("w-5 h-5 flex-shrink-0", cls)} aria-hidden="true" />
             <div>
-              <p className="text-white font-bold text-xl">{value}</p>
-              <p className="text-white/40 text-xs">{label}</p>
+              <p className="t-text font-bold text-xl">{value}</p>
+              <p className="t-text-40 text-xs">{label}</p>
             </div>
           </div>
         ))}
@@ -59,20 +59,22 @@ export default function MarketsPage() {
         </div>
 
         {/* Top cities */}
-        <div className="rounded-xl border border-white/8 bg-[#0d0d18]">
-          <div className="px-5 py-4 border-b border-white/5">
-            <h3 className="text-white font-semibold text-sm">Top Cities</h3>
-            <p className="text-white/30 text-xs mt-0.5">By annual revenue</p>
+        <div className="panel">
+          <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
+            <h3 className="t-text font-semibold text-sm">Top Cities</h3>
+            <p className="t-text-30 text-xs mt-0.5">By annual revenue</p>
           </div>
-          <div className="divide-y divide-white/[0.04]">
+          <div className="t-divide">
             {topCities.map((c, i) => (
-              <div key={c.city} className="px-5 py-3 flex items-center gap-3 hover:bg-white/[0.02] transition-colors">
-                <span className="w-5 h-5 rounded-md bg-white/5 flex items-center justify-center text-white/25 text-[10px] font-bold flex-shrink-0">{i+1}</span>
+              <div key={c.city} className="px-5 py-3 flex items-center gap-3 t-hover transition-colors">
+                <span className="w-5 h-5 rounded-md flex items-center justify-center t-text-30 text-[10px] font-bold flex-shrink-0" style={{ backgroundColor: "var(--t-input-bg)" }}>
+                  {i+1}
+                </span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white/70 text-xs font-medium">{c.city}</p>
-                  <p className="text-white/30 text-[11px]">{c.country} · {c.orders} orders</p>
+                  <p className="t-text-70 text-xs font-medium">{c.city}</p>
+                  <p className="t-text-30 text-[11px]">{c.country} · {c.orders} orders</p>
                 </div>
-                <span className="text-white text-xs font-semibold">{fmt(c.revenue)}</span>
+                <span className="t-text text-xs font-semibold">{fmt(c.revenue)}</span>
               </div>
             ))}
           </div>
@@ -80,44 +82,44 @@ export default function MarketsPage() {
       </div>
 
       {/* Regional breakdown table */}
-      <div className="rounded-xl border border-white/8 bg-[#0d0d18]">
-        <div className="px-5 py-4 border-b border-white/5">
-          <h3 className="text-white font-semibold text-sm">Regional Performance</h3>
+      <div className="panel">
+        <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
+          <h3 className="t-text font-semibold text-sm">Regional Performance</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/5">
+              <tr style={{ borderBottom: "1px solid var(--t-border)" }}>
                 {["Region","Countries","Revenue","Orders","Growth","Share","Status"].map(h => (
-                  <th key={h} className="text-left text-[11px] font-medium text-white/25 uppercase tracking-wider px-5 py-3">{h}</th>
+                  <th key={h} className="text-left text-[11px] font-medium t-text-30 uppercase tracking-wider px-5 py-3">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {regions.map(r => (
-                <tr key={r.name} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
+                <tr key={r.name} className="t-hover transition-colors" style={{ borderBottom: "1px solid var(--t-border)" }}>
                   <td className="px-5 py-3.5">
-                    <span className="text-white/80 text-sm font-medium">{r.name}</span>
+                    <span className="t-text-80 text-sm font-medium">{r.name}</span>
                   </td>
                   <td className="px-5 py-3.5">
-                    <span className="text-white/40 text-xs">{r.countries.join(", ")}</span>
+                    <span className="t-text-40 text-xs">{r.countries.join(", ")}</span>
                   </td>
                   <td className="px-5 py-3.5">
-                    <span className="text-white font-semibold text-sm">{fmt(r.revenue)}</span>
+                    <span className="t-text font-semibold text-sm">{fmt(r.revenue)}</span>
                   </td>
                   <td className="px-5 py-3.5">
-                    <span className="text-white/60 text-sm">{r.orders.toLocaleString()}</span>
+                    <span className="t-text-60 text-sm">{r.orders.toLocaleString()}</span>
                   </td>
                   <td className="px-5 py-3.5">
                     <div className={cn("flex items-center gap-1 text-xs font-semibold", r.growth >= 0 ? "text-emerald-400" : "text-red-400")}>
-                      {r.growth >= 0 ? <TrendingUp className="w-3 h-3"/> : <TrendingDown className="w-3 h-3"/>}
+                      {r.growth >= 0 ? <TrendingUp className="w-3 h-3" aria-hidden="true" /> : <TrendingDown className="w-3 h-3" aria-hidden="true" />}
                       +{r.growth}%
                     </div>
                   </td>
                   <td className="px-5 py-3.5 w-40">
                     <div className="flex items-center gap-2">
-                      <Progress value={r.share} className="h-1 flex-1 bg-white/5" />
-                      <span className="text-white/50 text-xs w-10 text-right">{r.share}%</span>
+                      <Progress value={r.share} className="h-1 flex-1 t-surface-2" />
+                      <span className="t-text-50 text-xs w-10 text-right">{r.share}%</span>
                     </div>
                   </td>
                   <td className="px-5 py-3.5">

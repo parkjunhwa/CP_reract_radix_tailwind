@@ -12,18 +12,18 @@ import {
 } from "lucide-react";
 
 const ACTIVITY = [
-  { action: "주문 승인", detail: "ORD-7821 · Patek Philippe · $142,000", time: "2분 전", icon: CheckCircle2, color: "text-emerald-400" },
-  { action: "고객 등업", detail: "Mei Lin Zhang → Platinum 티어 승급", time: "34분 전", icon: Star, color: "text-amber-400" },
-  { action: "인보이스 발행", detail: "INV-2026-0142 · James Worthington", time: "2시간 전", icon: Award, color: "text-violet-400" },
-  { action: "설정 변경", detail: "2FA 인증 활성화", time: "1일 전", icon: Shield, color: "text-sky-400" },
-  { action: "보고서 조회", detail: "4월 월간 매출 보고서 열람", time: "2일 전", icon: TrendingUp, color: "text-emerald-400" },
+  { action: "Order approved", detail: "ORD-7821 · Patek Philippe · $142,000", time: "2 minutes ago", icon: CheckCircle2, color: "text-emerald-400" },
+  { action: "Client upgraded", detail: "Mei Lin Zhang → promoted to Platinum tier", time: "34 minutes ago", icon: Star, color: "text-amber-400" },
+  { action: "Invoice issued", detail: "INV-2026-0142 · James Worthington", time: "2 hours ago", icon: Award, color: "text-violet-400" },
+  { action: "Settings updated", detail: "2FA enabled", time: "1 day ago", icon: Shield, color: "text-sky-400" },
+  { action: "Report viewed", detail: "April monthly revenue report opened", time: "2 days ago", icon: TrendingUp, color: "text-emerald-400" },
 ];
 
 const STATS = [
-  { label: "총 승인 주문", value: "2,841", icon: ShoppingBag, color: "text-violet-400" },
-  { label: "관리 고객 수", value: "284",   icon: User,        color: "text-sky-400"    },
-  { label: "이번달 처리", value: "147",    icon: CheckCircle2,color: "text-emerald-400" },
-  { label: "평균 응답 시간", value: "4분", icon: Clock,       color: "text-amber-400"  },
+  { label: "Approved orders", value: "2,841", icon: ShoppingBag, color: "text-violet-400" },
+  { label: "Managed clients", value: "284",   icon: User,        color: "text-sky-400"    },
+  { label: "Processed this month", value: "147", icon: CheckCircle2, color: "text-emerald-400" },
+  { label: "Avg. response time", value: "4m", icon: Clock,       color: "text-amber-400"  },
 ];
 
 const ROLES = [
@@ -43,7 +43,7 @@ export default function ProfilePage() {
     phone:    "+82 10 1234 5678",
     location: "Seoul, South Korea",
     title:    "Administrator",
-    bio:      "LUXE Commerce 플랫폼을 관리하는 시니어 어드민입니다. 고가 럭셔리 상품의 거래 승인과 VIP 고객 관리를 담당합니다.",
+    bio:      "Senior administrator for LUXE Commerce. Responsible for approving high-value transactions and managing VIP client relationships.",
   });
 
   const handleSave = () => {
@@ -52,16 +52,8 @@ export default function ProfilePage() {
     setTimeout(() => setSaved(false), 2500);
   };
 
-  const inputCls = (editable: boolean) => cn(
-    "w-full rounded-lg px-3 py-2 text-sm transition-colors outline-none",
-    editable
-      ? "border focus:border-violet-500/60"
-      : "border-transparent cursor-default",
-    "border",
-  );
-
   return (
-    <div className="space-y-6 pb-6">
+    <div className="space-y-4 pb-4">
       {/* Profile hero card */}
       <div
         className="rounded-xl border p-6"
@@ -76,7 +68,7 @@ export default function ProfilePage() {
               </AvatarFallback>
             </Avatar>
             <button
-              aria-label="프로필 사진 변경"
+              aria-label="Change profile photo"
               className="absolute bottom-0 right-0 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
               style={{ backgroundColor: "var(--luxe-surface-2)", borderColor: "var(--luxe-bg)" }}
             >
@@ -91,7 +83,7 @@ export default function ProfilePage() {
               <Badge className="bg-violet-600/20 text-violet-300 border-violet-500/20 text-[10px]">Admin</Badge>
               {saved && (
                 <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px] flex items-center gap-1">
-                  <Check className="w-2.5 h-2.5" aria-hidden="true" /> 저장됨
+                  <Check className="w-2.5 h-2.5" aria-hidden="true" /> Saved
                 </Badge>
               )}
             </div>
@@ -101,7 +93,7 @@ export default function ProfilePage() {
                 { icon: Mail,    val: form.email },
                 { icon: Phone,   val: form.phone },
                 { icon: MapPin,  val: form.location },
-                { icon: Calendar,val: "2019년 3월 입사" },
+                { icon: Calendar,val: "Joined Mar 2019" },
               ].map(({ icon: Icon, val }) => (
                 <div key={val} className="flex items-center gap-1.5">
                   <Icon className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" style={{ color: "var(--luxe-text-30)" }} />
@@ -120,23 +112,23 @@ export default function ProfilePage() {
                   className="px-3 py-1.5 rounded-lg border text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
                   style={{ borderColor: "var(--luxe-border-2)", color: "var(--luxe-text-50)" }}
                 >
-                  취소
+                  Cancel
                 </button>
                 <button
                   onClick={handleSave}
                   className="px-4 py-1.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-medium flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
                 >
-                  <Save className="w-3.5 h-3.5" aria-hidden="true" /> 저장
+                  <Save className="w-3.5 h-3.5" aria-hidden="true" /> Save
                 </button>
               </>
             ) : (
               <button
                 onClick={() => setEditing(true)}
-                aria-label="프로필 편집"
+                aria-label="Edit profile"
                 className="px-4 py-1.5 rounded-lg border text-xs flex items-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
                 style={{ borderColor: "var(--luxe-border-2)", color: "var(--luxe-text-50)" }}
               >
-                <Edit3 className="w-3.5 h-3.5" aria-hidden="true" /> 편집
+                <Edit3 className="w-3.5 h-3.5" aria-hidden="true" /> Edit
               </button>
             )}
           </div>
@@ -144,7 +136,7 @@ export default function ProfilePage() {
 
         {/* Bio */}
         <div className="mt-5 pt-5" style={{ borderTop: "1px solid var(--luxe-border)" }}>
-          <label className="text-xs font-medium mb-1.5 block" style={{ color: "var(--luxe-text-40)" }}>자기소개</label>
+          <label className="text-xs font-medium mb-1.5 block" style={{ color: "var(--luxe-text-40)" }}>Bio</label>
           {editing ? (
             <textarea
               value={form.bio}
@@ -182,14 +174,14 @@ export default function ProfilePage() {
           className="lg:col-span-2 rounded-xl border p-6"
           style={{ backgroundColor: "var(--luxe-surface)", borderColor: "var(--luxe-border)" }}
         >
-          <h3 className="font-semibold text-sm mb-5" style={{ color: "var(--luxe-text)" }}>개인 정보</h3>
+          <h3 className="font-semibold text-sm mb-5" style={{ color: "var(--luxe-text)" }}>Personal information</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {([
-              { label: "이름",        key: "name"     as const },
-              { label: "이메일",      key: "email"    as const },
-              { label: "직함",        key: "title"    as const },
-              { label: "전화번호",    key: "phone"    as const },
-              { label: "위치",        key: "location" as const },
+              { label: "Name",     key: "name"     as const },
+              { label: "Email",    key: "email"    as const },
+              { label: "Title",    key: "title"    as const },
+              { label: "Phone",    key: "phone"    as const },
+              { label: "Location", key: "location" as const },
             ]).map(({ label, key }) => (
               <div key={key}>
                 <label
@@ -221,12 +213,12 @@ export default function ProfilePage() {
           <Separator className="my-5" style={{ backgroundColor: "var(--luxe-border)" }} />
 
           {/* Security links */}
-          <h3 className="font-semibold text-sm mb-4" style={{ color: "var(--luxe-text)" }}>보안 설정</h3>
+          <h3 className="font-semibold text-sm mb-4" style={{ color: "var(--luxe-text)" }}>Security</h3>
           <div className="flex flex-wrap gap-3">
             {[
-              { label: "비밀번호 변경", icon: Key, href: "/settings?tab=security" },
-              { label: "2FA 관리",      icon: Shield, href: "/settings?tab=security" },
-              { label: "API 키",        icon: Key, href: "/settings?tab=api" },
+              { label: "Change password", icon: Key, href: "/settings?tab=security" },
+              { label: "Manage 2FA",      icon: Shield, href: "/settings?tab=security" },
+              { label: "API keys",        icon: Key, href: "/settings?tab=api" },
             ].map(({ label, icon: Icon, href }) => (
               <a
                 key={label}
@@ -248,8 +240,8 @@ export default function ProfilePage() {
             className="rounded-xl border p-5"
             style={{ backgroundColor: "var(--luxe-surface)", borderColor: "var(--luxe-border)" }}
           >
-            <h3 className="font-semibold text-sm mb-4" style={{ color: "var(--luxe-text)" }}>권한 & 역할</h3>
-            <ul className="space-y-2" aria-label="역할 목록">
+            <h3 className="font-semibold text-sm mb-4" style={{ color: "var(--luxe-text)" }}>Roles & permissions</h3>
+            <ul className="space-y-2" aria-label="Role list">
               {ROLES.map(role => (
                 <li key={role.name} className="flex items-center justify-between">
                   <span className="text-xs" style={{ color: "var(--luxe-text-60)" }}>{role.name}</span>
@@ -257,9 +249,9 @@ export default function ProfilePage() {
                     "text-[10px] px-2 border",
                     role.active
                       ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                      : "bg-white/5 text-white/25 border-white/10"
+                      : "bg-[var(--t-input-bg)] t-text-40 border-[color:var(--t-border-2)]"
                   )}>
-                    {role.active ? "활성" : "비활성"}
+                    {role.active ? "Active" : "Inactive"}
                   </Badge>
                 </li>
               ))}
@@ -272,9 +264,9 @@ export default function ProfilePage() {
             style={{ backgroundColor: "var(--luxe-surface)", borderColor: "var(--luxe-border)" }}
           >
             <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--luxe-border)" }}>
-              <h3 className="font-semibold text-sm" style={{ color: "var(--luxe-text)" }}>최근 활동</h3>
+              <h3 className="font-semibold text-sm" style={{ color: "var(--luxe-text)" }}>Recent activity</h3>
             </div>
-            <ul aria-label="최근 활동 목록">
+            <ul aria-label="Recent activity list">
               {ACTIVITY.map((a, i) => {
                 const Icon = a.icon;
                 return (
@@ -302,12 +294,12 @@ export default function ProfilePage() {
             className="rounded-xl border p-5"
             style={{ backgroundColor: "var(--luxe-surface)", borderColor: "rgba(239,68,68,0.2)" }}
           >
-            <h3 className="font-semibold text-sm text-red-400 mb-3">위험 구역</h3>
+            <h3 className="font-semibold text-sm text-red-400 mb-3">Danger zone</h3>
             <button
               className="w-full flex items-center justify-center gap-2 py-2 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
-              aria-label="계정에서 로그아웃"
+              aria-label="Sign out of account"
             >
-              <LogOut className="w-4 h-4" aria-hidden="true" /> 로그아웃
+              <LogOut className="w-4 h-4" aria-hidden="true" /> Sign out
             </button>
           </div>
         </div>

@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  AreaChart, Area, BarChart, Bar, LineChart, Line,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  AreaChart, Area, LineChart, Line,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
 
 const monthlyData = [
@@ -29,16 +29,29 @@ const retentionData = [
 
 const fmtM = (v: number) => `$${(v/1_000_000).toFixed(1)}M`;
 
-const TIP = ({ active, payload, label }: any) => {
+type ChartTooltipPayloadItem = {
+  name?: string;
+  value?: number | string;
+  color?: string;
+};
+type ChartTooltipProps = {
+  active?: boolean;
+  payload?: ChartTooltipPayloadItem[];
+  label?: string;
+};
+
+const TIP = ({ active, payload, label }: ChartTooltipProps) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#13131f] border border-white/10 rounded-xl px-4 py-3 shadow-xl">
-      <p className="text-white/40 text-xs mb-2">{label}</p>
-      {payload.map((p: any) => (
+    <div className="panel-2 px-4 py-3 shadow-xl rounded-xl" style={{ borderColor: "var(--t-border-2)" }}>
+      <p className="t-text-40 text-xs mb-2">{label}</p>
+      {payload.map((p) => (
         <div key={p.name} className="flex items-center gap-2 text-xs">
           <span className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
-          <span className="text-white/50 capitalize">{p.name}:</span>
-          <span className="text-white font-semibold">{typeof p.value === "number" && p.value > 10000 ? fmtM(p.value) : `${p.value}%`}</span>
+          <span className="t-text-50 capitalize">{p.name}:</span>
+          <span className="t-text font-semibold">
+            {typeof p.value === "number" && p.value > 10000 ? fmtM(p.value) : `${p.value}%`}
+          </span>
         </div>
       ))}
     </div>
@@ -49,9 +62,9 @@ export default function AnalyticsCharts() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
       {/* Stacked area by category */}
-      <div className="lg:col-span-2 rounded-xl border border-white/8 bg-[#0d0d18] p-5">
-        <h3 className="text-white font-semibold text-sm mb-1">Revenue by Category</h3>
-        <p className="text-white/30 text-xs mb-4">Monthly breakdown · 2025</p>
+      <div className="lg:col-span-2 panel p-5">
+        <h3 className="t-text font-semibold text-sm mb-1">Revenue by Category</h3>
+        <p className="t-text-30 text-xs mb-4">Monthly breakdown · 2025</p>
         <div className="h-56">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={monthlyData} margin={{ top:4, right:4, bottom:0, left:0 }}>
@@ -68,10 +81,10 @@ export default function AnalyticsCharts() {
                   </linearGradient>
                 ))}
               </defs>
-              <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.04)" />
-              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill:"rgba(255,255,255,0.25)", fontSize:11 }} />
-              <YAxis axisLine={false} tickLine={false} tick={{ fill:"rgba(255,255,255,0.25)", fontSize:11 }} tickFormatter={fmtM} width={48} />
-              <Tooltip content={<TIP />} cursor={{ stroke:"rgba(255,255,255,0.08)", strokeWidth:1 }} />
+              <CartesianGrid vertical={false} stroke="var(--t-chart-grid)" />
+              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill:"var(--t-chart-tick)", fontSize:11 }} />
+              <YAxis axisLine={false} tickLine={false} tick={{ fill:"var(--t-chart-tick)", fontSize:11 }} tickFormatter={fmtM} width={48} />
+              <Tooltip content={<TIP />} cursor={{ stroke:"var(--t-border-2)", strokeWidth:1 }} />
               <Area type="monotone" dataKey="art"     stroke="#0ea5e9" strokeWidth={1.5} fill="url(#art)"     dot={false} stackId="a" />
               <Area type="monotone" dataKey="fashion"  stroke="#ec4899" strokeWidth={1.5} fill="url(#fashion)" dot={false} stackId="a" />
               <Area type="monotone" dataKey="jewelry"  stroke="#f59e0b" strokeWidth={1.5} fill="url(#jewelry)" dot={false} stackId="a" />
@@ -83,35 +96,42 @@ export default function AnalyticsCharts() {
           {[["Watches","#7c3aed"],["Jewelry","#f59e0b"],["Fashion","#ec4899"],["Art","#0ea5e9"]].map(([l,c]) => (
             <div key={l} className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: c }} />
-              <span className="text-white/40 text-xs">{l}</span>
+              <span className="t-text-40 text-xs">{l}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Retention line */}
-      <div className="rounded-xl border border-white/8 bg-[#0d0d18] p-5">
-        <h3 className="text-white font-semibold text-sm mb-1">Client Retention</h3>
-        <p className="text-white/30 text-xs mb-4">Monthly repeat rate · 2025</p>
+      <div className="panel p-5">
+        <h3 className="t-text font-semibold text-sm mb-1">Client Retention</h3>
+        <p className="t-text-30 text-xs mb-4">Monthly repeat rate · 2025</p>
         <div className="h-56">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={retentionData} margin={{ top:4, right:4, bottom:0, left:0 }}>
-              <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.04)" />
-              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill:"rgba(255,255,255,0.25)", fontSize:10 }} />
-              <YAxis axisLine={false} tickLine={false} tick={{ fill:"rgba(255,255,255,0.25)", fontSize:10 }} domain={[55, 85]} tickFormatter={v => `${v}%`} width={36} />
-              <Tooltip content={<TIP />} cursor={{ stroke:"rgba(255,255,255,0.08)", strokeWidth:1 }} />
-              <Line type="monotone" dataKey="rate" stroke="#10b981" strokeWidth={2} dot={{ r:3, fill:"#10b981", stroke:"#0d0d18", strokeWidth:2 }} activeDot={{ r:5 }} />
+              <CartesianGrid vertical={false} stroke="var(--t-chart-grid)" />
+              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill:"var(--t-chart-tick)", fontSize:10 }} />
+              <YAxis axisLine={false} tickLine={false} tick={{ fill:"var(--t-chart-tick)", fontSize:10 }} domain={[55, 85]} tickFormatter={v => `${v}%`} width={36} />
+              <Tooltip content={<TIP />} cursor={{ stroke:"var(--t-border-2)", strokeWidth:1 }} />
+              <Line
+                type="monotone"
+                dataKey="rate"
+                stroke="#10b981"
+                strokeWidth={2}
+                dot={{ r: 3, fill: "#10b981", stroke: "var(--t-surface)", strokeWidth: 2 }}
+                activeDot={{ r: 5 }}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
         <div className="flex items-center gap-4 mt-3">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-0.5 bg-emerald-500 inline-block rounded" />
-            <span className="text-white/40 text-xs">Retention %</span>
+            <span className="t-text-40 text-xs">Retention %</span>
           </div>
           <div className="ml-auto text-right">
             <p className="text-emerald-400 font-semibold text-sm">80%</p>
-            <p className="text-white/30 text-[11px]">Dec peak</p>
+            <p className="t-text-30 text-[11px]">Dec peak</p>
           </div>
         </div>
       </div>

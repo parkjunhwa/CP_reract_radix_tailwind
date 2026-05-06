@@ -1,0 +1,52 @@
+/* ════════════════════════════════════════════
+   LIGHT THEME  —  html[data-theme="light"]
+   ════════════════════════════════════════════ */
+
+[data-theme="light"] {
+  color-scheme: light;
+  --luxe-sidebar-rgb: 255,255,255;
+
+  /* ── Backgrounds ─────────────────── */
+  --t-bg:        #f0f2f9;   /* page canvas */
+  --t-surface:   #ffffff;   /* card / panel */
+  --t-surface-2: #ffffff;   /* elevated surface */
+  --t-surface-3: #ebebf8;   /* tooltip / popover */
+  --t-sidebar:   #ffffff;   /* sidebar */
+
+  /* ── Borders ─────────────────────── */
+  --t-border:    rgba(0,0,0,0.09);
+  --t-border-2:  rgba(0,0,0,0.13);
+  --t-border-3:  rgba(0,0,0,0.20);
+
+  /* ── Text ────────────────────────── */
+  --t-text:      #010106;
+  --t-text-80:   rgba(1,1,6,0.9);
+  --t-text-70:   rgba(1,1,6,0.85);
+  --t-text-60:   rgba(1,1,6,0.75);
+  --t-text-50:   rgba(1,1,6,0.65);
+  --t-text-40:   rgba(1,1,6,0.55);
+  --t-text-30:   rgba(1,1,6,0.45);
+  --t-text-20:   rgba(1,1,6,0.35);
+
+  /* ── Interactive ─────────────────── */
+  --t-hover:     rgba(0,0,0,0.04);
+  --t-hover-2:   rgba(0,0,0,0.07);
+  --t-input-bg:  rgba(0,0,0,0.04);
+
+  /* ── Accent (indigo/violet) ─────── */
+  --t-accent:      #5b21b6;
+  --t-accent-h:    #4c1d95;
+  --t-accent-soft: rgba(91,33,182,0.08);
+  --t-accent-text: #5b21b6;
+
+  /* ── Chart ───────────────────────── */
+  --t-chart-grid:    rgba(0,0,0,0.05);
+  --t-chart-tick:    rgba(0,0,0,0.38);
+  --t-chart-tooltip: #f5f5fc;
+  --t-chart-cursor:  rgba(0,0,0,0.04);
+
+  /* ── Misc ────────────────────────── */
+  --t-scrollbar:  rgba(0,0,0,0.12);
+  --t-shadow:     0 2px 16px rgba(0,0,0,0.10);
+  --t-ring:       rgba(91,33,182,0.5);
+}

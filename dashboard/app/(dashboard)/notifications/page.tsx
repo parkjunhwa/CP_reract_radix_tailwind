@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
-  ShoppingBag, UserPlus, AlertTriangle, CheckCircle2, XCircle,
-  Globe, TrendingUp, Package, Bell, BellOff, Trash2, CheckCheck,
+  ShoppingBag, UserPlus, AlertTriangle, CheckCircle2,
+  Globe, TrendingUp, BellOff, Trash2, CheckCheck,
 } from "lucide-react";
 
 type NType = "order" | "client" | "alert" | "payment" | "system" | "market";
@@ -35,13 +35,13 @@ const TYPE_CFG: Record<NType, { icon:React.ElementType; cls:string }> = {
   client:  { icon:UserPlus,     cls:"bg-sky-500/15 text-sky-400" },
   alert:   { icon:AlertTriangle,cls:"bg-amber-500/15 text-amber-400" },
   payment: { icon:CheckCircle2, cls:"bg-emerald-500/15 text-emerald-400" },
-  system:  { icon:Globe,        cls:"bg-white/8 text-white/40" },
+  system:  { icon:Globe,        cls:"bg-[var(--t-input-bg)] t-text-40" },
   market:  { icon:TrendingUp,   cls:"bg-fuchsia-500/15 text-fuchsia-400" },
 };
 const PRIORITY_CFG = {
   high:   "bg-red-500/10 text-red-400 border-red-500/20",
   medium: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  low:    "bg-white/5 text-white/30 border-white/10",
+  low:    "bg-[var(--t-input-bg)] t-text-40 border-[color:var(--t-border-2)]",
 };
 
 export default function NotificationsPage() {
@@ -61,14 +61,19 @@ export default function NotificationsPage() {
   const deleteOne = (id: string) => setNotifs(ns => ns.filter(n => n.id !== id));
 
   return (
-    <div className="space-y-5 pb-6">
+    <div className="space-y-4 pb-4">
       {/* Header bar */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           {(["all","unread","order","client","alert","payment","system","market"] as const).map(f => (
             <button key={f} onClick={() => setFilter(f)}
               className={cn("px-3 h-8 rounded-lg text-xs font-medium capitalize transition-colors",
-                filter===f ? "bg-violet-600 text-white" : "text-white/40 hover:text-white hover:bg-white/5 border border-white/8")}>
+                filter===f
+                  ? "text-white"
+                  : "t-text-40 hover:t-text-80 hover:bg-[var(--t-hover)] border")
+              }
+              style={filter===f ? { backgroundColor: "var(--t-accent)" } : { borderColor: "var(--t-border-2)" }}
+            >
               {f}{f==="unread" && unreadCount > 0 && <span className="ml-1.5 bg-violet-400/20 text-violet-300 text-[10px] px-1.5 rounded-full">{unreadCount}</span>}
             </button>
           ))}
@@ -81,44 +86,51 @@ export default function NotificationsPage() {
       </div>
 
       {/* Notification list */}
-      <div className="rounded-xl border border-white/8 bg-[#0d0d18] divide-y divide-white/[0.04]">
+      <div className="panel t-divide">
         {filtered.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16 gap-3">
-            <BellOff className="w-8 h-8 text-white/15" />
-            <p className="text-white/30 text-sm">No notifications</p>
+            <BellOff className="w-8 h-8 t-text-20" aria-hidden="true" />
+            <p className="t-text-30 text-sm">No notifications</p>
           </div>
         )}
         {filtered.map(n => {
           const { icon: Icon, cls } = TYPE_CFG[n.type];
           return (
-            <div key={n.id} className={cn("flex items-start gap-4 px-5 py-4 hover:bg-white/[0.02] transition-colors group", !n.read && "bg-violet-600/[0.04]")}>
+            <div
+              key={n.id}
+              className={cn(
+                "flex items-start gap-4 px-5 py-4 t-hover transition-colors group",
+                !n.read && "bg-[var(--t-accent-soft)]"
+              )}
+            >
               {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-violet-500 flex-shrink-0 mt-2" />}
               {n.read && <span className="w-1.5 h-1.5 flex-shrink-0" />}
               <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0", cls)}>
-                <Icon className="w-4.5 h-4.5" />
+                <Icon className="w-4.5 h-4.5" aria-hidden="true" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <p className={cn("text-sm font-medium", n.read ? "text-white/60" : "text-white")}>{n.title}</p>
-                    <p className="text-white/40 text-xs mt-0.5 leading-relaxed">{n.body}</p>
+                    <p className={cn("text-sm font-medium", n.read ? "t-text-60" : "t-text")}>{n.title}</p>
+                    <p className="t-text-40 text-xs mt-0.5 leading-relaxed">{n.body}</p>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <Badge className={cn("text-[10px] px-1.5 border", PRIORITY_CFG[n.priority])}>{n.priority}</Badge>
-                    <span className="text-white/25 text-[11px]">{n.time}</span>
+                    <span className="t-text-30 text-[11px]">{n.time}</span>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
                 {!n.read && (
                   <button onClick={() => markOne(n.id)} title="Mark as read"
-                    className="w-7 h-7 rounded-lg hover:bg-white/5 flex items-center justify-center text-white/30 hover:text-white transition-colors">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    className="w-7 h-7 rounded-lg hover:bg-[var(--t-hover)] flex items-center justify-center t-text-30 hover:t-text transition-colors"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 )}
                 <button onClick={() => deleteOne(n.id)} title="Delete"
-                  className="w-7 h-7 rounded-lg hover:bg-red-500/10 flex items-center justify-center text-white/30 hover:text-red-400 transition-colors">
-                  <Trash2 className="w-3.5 h-3.5" />
+                  className="w-7 h-7 rounded-lg hover:bg-red-500/10 flex items-center justify-center t-text-30 hover:text-red-400 transition-colors">
+                  <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                 </button>
               </div>
             </div>

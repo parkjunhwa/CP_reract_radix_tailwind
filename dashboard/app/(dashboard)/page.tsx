@@ -6,7 +6,7 @@ import TopClients from "@/components/dashboard/TopClients";
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-6 pb-6">
+    <div className="space-y-4 pb-4">
       <KpiCards />
       <ChartsSection />
       <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
@@ -32,21 +32,21 @@ function ActivityFeed() {
     { time: "5h ago", icon: "📈", text: "Monthly target exceeded", detail: "April revenue +13.6% over target", color: "text-violet-400" },
   ];
   return (
-    <div className="rounded-xl border border-white/8 bg-[#0d0d18] flex flex-col h-full">
-      <div className="px-5 py-4 border-b border-white/5">
-        <h3 className="text-white font-semibold text-sm">Activity Feed</h3>
-        <p className="text-white/30 text-xs mt-0.5">Real-time business events</p>
+    <div className="panel flex flex-col h-full">
+      <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
+        <h3 className="t-text font-semibold text-sm">Activity Feed</h3>
+        <p className="t-text-30 text-xs mt-0.5">Real-time business events</p>
       </div>
       <div className="flex-1 overflow-y-auto">
         {activities.map((a, i) => (
-          <div key={i} className="flex items-start gap-3 px-5 py-3.5 border-b border-white/[0.03] last:border-0 hover:bg-white/[0.02] transition-colors">
+          <div key={i} className="flex items-start gap-3 px-5 py-3.5 t-hover transition-colors last:border-0" style={{ borderBottom: "1px solid var(--t-border)" }}>
             <span className="text-base mt-0.5 flex-shrink-0">{a.icon}</span>
             <div className="flex-1 min-w-0">
               <div className="flex items-baseline justify-between gap-2">
                 <span className={`text-xs font-semibold ${a.color}`}>{a.text}</span>
-                <span className="text-white/20 text-[10px] flex-shrink-0">{a.time}</span>
+                <span className="t-text-20 text-[10px] flex-shrink-0">{a.time}</span>
               </div>
-              <p className="text-white/40 text-xs mt-0.5 truncate">{a.detail}</p>
+              <p className="t-text-40 text-xs mt-0.5 truncate">{a.detail}</p>
             </div>
           </div>
         ))}

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
 
 export type Theme = "light" | "dark" | "system";
 
@@ -10,14 +10,56 @@ interface ThemeCtx {
   setTheme: (t: Theme) => void;
 }
 
-const Ctx = createContext<ThemeCtx>({ theme: "dark", resolvedTheme: "dark", setTheme: () => {} });
+const Ctx = createContext<ThemeCtx>({ theme: "system", resolvedTheme: "dark", setTheme: () => {} });
 
-function resolve(t: Theme): "light" | "dark" {
-  if (t === "system") {
-    return typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark" : "light";
+const THEME_STORAGE_KEY = "luxe-theme";
+const THEME_EVENT = "luxe-theme-change";
+
+function readStoredTheme(): Theme {
+  try {
+    const v = localStorage.getItem(THEME_STORAGE_KEY);
+    if (v === "light" || v === "dark" || v === "system") return v;
+  } catch {
+    // ignore
   }
-  return t;
+  return "system";
+}
+
+function subscribeThemeStore(onStoreChange: () => void) {
+  const handler = () => onStoreChange();
+  window.addEventListener("storage", handler);
+  window.addEventListener(THEME_EVENT, handler as EventListener);
+  return () => {
+    window.removeEventListener("storage", handler);
+    window.removeEventListener(THEME_EVENT, handler as EventListener);
+  };
+}
+
+function useStoredTheme(): Theme {
+  return useSyncExternalStore(
+    subscribeThemeStore,
+    () => readStoredTheme(),
+    () => "system"
+  );
+}
+
+function readPrefersDark(): boolean {
+  return window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? true;
+}
+
+function subscribePrefersDark(onStoreChange: () => void) {
+  const mq = window.matchMedia("(prefers-color-scheme: dark)");
+  const handler = () => onStoreChange();
+  mq.addEventListener("change", handler);
+  return () => mq.removeEventListener("change", handler);
+}
+
+function usePrefersDark(): boolean {
+  return useSyncExternalStore(
+    subscribePrefersDark,
+    () => readPrefersDark(),
+    () => true
+  );
 }
 
 function applyResolved(resolved: "light" | "dark") {
@@ -31,36 +73,24 @@ function applyResolved(resolved: "light" | "dark") {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("dark");
-  const [resolvedTheme, setResolved] = useState<"light" | "dark">("dark");
+  const theme = useStoredTheme();
+  const prefersDark = usePrefersDark();
+  const resolvedTheme = useMemo<"light" | "dark">(() => {
+    if (theme === "system") return prefersDark ? "dark" : "light";
+    return theme;
+  }, [prefersDark, theme]);
 
   useEffect(() => {
-    const stored = (localStorage.getItem("luxe-theme") as Theme) || "dark";
-    const res = resolve(stored);
-    setThemeState(stored);
-    setResolved(res);
-    applyResolved(res);
-
-    // system preference listener
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const onChange = () => {
-      const cur = (localStorage.getItem("luxe-theme") as Theme) || "dark";
-      if (cur === "system") {
-        const r = mq.matches ? "dark" : "light";
-        setResolved(r);
-        applyResolved(r);
-      }
-    };
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
+    applyResolved(resolvedTheme);
+  }, [resolvedTheme]);
 
   const setTheme = (t: Theme) => {
-    const res = resolve(t);
-    setThemeState(t);
-    setResolved(res);
-    localStorage.setItem("luxe-theme", t);
-    applyResolved(res);
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, t);
+      window.dispatchEvent(new Event(THEME_EVENT));
+    } catch {
+      // ignore
+    }
   };
 
   return <Ctx.Provider value={{ theme, resolvedTheme, setTheme }}>{children}</Ctx.Provider>;

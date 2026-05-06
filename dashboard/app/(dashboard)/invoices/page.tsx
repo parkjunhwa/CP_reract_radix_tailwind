@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Search, Plus, Download, FileText, Clock, CheckCircle2, XCircle, Send, MoreHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Plus, Download, FileText, Clock, CheckCircle2, Send, MoreHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
 
 type InvStatus = "paid" | "sent" | "overdue" | "draft";
 
@@ -36,7 +36,7 @@ const STATUS_CFG: Record<InvStatus, { label:string; icon:React.ElementType; cls:
   paid:    { label:"Paid",    icon:CheckCircle2, cls:"bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
   sent:    { label:"Sent",    icon:Send,         cls:"bg-sky-500/10 text-sky-400 border-sky-500/20" },
   overdue: { label:"Overdue", icon:Clock,        cls:"bg-red-500/10 text-red-400 border-red-500/20" },
-  draft:   { label:"Draft",   icon:FileText,     cls:"bg-white/5 text-white/40 border-white/10" },
+  draft:   { label:"Draft",   icon:FileText,     cls:"bg-[var(--t-input-bg)] t-text-40 border-[color:var(--t-border-2)]" },
 };
 
 const PAGE_SIZE = 8;
@@ -62,7 +62,7 @@ export default function InvoicesPage() {
   const totalSent = INVOICES.filter(i=>i.status==="sent").reduce((s,i)=>s+i.amount,0);
 
   return (
-    <div className="space-y-5 pb-6">
+    <div className="space-y-4 pb-4">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label:"Total Invoices", value:INVOICES.length, sub:"all time", cls:"text-violet-400" },
@@ -70,31 +70,35 @@ export default function InvoicesPage() {
           { label:"Awaiting Payment", value:fmt(totalSent), sub:"sent & pending", cls:"text-sky-400" },
           { label:"Overdue", value:fmt(totalOverdue), sub:`${INVOICES.filter(i=>i.status==="overdue").length} invoices`, cls:"text-red-400" },
         ].map(({ label, value, sub, cls }) => (
-          <div key={label} className="rounded-xl border border-white/8 bg-[#0d0d18] p-4">
-            <p className="text-white/40 text-xs uppercase tracking-wide mb-1">{label}</p>
+          <div key={label} className="panel p-4">
+            <p className="t-text-40 text-xs uppercase tracking-wide mb-1">{label}</p>
             <p className={cn("font-bold text-xl", cls)}>{value}</p>
-            <p className="text-white/25 text-xs mt-0.5">{sub}</p>
+            <p className="t-text-30 text-xs mt-0.5">{sub}</p>
           </div>
         ))}
       </div>
 
-      <div className="rounded-xl border border-white/8 bg-[#0d0d18]">
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-white/5">
-          <div className="flex items-center gap-2 h-9 px-3 rounded-lg bg-white/5 border border-white/8 flex-1">
-            <Search className="w-3.5 h-3.5 text-white/30" />
+      <div className="panel">
+        <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
+          <div className="flex items-center gap-2 h-9 px-3 rounded-lg border flex-1" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
+            <Search className="w-3.5 h-3.5 t-text-30" aria-hidden="true" />
             <input value={search} onChange={e=>{setSearch(e.target.value);setPage(1);}} placeholder="Search invoice ID or client…"
-              className="flex-1 bg-transparent text-xs text-white placeholder:text-white/25 outline-none" />
+              className="flex-1 bg-transparent text-xs outline-none text-[color:var(--t-text-70)] placeholder:text-[color:var(--t-text-30)]" />
           </div>
           <select value={statusFilter} onChange={e=>{setStatusFilter(e.target.value as InvStatus|"all");setPage(1);}}
-            className="h-9 px-3 rounded-lg bg-white/5 border border-white/8 text-white/60 text-xs outline-none">
+            className="h-9 px-3 rounded-lg border text-xs outline-none text-[color:var(--t-text-70)]"
+            style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}
+          >
             <option value="all">All Status</option>
             <option value="paid">Paid</option>
             <option value="sent">Sent</option>
             <option value="overdue">Overdue</option>
             <option value="draft">Draft</option>
           </select>
-          <button className="h-9 px-3 rounded-lg bg-white/5 border border-white/8 text-white/50 hover:text-white text-xs flex items-center gap-1.5">
-            <Download className="w-3.5 h-3.5" /> Export PDF
+          <button className="h-9 px-3 rounded-lg border text-xs flex items-center gap-1.5 hover:bg-[var(--t-hover)]"
+            style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text-60)" }}
+          >
+            <Download className="w-3.5 h-3.5" aria-hidden="true" /> Export PDF
           </button>
           <button className="h-9 px-3 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs flex items-center gap-1.5 font-medium">
             <Plus className="w-3.5 h-3.5" /> New Invoice
@@ -104,9 +108,9 @@ export default function InvoicesPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/5">
+              <tr style={{ borderBottom: "1px solid var(--t-border)" }}>
                 {["Invoice #","Client","Issued","Due Date","Items","Amount","Currency","Status",""].map(h => (
-                  <th key={h} className="text-left text-[11px] font-medium text-white/25 uppercase tracking-wider px-5 py-3">{h}</th>
+                  <th key={h} className="text-left text-[11px] font-medium t-text-30 uppercase tracking-wider px-5 py-3">{h}</th>
                 ))}
               </tr>
             </thead>
@@ -115,36 +119,36 @@ export default function InvoicesPage() {
                 const { label, icon: Icon, cls } = STATUS_CFG[inv.status];
                 const overdue = inv.status === "overdue";
                 return (
-                  <tr key={inv.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors group">
+                  <tr key={inv.id} className="t-hover transition-colors group" style={{ borderBottom: "1px solid var(--t-border)" }}>
                     <td className="px-5 py-3.5">
-                      <span className="font-mono text-xs text-white/60 group-hover:text-violet-400 transition-colors">{inv.id}</span>
+                      <span className="font-mono text-xs t-text-60 group-hover:t-accent-text transition-colors">{inv.id}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white/70 text-xs font-medium">{inv.client}</span>
+                      <span className="t-text-70 text-xs font-medium">{inv.client}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white/40 text-xs">{inv.issuedDate}</span>
+                      <span className="t-text-40 text-xs">{inv.issuedDate}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className={cn("text-xs", overdue ? "text-red-400 font-semibold" : "text-white/40")}>{inv.dueDate}</span>
+                      <span className={cn("text-xs", overdue ? "text-red-400 font-semibold" : "t-text-40")}>{inv.dueDate}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white/40 text-xs">{inv.items} item{inv.items>1?"s":""}</span>
+                      <span className="t-text-40 text-xs">{inv.items} item{inv.items>1?"s":""}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white font-semibold text-sm">{fmt(inv.amount)}</span>
+                      <span className="t-text font-semibold text-sm">{fmt(inv.amount)}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white/30 text-xs font-mono">{inv.currency}</span>
+                      <span className="t-text-30 text-xs font-mono">{inv.currency}</span>
                     </td>
                     <td className="px-5 py-3.5">
                       <Badge className={cn("text-[10px] px-2 border flex items-center gap-1 w-fit", cls)}>
-                        <Icon className="w-2.5 h-2.5" />{label}
+                        <Icon className="w-2.5 h-2.5" aria-hidden="true" />{label}
                       </Badge>
                     </td>
                     <td className="px-3 py-3.5">
-                      <button className="text-white/20 hover:text-white/70 transition-colors">
-                        <MoreHorizontal className="w-4 h-4" />
+                      <button className="t-text-30 hover:t-text-70 transition-colors" aria-label="More actions">
+                        <MoreHorizontal className="w-4 h-4" aria-hidden="true" />
                       </button>
                     </td>
                   </tr>
@@ -154,22 +158,28 @@ export default function InvoicesPage() {
           </table>
         </div>
 
-        <div className="flex items-center justify-between px-5 py-3.5 border-t border-white/5">
-          <span className="text-white/30 text-xs">Showing {Math.min((page-1)*PAGE_SIZE+1, filtered.length)}–{Math.min(page*PAGE_SIZE, filtered.length)} of {filtered.length}</span>
+        <div className="flex items-center justify-between px-5 py-3.5" style={{ borderTop: "1px solid var(--t-border)" }}>
+          <span className="t-text-30 text-xs">Showing {Math.min((page-1)*PAGE_SIZE+1, filtered.length)}–{Math.min(page*PAGE_SIZE, filtered.length)} of {filtered.length}</span>
           <div className="flex items-center gap-1">
             <button onClick={()=>setPage(p=>Math.max(1,p-1))} disabled={page===1}
-              className="w-8 h-8 rounded-lg border border-white/8 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed">
-              <ChevronLeft className="w-3.5 h-3.5" />
+              className="w-8 h-8 rounded-lg border flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[var(--t-hover)]"
+              style={{ borderColor: "var(--t-border-2)", color: "var(--t-text-50)" }}
+            >
+              <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
             {Array.from({length:totalPages},(_,i)=>i+1).map(p => (
               <button key={p} onClick={()=>setPage(p)}
-                className={cn("w-8 h-8 rounded-lg text-xs font-medium", page===p?"bg-violet-600 text-white":"text-white/40 hover:text-white hover:bg-white/5")}>
+                className={cn("w-8 h-8 rounded-lg text-xs font-medium", page===p ? "text-white" : "")}
+                style={page===p ? { backgroundColor: "var(--t-accent)" } : { color: "var(--t-text-50)" }}
+              >
                 {p}
               </button>
             ))}
             <button onClick={()=>setPage(p=>Math.min(totalPages,p+1))} disabled={page===totalPages||totalPages===0}
-              className="w-8 h-8 rounded-lg border border-white/8 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed">
-              <ChevronRight className="w-3.5 h-3.5" />
+              className="w-8 h-8 rounded-lg border flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[var(--t-hover)]"
+              style={{ borderColor: "var(--t-border-2)", color: "var(--t-text-50)" }}
+            >
+              <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
           </div>
         </div>

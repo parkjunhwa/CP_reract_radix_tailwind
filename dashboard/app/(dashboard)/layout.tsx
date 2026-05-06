@@ -30,9 +30,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Sidebar */}
       <div
         role="navigation"
-        aria-label="메인 내비게이션"
+        aria-label="Main navigation"
         className={[
-          "fixed md:relative inset-y-0 left-0 z-50",
+          // Keep sidebar below Radix portals (dropdowns/dialogs use z-50)
+          "fixed md:relative inset-y-0 left-0 z-30",
           "transition-transform duration-300 ease-in-out",
           mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         ].join(" ")}

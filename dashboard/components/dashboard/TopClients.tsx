@@ -7,85 +7,63 @@ import { cn } from "@/lib/utils";
 import { ArrowUpRight, Crown } from "lucide-react";
 
 const tierConfig = {
-  platinum: { label: "Platinum", className: "bg-violet-500/10 text-violet-300 border-violet-500/20" },
-  gold: { label: "Gold", className: "bg-amber-500/10 text-amber-300 border-amber-500/20" },
-  silver: { label: "Silver", className: "bg-white/5 text-white/40 border-white/10" },
+  platinum: { label:"Platinum", cls:"bg-violet-500/10 text-violet-500 border-violet-500/20" },
+  gold:     { label:"Gold",     cls:"bg-amber-500/10 text-amber-500 border-amber-500/20" },
+  silver:   { label:"Silver",  cls:"bg-zinc-500/10 text-zinc-500 border-zinc-500/20" },
 };
 
-const avatarColors = [
-  "from-violet-500 to-purple-700",
-  "from-rose-500 to-pink-700",
-  "from-sky-500 to-blue-700",
-  "from-amber-500 to-orange-700",
-  "from-emerald-500 to-teal-700",
+const AV_COLORS = [
+  "from-violet-500 to-purple-700","from-rose-500 to-pink-700",
+  "from-sky-500 to-blue-700","from-amber-500 to-orange-700","from-emerald-500 to-teal-700",
 ];
 
 export default function TopClients() {
-  const formatCurrency = (v: number) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      maximumFractionDigits: 0,
-      notation: "compact",
-      compactDisplay: "short",
-    }).format(v);
+  const fmt = (v: number) =>
+    new Intl.NumberFormat("en-US", { style:"currency", currency:"USD", notation:"compact", maximumFractionDigits:1 }).format(v);
 
   return (
-    <div className="rounded-xl border border-white/8 bg-[#0d0d18] flex flex-col">
-      <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
+    <section aria-label="Top clients list" className="panel flex flex-col">
+      <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom:"1px solid var(--t-border)" }}>
         <div>
-          <h3 className="text-white font-semibold text-sm">Top Clients</h3>
-          <p className="text-white/30 text-xs mt-0.5">By lifetime value</p>
+          <h2 className="t-text font-semibold text-sm">Top Clients</h2>
+          <p className="t-text-30 text-xs mt-0.5">By lifetime value</p>
         </div>
-        <button className="flex items-center gap-1 text-xs text-violet-400 hover:text-violet-300 transition-colors font-medium">
-          All clients
-          <ArrowUpRight className="w-3 h-3" />
-        </button>
+        <a href="/clients" className="flex items-center gap-1 text-xs t-accent-text hover:opacity-80 font-medium">
+          View all <ArrowUpRight className="w-3 h-3" aria-hidden="true" />
+        </a>
       </div>
 
-      <div className="flex flex-col divide-y divide-white/[0.04]">
+      <ol className="flex flex-col divide-y" style={{ "--tw-divide-opacity":1 } as React.CSSProperties}>
         {topCustomers.map((client, i) => {
-          const { label, className } = tierConfig[client.tier];
+          const { label, cls } = tierConfig[client.tier];
           return (
-            <div
-              key={client.id}
-              className="px-5 py-3.5 flex items-center gap-3 hover:bg-white/[0.02] transition-colors cursor-pointer group"
-            >
+            <li key={client.id} className="px-5 py-3.5 flex items-center gap-3 t-hover transition-colors cursor-pointer group" style={{ borderColor:"var(--t-border)" }}>
               <div className="relative flex-shrink-0">
                 <Avatar className="w-9 h-9">
-                  <AvatarFallback
-                    className={cn(
-                      "bg-gradient-to-br text-white text-xs font-semibold",
-                      avatarColors[i % avatarColors.length]
-                    )}
-                  >
+                  <AvatarFallback className={cn("bg-gradient-to-br text-white text-xs font-semibold", AV_COLORS[i % AV_COLORS.length])}>
                     {client.avatar}
                   </AvatarFallback>
                 </Avatar>
                 {i === 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-500/90 flex items-center justify-center">
-                    <Crown className="w-2.5 h-2.5 text-white" />
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-500 flex items-center justify-center">
+                    <Crown className="w-2.5 h-2.5 text-white" aria-hidden="true" />
                   </span>
                 )}
               </div>
-
               <div className="flex-1 min-w-0">
-                <p className="text-white/80 text-sm font-medium leading-tight truncate group-hover:text-white transition-colors">
+                <p className="t-text-80 text-sm font-medium leading-tight truncate group-hover:t-text transition-colors">
                   {client.name}
                 </p>
-                <p className="text-white/30 text-[11px] truncate mt-0.5">{client.email}</p>
+                <p className="t-text-30 text-[11px] truncate mt-0.5">{client.email}</p>
               </div>
-
               <div className="flex-shrink-0 text-right flex flex-col items-end gap-1">
-                <span className="text-white font-semibold text-sm">{formatCurrency(client.totalSpent)}</span>
-                <Badge className={cn("text-[10px] px-1.5 py-0 border font-medium", className)}>
-                  {label}
-                </Badge>
+                <span className="t-text font-semibold text-sm">{fmt(client.totalSpent)}</span>
+                <Badge className={cn("text-[10px] px-1.5 py-0 border font-medium", cls)}>{label}</Badge>
               </div>
-            </div>
+            </li>
           );
         })}
-      </div>
-    </div>
+      </ol>
+    </section>
   );
 }

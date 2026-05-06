@@ -5,8 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import {
-  Search, Filter, Download, Plus, ChevronLeft, ChevronRight,
-  ArrowUpDown, Eye, MoreHorizontal, CheckCircle2, Clock,
+  Search, Download, Plus, ChevronLeft, ChevronRight,
+  ArrowUpDown, MoreHorizontal, CheckCircle2, Clock,
   XCircle, Loader2,
 } from "lucide-react";
 
@@ -85,27 +85,29 @@ export default function OrdersPage() {
   }), []);
 
   return (
-    <div className="space-y-5 pb-6">
+    <div className="space-y-4 pb-4">
       {/* Stat summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {(["completed","processing","pending","cancelled"] as Status[]).map((s) => {
           const cfg = statusConfig[s];
           const Icon = cfg.icon;
+          const active = statusFilter === s;
           return (
             <button
               key={s}
               onClick={() => { setStatusFilter(statusFilter === s ? "all" : s); setPage(1); }}
               className={cn(
-                "flex items-center gap-3 p-4 rounded-xl border transition-all text-left",
-                statusFilter === s
-                  ? "border-violet-500/40 bg-violet-600/10"
-                  : "border-white/8 bg-[#0d0d18] hover:border-white/15"
+                "panel flex items-center gap-3 p-4 transition-all text-left",
+                active
+                  ? "t-border-2"
+                  : "hover:t-border-2"
               )}
+              style={active ? { boxShadow: "0 0 0 3px var(--t-accent-soft)" } : undefined}
             >
-              <Icon className={cn("w-4 h-4", cfg.cls.split(" ")[1])} />
+              <Icon className={cn("w-4 h-4", cfg.cls.split(" ")[1])} aria-hidden="true" />
               <div>
-                <p className="text-white font-bold text-lg leading-none">{counts[s]}</p>
-                <p className="text-white/40 text-xs mt-0.5 capitalize">{s}</p>
+                <p className="t-text font-bold text-lg leading-none">{counts[s]}</p>
+                <p className="t-text-40 text-xs mt-0.5 capitalize">{s}</p>
               </div>
             </button>
           );
@@ -113,22 +115,26 @@ export default function OrdersPage() {
       </div>
 
       {/* Table card */}
-      <div className="rounded-xl border border-white/8 bg-[#0d0d18]">
+      <div className="panel">
         {/* Toolbar */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-white/5">
-          <div className="flex-1 flex items-center gap-2 h-9 px-3 rounded-lg bg-white/5 border border-white/8">
-            <Search className="w-3.5 h-3.5 text-white/30 flex-shrink-0" />
+        <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
+          <div
+            className="flex-1 flex items-center gap-2 h-9 px-3 rounded-lg border transition-colors"
+            style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}
+          >
+            <Search className="w-3.5 h-3.5 flex-shrink-0 t-text-30" aria-hidden="true" />
             <input
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               placeholder="Search by order ID, client or product…"
-              className="flex-1 bg-transparent text-xs text-white placeholder:text-white/25 outline-none"
+              className="flex-1 bg-transparent text-xs outline-none text-[color:var(--t-text-70)] placeholder:text-[color:var(--t-text-30)]"
             />
           </div>
           <select
             value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value as Status | "all"); setPage(1); }}
-            className="h-9 px-3 rounded-lg bg-white/5 border border-white/8 text-white/60 text-xs outline-none"
+            className="h-9 px-3 rounded-lg border text-xs outline-none transition-colors text-[color:var(--t-text-70)]"
+            style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}
           >
             <option value="all">All status ({counts.all})</option>
             <option value="completed">Completed ({counts.completed})</option>
@@ -136,11 +142,17 @@ export default function OrdersPage() {
             <option value="pending">Pending ({counts.pending})</option>
             <option value="cancelled">Cancelled ({counts.cancelled})</option>
           </select>
-          <button className="h-9 px-3 rounded-lg bg-white/5 border border-white/8 text-white/50 hover:text-white text-xs flex items-center gap-1.5 transition-colors">
-            <Download className="w-3.5 h-3.5" /> Export
+          <button
+            className="h-9 px-3 rounded-lg border text-xs flex items-center gap-1.5 transition-colors hover:opacity-90"
+            style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text-60)" }}
+          >
+            <Download className="w-3.5 h-3.5" aria-hidden="true" /> Export
           </button>
-          <button className="h-9 px-3 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs flex items-center gap-1.5 transition-colors font-medium">
-            <Plus className="w-3.5 h-3.5" /> New Order
+          <button
+            className="h-9 px-3 rounded-lg text-white text-xs flex items-center gap-1.5 transition-colors font-medium"
+            style={{ backgroundColor: "var(--t-accent)" }}
+          >
+            <Plus className="w-3.5 h-3.5" aria-hidden="true" /> New Order
           </button>
         </div>
 
@@ -148,10 +160,10 @@ export default function OrdersPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/5">
+              <tr style={{ borderBottom: "1px solid var(--t-border)" }}>
                 {["Order ID","Client","Product","Category","Amount","Region","Date","Status",""].map((h, i) => (
-                  <th key={i} className="text-left text-[11px] font-medium text-white/25 uppercase tracking-wider px-5 py-3 first:pl-5 last:w-10">
-                    {h && <span className="flex items-center gap-1">{h}{i < 7 && <ArrowUpDown className="w-3 h-3" />}</span>}
+                  <th key={i} className="text-left text-[11px] font-medium t-text-30 uppercase tracking-wider px-5 py-3 first:pl-5 last:w-10">
+                    {h && <span className="flex items-center gap-1">{h}{i < 7 && <ArrowUpDown className="w-3 h-3" aria-hidden="true" />}</span>}
                   </th>
                 ))}
               </tr>
@@ -160,9 +172,15 @@ export default function OrdersPage() {
               {paged.map((order, i) => {
                 const { label, icon: Icon, cls } = statusConfig[order.status];
                 return (
-                  <tr key={order.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors group">
+                  <tr
+                    key={order.id}
+                    className="transition-colors group"
+                    style={{ borderBottom: "1px solid var(--t-border)" }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLTableRowElement).style.backgroundColor = "var(--t-hover)"; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLTableRowElement).style.backgroundColor = "transparent"; }}
+                  >
                     <td className="px-5 py-3.5">
-                      <span className="font-mono text-xs text-white/50 group-hover:text-violet-400 transition-colors">{order.id}</span>
+                      <span className="font-mono text-xs t-text-50 group-hover:t-accent-text transition-colors">{order.id}</span>
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2.5">
@@ -171,32 +189,32 @@ export default function OrdersPage() {
                             {order.avatar}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-white/70 text-xs font-medium truncate max-w-[130px]">{order.customer}</span>
+                        <span className="t-text-70 text-xs font-medium truncate max-w-[130px]">{order.customer}</span>
                       </div>
                     </td>
                     <td className="px-5 py-3.5 max-w-[160px]">
-                      <span className="text-white/60 text-xs truncate block">{order.product}</span>
+                      <span className="t-text-60 text-xs truncate block">{order.product}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white/40 text-xs">{order.category}</span>
+                      <span className="t-text-40 text-xs">{order.category}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white font-semibold text-sm">{fmt(order.amount)}</span>
+                      <span className="t-text font-semibold text-sm">{fmt(order.amount)}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white/40 text-xs">{order.region}</span>
+                      <span className="t-text-40 text-xs">{order.region}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white/40 text-xs">{order.date}</span>
+                      <span className="t-text-40 text-xs">{order.date}</span>
                     </td>
                     <td className="px-5 py-3.5">
                       <Badge className={cn("text-[10px] px-2 py-0.5 font-medium border flex items-center gap-1 w-fit", cls)}>
-                        <Icon className="w-2.5 h-2.5" />{label}
+                        <Icon className="w-2.5 h-2.5" aria-hidden="true" />{label}
                       </Badge>
                     </td>
                     <td className="px-3 py-3.5">
-                      <button className="text-white/20 hover:text-white/70 transition-colors">
-                        <MoreHorizontal className="w-4 h-4" />
+                      <button className="t-text-30 hover:t-text-70 transition-colors" aria-label="More actions">
+                        <MoreHorizontal className="w-4 h-4" aria-hidden="true" />
                       </button>
                     </td>
                   </tr>
@@ -207,17 +225,18 @@ export default function OrdersPage() {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-t border-white/5">
-          <span className="text-white/30 text-xs">
+        <div className="flex items-center justify-between px-5 py-3.5" style={{ borderTop: "1px solid var(--t-border)" }}>
+          <span className="t-text-30 text-xs">
             {filtered.length === 0 ? "No results" : `Showing ${(page-1)*PAGE_SIZE+1}–${Math.min(page*PAGE_SIZE, filtered.length)} of ${filtered.length} orders`}
           </span>
           <div className="flex items-center gap-1">
             <button
               onClick={() => setPage(p => Math.max(1, p-1))}
               disabled={page === 1}
-              className="w-8 h-8 rounded-lg border border-white/8 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="w-8 h-8 rounded-lg border flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              style={{ backgroundColor: "transparent", borderColor: "var(--t-border-2)", color: "var(--t-text-50)" }}
             >
-              <ChevronLeft className="w-3.5 h-3.5" />
+              <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
               <button
@@ -225,8 +244,11 @@ export default function OrdersPage() {
                 onClick={() => setPage(p)}
                 className={cn(
                   "w-8 h-8 rounded-lg text-xs font-medium transition-colors",
-                  page === p ? "bg-violet-600 text-white" : "text-white/40 hover:text-white hover:bg-white/5"
+                  page === p ? "text-white" : ""
                 )}
+                style={page === p
+                  ? { backgroundColor: "var(--t-accent)" }
+                  : { backgroundColor: "transparent", color: "var(--t-text-50)" }}
               >
                 {p}
               </button>
@@ -234,9 +256,10 @@ export default function OrdersPage() {
             <button
               onClick={() => setPage(p => Math.min(totalPages, p+1))}
               disabled={page === totalPages || totalPages === 0}
-              className="w-8 h-8 rounded-lg border border-white/8 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="w-8 h-8 rounded-lg border flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              style={{ backgroundColor: "transparent", borderColor: "var(--t-border-2)", color: "var(--t-text-50)" }}
             >
-              <ChevronRight className="w-3.5 h-3.5" />
+              <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
           </div>
         </div>

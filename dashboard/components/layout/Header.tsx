@@ -6,36 +6,38 @@ import { Bell, Search, ChevronDown, Sun, Moon, Monitor, Menu } from "lucide-reac
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
-  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
+  DropdownMenuGroup, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
+import { getRadixPrimitive } from "@/lib/radix-primitives";
 
 const pageMeta: Record<string, { title: string; sub: string }> = {
   "/":               { title: "Overview",       sub: "Tuesday, May 6, 2026" },
-  "/orders":         { title: "Orders",         sub: "모든 거래 관리 및 추적" },
-  "/products":       { title: "Products",       sub: "카탈로그 및 재고 관리" },
-  "/clients":        { title: "Clients",        sub: "고객 관계 관리" },
-  "/analytics":      { title: "Analytics",      sub: "성과 인사이트 및 트렌드" },
-  "/invoices":       { title: "Invoices",       sub: "청구서 및 인보이스" },
-  "/payments":       { title: "Payments",       sub: "거래 원장" },
-  "/markets":        { title: "Markets",        sub: "지역별 매출 분석" },
-  "/notifications":  { title: "Notifications",  sub: "활동 알림 및 업데이트" },
-  "/settings":       { title: "Settings",       sub: "계정 및 환경설정" },
-  "/help":           { title: "Help & Support", sub: "문서 및 지원 티켓" },
-  "/profile":        { title: "My Profile",     sub: "내 계정 정보" },
+  "/orders":         { title: "Orders",         sub: "Manage and track all transactions" },
+  "/products":       { title: "Products",       sub: "Catalog and inventory management" },
+  "/clients":        { title: "Clients",        sub: "Client relationship management" },
+  "/analytics":      { title: "Analytics",      sub: "Performance insights and trends" },
+  "/invoices":       { title: "Invoices",       sub: "Invoices and billing" },
+  "/payments":       { title: "Payments",       sub: "Payment ledger" },
+  "/markets":        { title: "Markets",        sub: "Regional revenue analysis" },
+  "/notifications":  { title: "Notifications",  sub: "Activity alerts and updates" },
+  "/settings":       { title: "Settings",       sub: "Account and preferences" },
+  "/help":           { title: "Help & Support", sub: "Docs and support tickets" },
+  "/profile":        { title: "My Profile",     sub: "Account overview" },
+  "/radix":          { title: "Radix",          sub: "Primitives playground" },
 };
 
 const THEME_OPTIONS = [
-  { value: "light",  label: "라이트",  icon: Sun },
-  { value: "dark",   label: "다크",    icon: Moon },
-  { value: "system", label: "시스템",  icon: Monitor },
+  { value: "light",  label: "Light",  icon: Sun },
+  { value: "dark",   label: "Dark",   icon: Moon },
+  { value: "system", label: "System", icon: Monitor },
 ] as const;
 
 const PROFILE_MENU = [
-  { label: "내 프로필",  href: "/profile" },
-  { label: "환경설정",  href: "/settings" },
-  { label: "API 키",    href: "/settings?tab=api" },
+  { label: "My profile", href: "/profile" },
+  { label: "Settings",   href: "/settings" },
+  { label: "API keys",   href: "/settings?tab=api" },
 ];
 
 interface HeaderProps { onMenuToggle?: () => void; }
@@ -44,9 +46,18 @@ const iconBtn = "w-9 h-9 flex items-center justify-center rounded-lg transition-
 
 export default function Header({ onMenuToggle }: HeaderProps) {
   const pathname = usePathname();
-  const meta = pageMeta[pathname] ?? { title: "Dashboard", sub: "" };
+  const meta = (() => {
+    if (pathname.startsWith("/radix/")) {
+      const slug = pathname.split("/")[2] ?? "";
+      const p = getRadixPrimitive(slug);
+      return {
+        title: p ? p.title : "Radix",
+        sub: "Radix Primitives playground",
+      };
+    }
+    return pageMeta[pathname] ?? { title: "Dashboard", sub: "" };
+  })();
   const { theme, setTheme } = useTheme();
-
   const ThemeIcon = theme === "light" ? Sun : theme === "system" ? Monitor : Moon;
 
   return (
@@ -59,7 +70,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
       <div className="flex items-center gap-3 min-w-0">
         <button
           type="button"
-          aria-label="사이드바 메뉴 열기"
+          aria-label="Open sidebar menu"
           onClick={onMenuToggle}
           className={cn(iconBtn, "md:hidden")}
           style={{ color: "var(--luxe-text-40)" }}
@@ -85,10 +96,10 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         style={{ backgroundColor: "var(--luxe-accent-2)", borderColor: "var(--luxe-border-2)" }}
       >
         <Search className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" style={{ color: "var(--luxe-text-30)" }} />
-        <span className="text-xs flex-1" style={{ color: "var(--luxe-text-30)" }}>검색 (주문, 상품, 고객…)</span>
+        <span className="text-xs flex-1" style={{ color: "var(--luxe-text-30)" }}>Search (orders, products, clients…)</span>
         <kbd
           className="text-[10px] rounded px-1.5 py-0.5 font-mono border hidden lg:block"
-          aria-label="단축키 Cmd K"
+          aria-label="Shortcut Cmd K"
           style={{ color: "var(--luxe-text-30)", borderColor: "var(--luxe-border-2)", backgroundColor: "var(--luxe-accent-2)" }}
         >⌘K</kbd>
       </div>
@@ -98,11 +109,14 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         {/* Theme toggle */}
         <DropdownMenu>
           <DropdownMenuTrigger
-            aria-label={`현재 테마: ${theme}. 테마 변경`}
+            aria-label={`Current theme: ${theme}. Change theme`}
+            suppressHydrationWarning
             className={cn(iconBtn, "outline-none")}
             style={{ color: "var(--luxe-text-40)" }}
           >
-            <ThemeIcon className="w-4 h-4" aria-hidden="true" />
+            <span suppressHydrationWarning>
+              <ThemeIcon className="w-4 h-4" aria-hidden="true" />
+            </span>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
@@ -110,31 +124,33 @@ export default function Header({ onMenuToggle }: HeaderProps) {
             style={{ backgroundColor: "var(--luxe-surface-2)", borderColor: "var(--luxe-border-2)" }}
             role="menu"
           >
-            <DropdownMenuLabel className="text-xs font-normal" style={{ color: "var(--luxe-text-40)" }}>
-              테마 선택
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator style={{ backgroundColor: "var(--luxe-border)" }} />
-            {THEME_OPTIONS.map(({ value, label, icon: Icon }) => (
-              <DropdownMenuItem
-                key={value}
-                role="menuitemradio"
-                aria-checked={theme === value}
-                onClick={() => setTheme(value)}
-                className={cn("flex items-center gap-2 text-sm cursor-pointer", theme === value ? "bg-[var(--luxe-accent-2)]" : "")}
-                style={{ color: theme === value ? "rgb(196,181,253)" : "var(--luxe-text-60)" }}
-              >
-                <Icon className="w-3.5 h-3.5" aria-hidden="true" />
-                {label}
-                {theme === value && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-violet-400" aria-hidden="true" />}
-              </DropdownMenuItem>
-            ))}
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="text-xs font-normal" style={{ color: "var(--luxe-text-40)" }}>
+                Theme
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator style={{ backgroundColor: "var(--luxe-border)" }} />
+              {THEME_OPTIONS.map(({ value, label, icon: Icon }) => (
+                <DropdownMenuItem
+                  key={value}
+                  role="menuitemradio"
+                  aria-checked={theme === value}
+                  onClick={() => setTheme(value)}
+                  className={cn("flex items-center gap-2 text-sm cursor-pointer", theme === value ? "bg-[var(--luxe-accent-2)]" : "")}
+                  style={{ color: theme === value ? "var(--t-accent-text)" : "var(--luxe-text-60)" }}
+                >
+                  <Icon className="w-3.5 h-3.5" aria-hidden="true" />
+                  {label}
+                  {theme === value && <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--t-accent)" }} aria-hidden="true" />}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
 
         {/* Notification bell → /notifications */}
         <Link
           href="/notifications"
-          aria-label="알림 센터 — 미읽음 5개"
+          aria-label="Notifications — 5 unread"
           className={cn(iconBtn, "relative")}
           style={{ color: "var(--luxe-text-40)" }}
         >
@@ -150,8 +166,8 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         {/* Profile dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger
-            aria-label="계정 메뉴 열기"
-            className="flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[var(--luxe-accent)] hover:bg-white/5"
+            aria-label="Open account menu"
+            className="flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[var(--luxe-accent)] t-hover"
           >
             <Avatar className="w-7 h-7">
               <AvatarFallback className="bg-gradient-to-br from-violet-500 to-purple-700 text-white text-[11px] font-semibold">
@@ -170,24 +186,26 @@ export default function Header({ onMenuToggle }: HeaderProps) {
             style={{ backgroundColor: "var(--luxe-surface-2)", borderColor: "var(--luxe-border-2)" }}
             role="menu"
           >
-            <DropdownMenuLabel className="text-xs font-normal" style={{ color: "var(--luxe-text-50)" }}>
-              내 계정
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator style={{ backgroundColor: "var(--luxe-border)" }} />
-            {PROFILE_MENU.map(({ label, href }) => (
-              <DropdownMenuItem
-                key={href}
-                render={<Link href={href} />}
-                className="cursor-pointer text-sm px-2 py-1.5 hover:bg-white/5 transition-colors rounded-sm"
-                style={{ color: "var(--luxe-text-60)" }}
-              >
-                {label}
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="text-xs font-normal" style={{ color: "var(--luxe-text-50)" }}>
+                Account
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator style={{ backgroundColor: "var(--luxe-border)" }} />
+              {PROFILE_MENU.map(({ label, href }) => (
+                <DropdownMenuItem
+                  key={href}
+                  className="cursor-pointer text-sm px-2 py-1.5 t-hover transition-colors rounded-sm"
+                  style={{ color: "var(--luxe-text-60)" }}
+                  asChild
+                >
+                  <Link href={href}>{label}</Link>
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator style={{ backgroundColor: "var(--luxe-border)" }} />
+              <DropdownMenuItem className="text-red-400 hover:text-red-300 hover:bg-red-500/10 text-sm cursor-pointer">
+                Sign out
               </DropdownMenuItem>
-            ))}
-            <DropdownMenuSeparator style={{ backgroundColor: "var(--luxe-border)" }} />
-            <DropdownMenuItem className="text-red-400 hover:text-red-300 hover:bg-red-500/10 text-sm cursor-pointer">
-              로그아웃
-            </DropdownMenuItem>
+            </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

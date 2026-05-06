@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Search, Plus, Crown, TrendingUp, Users, Star, Mail, Phone, MoreHorizontal, Filter } from "lucide-react";
+import { Search, Plus, Crown, TrendingUp, Users, Star, Mail, Phone, MoreHorizontal } from "lucide-react";
 
 type Tier = "platinum" | "gold" | "silver" | "bronze";
 
@@ -35,7 +35,7 @@ const CLIENTS: Client[] = [
 const TIER_CFG: Record<Tier, { label: string; cls: string; icon?: boolean }> = {
   platinum: { label:"Platinum", cls:"bg-violet-500/10 text-violet-300 border-violet-500/20", icon:true },
   gold:     { label:"Gold",     cls:"bg-amber-500/10 text-amber-300 border-amber-500/20" },
-  silver:   { label:"Silver",  cls:"bg-white/8 text-white/50 border-white/15" },
+  silver:   { label:"Silver",  cls:"bg-[var(--t-input-bg)] t-text-50 border-[color:var(--t-border-2)]" },
   bronze:   { label:"Bronze",  cls:"bg-orange-500/10 text-orange-400 border-orange-500/20" },
 };
 
@@ -59,7 +59,7 @@ export default function ClientsPage() {
   const totalLTV = CLIENTS.reduce((s,c) => s+c.totalSpent, 0);
 
   return (
-    <div className="space-y-5 pb-6">
+    <div className="space-y-4 pb-4">
       {/* KPI row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
@@ -68,31 +68,33 @@ export default function ClientsPage() {
           { label:"Total LTV", value: fmt(totalLTV), sub:"lifetime value", icon: TrendingUp, color:"text-emerald-400" },
           { label:"Active", value: CLIENTS.filter(c=>c.status==="active").length, sub:"last 90 days", icon: Star, color:"text-sky-400" },
         ].map(({ label, value, sub, icon: Icon, color }) => (
-          <div key={label} className="rounded-xl border border-white/8 bg-[#0d0d18] p-4 flex items-center gap-3">
-            <div className={cn("w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0")}>
-              <Icon className={cn("w-4.5 h-4.5", color)} />
+          <div key={label} className="panel p-4 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "var(--t-input-bg)" }}>
+              <Icon className={cn("w-4.5 h-4.5", color)} aria-hidden="true" />
             </div>
             <div>
-              <p className="text-white font-bold text-xl leading-none">{value}</p>
-              <p className="text-white/30 text-xs mt-0.5">{label} · {sub}</p>
+              <p className="t-text font-bold text-xl leading-none">{value}</p>
+              <p className="t-text-30 text-xs mt-0.5">{label} · {sub}</p>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="rounded-xl border border-white/8 bg-[#0d0d18]">
+      <div className="panel">
         {/* Toolbar */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-white/5">
-          <div className="flex items-center gap-2 h-9 px-3 rounded-lg bg-white/5 border border-white/8 flex-1">
-            <Search className="w-3.5 h-3.5 text-white/30" />
+        <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
+          <div className="flex items-center gap-2 h-9 px-3 rounded-lg border flex-1" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
+            <Search className="w-3.5 h-3.5 t-text-30" aria-hidden="true" />
             <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search clients…"
-              className="flex-1 bg-transparent text-xs text-white placeholder:text-white/25 outline-none" />
+              className="flex-1 bg-transparent text-xs outline-none text-[color:var(--t-text-70)] placeholder:text-[color:var(--t-text-30)]" />
           </div>
           <div className="flex gap-1">
             {(["all","platinum","gold","silver","bronze"] as const).map(t => (
               <button key={t} onClick={() => setTierFilter(t)}
                 className={cn("px-3 h-9 rounded-lg text-xs font-medium capitalize transition-colors",
-                  tierFilter === t ? "bg-violet-600 text-white" : "text-white/40 hover:text-white hover:bg-white/5 border border-white/8")}>
+                  tierFilter === t ? "text-white" : "t-text-40 hover:t-text-80 hover:bg-[var(--t-hover)] border")}
+                style={tierFilter === t ? { backgroundColor: "var(--t-accent)" } : { borderColor: "var(--t-border-2)" }}
+              >
                 {t}
               </button>
             ))}
@@ -105,9 +107,9 @@ export default function ClientsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/5">
+              <tr style={{ borderBottom: "1px solid var(--t-border)" }}>
                 {["Client","Contact","Location","Tier","Total Spent","Orders","Avg. Order","Last Order","Status",""].map(h => (
-                  <th key={h} className="text-left text-[11px] font-medium text-white/25 uppercase tracking-wider px-5 py-3">{h}</th>
+                  <th key={h} className="text-left text-[11px] font-medium t-text-30 uppercase tracking-wider px-5 py-3">{h}</th>
                 ))}
               </tr>
             </thead>
@@ -115,7 +117,7 @@ export default function ClientsPage() {
               {filtered.map((c, i) => {
                 const { label, cls, icon } = TIER_CFG[c.tier];
                 return (
-                  <tr key={c.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors group">
+                  <tr key={c.id} className="t-hover transition-colors group" style={{ borderBottom: "1px solid var(--t-border)" }}>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2.5">
                         <div className="relative flex-shrink-0">
@@ -126,55 +128,55 @@ export default function ClientsPage() {
                           </Avatar>
                           {c.tier === "platinum" && (
                             <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-500/90 flex items-center justify-center">
-                              <Crown className="w-2.5 h-2.5 text-white" />
+                              <Crown className="w-2.5 h-2.5 text-white" aria-hidden="true" />
                             </span>
                           )}
                         </div>
                         <div>
-                          <p className="text-white/80 text-xs font-medium group-hover:text-white transition-colors">{c.name}</p>
-                          <p className="text-white/30 text-[11px]">{c.id}</p>
+                          <p className="t-text-80 text-xs font-medium group-hover:t-text transition-colors">{c.name}</p>
+                          <p className="t-text-30 text-[11px]">{c.id}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex flex-col gap-0.5">
-                        <div className="flex items-center gap-1 text-white/40 text-[11px]">
-                          <Mail className="w-3 h-3" />{c.email}
+                        <div className="flex items-center gap-1 t-text-40 text-[11px]">
+                          <Mail className="w-3 h-3" aria-hidden="true" />{c.email}
                         </div>
-                        <div className="flex items-center gap-1 text-white/30 text-[11px]">
-                          <Phone className="w-3 h-3" />{c.phone}
+                        <div className="flex items-center gap-1 t-text-30 text-[11px]">
+                          <Phone className="w-3 h-3" aria-hidden="true" />{c.phone}
                         </div>
                       </div>
                     </td>
                     <td className="px-5 py-3.5">
-                      <p className="text-white/60 text-xs">{c.city}</p>
-                      <p className="text-white/30 text-[11px]">{c.country}</p>
+                      <p className="t-text-60 text-xs">{c.city}</p>
+                      <p className="t-text-30 text-[11px]">{c.country}</p>
                     </td>
                     <td className="px-5 py-3.5">
                       <Badge className={cn("text-[10px] px-2 border flex items-center gap-1 w-fit", cls)}>
-                        {icon && <Crown className="w-2.5 h-2.5" />}{label}
+                        {icon && <Crown className="w-2.5 h-2.5" aria-hidden="true" />}{label}
                       </Badge>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white font-semibold text-sm">{fmtFull(c.totalSpent)}</span>
+                      <span className="t-text font-semibold text-sm">{fmtFull(c.totalSpent)}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white/60 text-sm">{c.orders}</span>
+                      <span className="t-text-60 text-sm">{c.orders}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white/50 text-xs">{fmt(c.avgOrder)}</span>
+                      <span className="t-text-50 text-xs">{fmt(c.avgOrder)}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white/40 text-xs">{c.lastOrder}</span>
+                      <span className="t-text-40 text-xs">{c.lastOrder}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <Badge className={cn("text-[10px] px-2 border", c.status==="active" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-white/5 text-white/30 border-white/10")}>
+                      <Badge className={cn("text-[10px] px-2 border", c.status==="active" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-[var(--t-input-bg)] t-text-40 border-[color:var(--t-border-2)]")}>
                         {c.status}
                       </Badge>
                     </td>
                     <td className="px-3 py-3.5">
-                      <button className="text-white/20 hover:text-white/70 transition-colors">
-                        <MoreHorizontal className="w-4 h-4" />
+                      <button className="t-text-30 hover:t-text-70 transition-colors" aria-label="More actions">
+                        <MoreHorizontal className="w-4 h-4" aria-hidden="true" />
                       </button>
                     </td>
                   </tr>
@@ -183,8 +185,8 @@ export default function ClientsPage() {
             </tbody>
           </table>
         </div>
-        <div className="px-5 py-3 border-t border-white/5">
-          <span className="text-white/30 text-xs">{filtered.length} clients</span>
+        <div className="px-5 py-3" style={{ borderTop: "1px solid var(--t-border)" }}>
+          <span className="t-text-30 text-xs">{filtered.length} clients</span>
         </div>
       </div>
     </div>

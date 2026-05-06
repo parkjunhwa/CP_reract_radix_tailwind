@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
   Search, ChevronDown, ChevronRight, MessageSquare, BookOpen,
-  Video, Mail, Phone, Plus, Send, CheckCircle2, Clock, AlertCircle,
+  Video, Mail, Phone, Send, CheckCircle2, Clock, AlertCircle,
 } from "lucide-react";
 
 const FAQS = [
@@ -50,10 +50,13 @@ export default function HelpPage() {
     }
   };
 
-  const inputCls = "w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder:text-white/25 outline-none focus:border-violet-500/50 transition-colors";
+  const inputCls =
+    "w-full rounded-lg px-3 py-2 text-sm outline-none transition-colors " +
+    "text-[color:var(--t-text-70)] placeholder:text-[color:var(--t-text-30)] " +
+    "border";
 
   return (
-    <div className="space-y-5 pb-6">
+    <div className="space-y-4 pb-4">
       {/* Quick links */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
@@ -62,11 +65,14 @@ export default function HelpPage() {
           { label:"Email Support", desc:"support@luxecommerce.co", icon:Mail, cls:"text-emerald-400" },
           { label:"Phone Support", desc:"+1 800 LUXE 247", icon:Phone, cls:"text-amber-400" },
         ].map(({ label, desc, icon: Icon, cls }) => (
-          <button key={label} className="rounded-xl border border-white/8 bg-[#0d0d18] p-4 flex items-center gap-3 hover:border-white/20 transition-colors text-left">
+          <button
+            key={label}
+            className="panel p-4 flex items-center gap-3 hover:t-border-2 transition-colors text-left"
+          >
             <Icon className={cn("w-5 h-5 flex-shrink-0", cls)} />
             <div>
-              <p className="text-white/80 text-sm font-medium">{label}</p>
-              <p className="text-white/35 text-xs mt-0.5">{desc}</p>
+              <p className="t-text-80 text-sm font-medium">{label}</p>
+              <p className="t-text-40 text-xs mt-0.5">{desc}</p>
             </div>
           </button>
         ))}
@@ -74,29 +80,35 @@ export default function HelpPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
         {/* FAQ */}
-        <div className="lg:col-span-3 rounded-xl border border-white/8 bg-[#0d0d18]">
-          <div className="px-5 py-4 border-b border-white/5">
-            <h3 className="text-white font-semibold text-sm">Frequently Asked Questions</h3>
-            <div className="flex items-center gap-2 mt-3 h-8 px-3 rounded-lg bg-white/5 border border-white/8">
-              <Search className="w-3.5 h-3.5 text-white/30" />
+        <div className="lg:col-span-3 panel">
+          <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
+            <h3 className="t-text font-semibold text-sm">Frequently Asked Questions</h3>
+            <div
+              className="flex items-center gap-2 mt-3 h-8 px-3 rounded-lg border"
+              style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}
+            >
+              <Search className="w-3.5 h-3.5 t-text-30" aria-hidden="true" />
               <input value={faqSearch} onChange={e=>setFaqSearch(e.target.value)} placeholder="Search FAQs…"
-                className="flex-1 bg-transparent text-xs text-white placeholder:text-white/25 outline-none" />
+                className="flex-1 bg-transparent text-xs outline-none text-[color:var(--t-text-70)] placeholder:text-[color:var(--t-text-30)]" />
             </div>
           </div>
-          <div className="divide-y divide-white/[0.04]">
+          <div className="t-divide">
             {filteredFaqs.map((faq, i) => (
               <div key={i}>
                 <button onClick={() => setOpenFaq(openFaq===i ? null : i)}
-                  className="w-full flex items-start justify-between gap-3 px-5 py-4 hover:bg-white/[0.02] transition-colors text-left">
+                  className="w-full flex items-start justify-between gap-3 px-5 py-4 t-hover transition-colors text-left">
                   <div className="flex items-start gap-2">
-                    <Badge className="bg-white/5 text-white/30 border-white/8 text-[10px] mt-0.5 flex-shrink-0">{faq.cat}</Badge>
-                    <span className={cn("text-sm", openFaq===i ? "text-white" : "text-white/70")}>{faq.q}</span>
+                    <Badge className="text-[10px] mt-0.5 flex-shrink-0" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text-40)" }}>{faq.cat}</Badge>
+                    <span className={cn("text-sm", openFaq===i ? "t-text" : "t-text-70")}>{faq.q}</span>
                   </div>
-                  {openFaq===i ? <ChevronDown className="w-4 h-4 text-white/40 flex-shrink-0 mt-0.5" /> : <ChevronRight className="w-4 h-4 text-white/25 flex-shrink-0 mt-0.5" />}
+                  {openFaq===i
+                    ? <ChevronDown className="w-4 h-4 t-text-40 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    : <ChevronRight className="w-4 h-4 t-text-30 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                  }
                 </button>
                 {openFaq===i && (
                   <div className="px-5 pb-4">
-                    <p className="text-white/50 text-sm leading-relaxed pl-16">{faq.a}</p>
+                    <p className="t-text-50 text-sm leading-relaxed pl-16">{faq.a}</p>
                   </div>
                 )}
               </div>
@@ -107,34 +119,40 @@ export default function HelpPage() {
         {/* Right column */}
         <div className="lg:col-span-2 flex flex-col gap-5">
           {/* Submit ticket */}
-          <div className="rounded-xl border border-white/8 bg-[#0d0d18] p-5">
+          <div className="panel p-5">
             <div className="flex items-center gap-2 mb-4">
               <MessageSquare className="w-4 h-4 text-violet-400" />
-              <h3 className="text-white font-semibold text-sm">Submit a Ticket</h3>
+              <h3 className="t-text font-semibold text-sm">Submit a Ticket</h3>
             </div>
             {submitted ? (
               <div className="flex flex-col items-center justify-center py-6 gap-2">
                 <CheckCircle2 className="w-8 h-8 text-emerald-400" />
-                <p className="text-white/70 text-sm font-medium">Ticket submitted!</p>
-                <p className="text-white/35 text-xs">We'll respond within 4 hours.</p>
+                <p className="t-text-70 text-sm font-medium">Ticket submitted!</p>
+                <p className="t-text-40 text-xs">We&apos;ll respond within 4 hours.</p>
               </div>
             ) : (
               <div className="space-y-3">
                 <div>
-                  <label className="text-white/50 text-xs mb-1.5 block">Subject</label>
+                  <label className="t-text-50 text-xs mb-1.5 block">Subject</label>
                   <input value={ticket.subject} onChange={e=>setTicket(t=>({...t,subject:e.target.value}))}
-                    placeholder="Describe the issue briefly" className={inputCls} />
+                    placeholder="Describe the issue briefly" className={inputCls}
+                    style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}
+                  />
                 </div>
                 <div>
-                  <label className="text-white/50 text-xs mb-1.5 block">Description</label>
+                  <label className="t-text-50 text-xs mb-1.5 block">Description</label>
                   <textarea value={ticket.body} onChange={e=>setTicket(t=>({...t,body:e.target.value}))}
                     placeholder="Provide details, order IDs, screenshots…" rows={4}
-                    className={cn(inputCls, "resize-none")} />
+                    className={cn(inputCls, "resize-none")}
+                    style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}
+                  />
                 </div>
                 <div>
-                  <label className="text-white/50 text-xs mb-1.5 block">Priority</label>
+                  <label className="t-text-50 text-xs mb-1.5 block">Priority</label>
                   <select value={ticket.priority} onChange={e=>setTicket(t=>({...t,priority:e.target.value}))}
-                    className={cn(inputCls, "cursor-pointer")}>
+                    className={cn(inputCls, "cursor-pointer")}
+                    style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}
+                  >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
                     <option value="high">High — Urgent</option>
@@ -149,22 +167,22 @@ export default function HelpPage() {
           </div>
 
           {/* Recent tickets */}
-          <div className="rounded-xl border border-white/8 bg-[#0d0d18]">
-            <div className="px-5 py-4 border-b border-white/5">
-              <h3 className="text-white font-semibold text-sm">My Tickets</h3>
+          <div className="panel">
+            <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
+              <h3 className="t-text font-semibold text-sm">My Tickets</h3>
             </div>
-            <div className="divide-y divide-white/[0.04]">
+            <div className="t-divide">
               {TICKETS.map(t => {
                 const { cls, icon: Icon } = STATUS_CFG[t.status];
                 return (
-                  <div key={t.id} className="px-5 py-3.5 hover:bg-white/[0.02] transition-colors cursor-pointer">
+                  <div key={t.id} className="px-5 py-3.5 t-hover transition-colors cursor-pointer">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="text-white/70 text-xs font-medium truncate">{t.subject}</p>
-                        <p className="text-white/25 text-[11px] mt-0.5 font-mono">{t.id} · Updated {t.updated}</p>
+                        <p className="t-text-70 text-xs font-medium truncate">{t.subject}</p>
+                        <p className="t-text-30 text-[11px] mt-0.5 font-mono">{t.id} · Updated {t.updated}</p>
                       </div>
                       <Badge className={cn("text-[10px] px-1.5 border flex items-center gap-1 flex-shrink-0", cls)}>
-                        <Icon className="w-2.5 h-2.5" />{t.status.replace("_"," ")}
+                        <Icon className="w-2.5 h-2.5" aria-hidden="true" />{t.status.replace("_"," ")}
                       </Badge>
                     </div>
                   </div>

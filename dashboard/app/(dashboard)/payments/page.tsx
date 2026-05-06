@@ -67,7 +67,7 @@ export default function PaymentsPage() {
   const totalRefunds = TXS.filter(t=>t.type==="refund").reduce((s,t)=>s+t.amount,0);
 
   return (
-    <div className="space-y-5 pb-6">
+    <div className="space-y-4 pb-4">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label:"Total Received", value:fmt(totalCredits), icon:DollarSign, cls:"text-emerald-400" },
@@ -75,45 +75,49 @@ export default function PaymentsPage() {
           { label:"Refunds Issued", value:fmt(totalRefunds), icon:RefreshCcw,  cls:"text-amber-400" },
           { label:"Net Volume",     value:fmt(totalCredits-totalDebits-totalRefunds), icon:ArrowDownLeft, cls:"text-violet-400" },
         ].map(({ label, value, icon: Icon, cls }) => (
-          <div key={label} className="rounded-xl border border-white/8 bg-[#0d0d18] p-4 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0">
-              <Icon className={cn("w-4.5 h-4.5", cls)} />
+          <div key={label} className="panel p-4 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "var(--t-input-bg)" }}>
+              <Icon className={cn("w-4.5 h-4.5", cls)} aria-hidden="true" />
             </div>
             <div>
               <p className={cn("font-bold text-lg", cls)}>{value}</p>
-              <p className="text-white/30 text-xs">{label}</p>
+              <p className="t-text-30 text-xs">{label}</p>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="rounded-xl border border-white/8 bg-[#0d0d18]">
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-white/5">
-          <div className="flex items-center gap-2 h-9 px-3 rounded-lg bg-white/5 border border-white/8 flex-1">
-            <Search className="w-3.5 h-3.5 text-white/30" />
+      <div className="panel">
+        <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
+          <div className="flex items-center gap-2 h-9 px-3 rounded-lg border flex-1" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
+            <Search className="w-3.5 h-3.5 t-text-30" aria-hidden="true" />
             <input value={search} onChange={e=>{setSearch(e.target.value);setPage(1);}} placeholder="Search transactions…"
-              className="flex-1 bg-transparent text-xs text-white placeholder:text-white/25 outline-none" />
+              className="flex-1 bg-transparent text-xs outline-none text-[color:var(--t-text-70)] placeholder:text-[color:var(--t-text-30)]" />
           </div>
           <div className="flex gap-1">
             {(["all","credit","debit","refund"] as const).map(t => (
               <button key={t} onClick={()=>{setTypeFilter(t);setPage(1);}}
                 className={cn("px-3 h-9 rounded-lg text-xs font-medium capitalize transition-colors",
-                  typeFilter===t?"bg-violet-600 text-white":"text-white/40 hover:text-white hover:bg-white/5 border border-white/8")}>
+                  typeFilter===t ? "text-white" : "t-text-40 hover:t-text-80 hover:bg-[var(--t-hover)] border")}
+                style={typeFilter===t ? { backgroundColor: "var(--t-accent)" } : { borderColor: "var(--t-border-2)" }}
+              >
                 {t}
               </button>
             ))}
           </div>
-          <button className="h-9 px-3 rounded-lg bg-white/5 border border-white/8 text-white/50 hover:text-white text-xs flex items-center gap-1.5">
-            <Download className="w-3.5 h-3.5" /> Export
+          <button className="h-9 px-3 rounded-lg border text-xs flex items-center gap-1.5 hover:bg-[var(--t-hover)]"
+            style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text-60)" }}
+          >
+            <Download className="w-3.5 h-3.5" aria-hidden="true" /> Export
           </button>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/5">
+              <tr style={{ borderBottom: "1px solid var(--t-border)" }}>
                 {["Txn ID","Date / Time","Client","Description","Method","Amount","Status",""].map(h => (
-                  <th key={h} className="text-left text-[11px] font-medium text-white/25 uppercase tracking-wider px-5 py-3">{h}</th>
+                  <th key={h} className="text-left text-[11px] font-medium t-text-30 uppercase tracking-wider px-5 py-3">{h}</th>
                 ))}
               </tr>
             </thead>
@@ -121,26 +125,26 @@ export default function PaymentsPage() {
               {paged.map(tx => {
                 const { icon: Icon, cls, sign } = TYPE_CFG[tx.type];
                 return (
-                  <tr key={tx.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
+                  <tr key={tx.id} className="t-hover transition-colors" style={{ borderBottom: "1px solid var(--t-border)" }}>
                     <td className="px-5 py-3.5">
-                      <span className="font-mono text-[11px] text-white/50">{tx.id}</span>
+                      <span className="font-mono text-[11px] t-text-50">{tx.id}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <p className="text-white/60 text-xs">{tx.date}</p>
-                      <p className="text-white/30 text-[11px]">{tx.time}</p>
+                      <p className="t-text-60 text-xs">{tx.date}</p>
+                      <p className="t-text-30 text-[11px]">{tx.time}</p>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white/70 text-xs">{tx.client}</span>
+                      <span className="t-text-70 text-xs">{tx.client}</span>
                     </td>
                     <td className="px-5 py-3.5 max-w-[200px]">
-                      <span className="text-white/50 text-xs truncate block">{tx.description}</span>
+                      <span className="t-text-50 text-xs truncate block">{tx.description}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-white/40 text-xs">{tx.method}</span>
+                      <span className="t-text-40 text-xs">{tx.method}</span>
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-1.5">
-                        <Icon className={cn("w-3.5 h-3.5", cls)} />
+                        <Icon className={cn("w-3.5 h-3.5", cls)} aria-hidden="true" />
                         <span className={cn("font-semibold text-sm", cls)}>{sign}{fmt(tx.amount)}</span>
                       </div>
                     </td>
@@ -148,8 +152,8 @@ export default function PaymentsPage() {
                       <Badge className={cn("text-[10px] px-2 border capitalize", STATUS_CFG[tx.status].cls)}>{tx.status}</Badge>
                     </td>
                     <td className="px-3 py-3.5">
-                      <button className="text-white/20 hover:text-white/70 transition-colors">
-                        <MoreHorizontal className="w-4 h-4" />
+                      <button className="t-text-30 hover:t-text-70 transition-colors" aria-label="More actions">
+                        <MoreHorizontal className="w-4 h-4" aria-hidden="true" />
                       </button>
                     </td>
                   </tr>
@@ -159,14 +163,35 @@ export default function PaymentsPage() {
           </table>
         </div>
 
-        <div className="flex items-center justify-between px-5 py-3.5 border-t border-white/5">
-          <span className="text-white/30 text-xs">Showing {Math.min((page-1)*PAGE_SIZE+1, filtered.length)}–{Math.min(page*PAGE_SIZE, filtered.length)} of {filtered.length}</span>
+        <div className="flex items-center justify-between px-5 py-3.5" style={{ borderTop: "1px solid var(--t-border)" }}>
+          <span className="t-text-30 text-xs">Showing {Math.min((page-1)*PAGE_SIZE+1, filtered.length)}–{Math.min(page*PAGE_SIZE, filtered.length)} of {filtered.length}</span>
           <div className="flex items-center gap-1">
-            <button onClick={()=>setPage(p=>Math.max(1,p-1))} disabled={page===1} className="w-8 h-8 rounded-lg border border-white/8 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed"><ChevronLeft className="w-3.5 h-3.5" /></button>
+            <button
+              onClick={()=>setPage(p=>Math.max(1,p-1))}
+              disabled={page===1}
+              className="w-8 h-8 rounded-lg border flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[var(--t-hover)]"
+              style={{ borderColor: "var(--t-border-2)", color: "var(--t-text-50)" }}
+            >
+              <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
+            </button>
             {Array.from({length:totalPages},(_,i)=>i+1).map(p=>(
-              <button key={p} onClick={()=>setPage(p)} className={cn("w-8 h-8 rounded-lg text-xs font-medium",page===p?"bg-violet-600 text-white":"text-white/40 hover:text-white hover:bg-white/5")}>{p}</button>
+              <button
+                key={p}
+                onClick={()=>setPage(p)}
+                className={cn("w-8 h-8 rounded-lg text-xs font-medium", page===p ? "text-white" : "")}
+                style={page===p ? { backgroundColor: "var(--t-accent)" } : { color: "var(--t-text-50)" }}
+              >
+                {p}
+              </button>
             ))}
-            <button onClick={()=>setPage(p=>Math.min(totalPages,p+1))} disabled={page===totalPages||totalPages===0} className="w-8 h-8 rounded-lg border border-white/8 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed"><ChevronRight className="w-3.5 h-3.5" /></button>
+            <button
+              onClick={()=>setPage(p=>Math.min(totalPages,p+1))}
+              disabled={page===totalPages||totalPages===0}
+              className="w-8 h-8 rounded-lg border flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[var(--t-hover)]"
+              style={{ borderColor: "var(--t-border-2)", color: "var(--t-text-50)" }}
+            >
+              <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
+            </button>
           </div>
         </div>
       </div>

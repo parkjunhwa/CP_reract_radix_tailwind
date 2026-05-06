@@ -25,11 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${geistSans.variable} ${geistMono.variable} dark`}>
-      <body className="antialiased bg-[#080810] dark:bg-[#080810]">
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
+      <body className="antialiased">
         <ThemeProvider>
           <TooltipProvider>
-            <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
+            <a href="#main-content" className="skip-link">Skip to content</a>
             {children}
           </TooltipProvider>
         </ThemeProvider>
