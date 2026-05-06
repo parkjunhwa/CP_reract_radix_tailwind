@@ -117,17 +117,84 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Light mode custom overrides */
+.light {
+  --luxe-bg:      #f4f4f8;
+  --luxe-surface: #ffffff;
+  --luxe-border:  rgba(0, 0, 0, 0.07);
+  --luxe-sidebar-bg: #ffffff;
+}
+.dark, :root {
+  --luxe-bg:      #080810;
+  --luxe-surface: #0d0d18;
+  --luxe-border:  rgba(255, 255, 255, 0.05);
+  --luxe-sidebar-bg: #0a0a0f;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+    background-color: var(--luxe-bg);
   }
   html {
     @apply font-sans;
   }
+
+  /* Focus visible — accessible ring */
+  :focus-visible {
+    outline: 2px solid #7c3aed;
+    outline-offset: 2px;
+  }
+
+  /* Skip-to-content */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 1rem;
+    z-index: 9999;
+    padding: 0.5rem 1rem;
+    background: #7c3aed;
+    color: #fff;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .skip-link:focus {
+    left: 1rem;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
+
+/* Light-mode surface overrides */
+.light body,
+.light [class*="bg-\[#080810\]"] { background-color: var(--luxe-bg) !important; }
+.light [class*="bg-\[#0d0d18\]"],
+.light [class*="bg-\[#0a0a0f\]"] { background-color: var(--luxe-surface) !important; }
+.light [class*="bg-\[#13131f\]"]  { background-color: #f0f0f8 !important; }
+.light [class*="border-white\/"] { border-color: rgba(0,0,0,0.1) !important; }
+.light [class*="text-white\/"] {
+  --tw-text-opacity: 1;
+}
+.light .text-white    { color: #0f0f1a !important; }
+.light .text-white\/80{ color: #1a1a2e !important; }
+.light .text-white\/70{ color: #2a2a3e !important; }
+.light .text-white\/60{ color: #3a3a4e !important; }
+.light .text-white\/50{ color: #4a4a5e !important; }
+.light .text-white\/40{ color: #6a6a7e !important; }
+.light .text-white\/30{ color: #8a8a9e !important; }
+.light .text-white\/25{ color: #9a9aae !important; }
+.light .text-white\/20{ color: #aaaaae !important; }
 
 /* Progress bar color override */
 [role="progressbar"] > div {
@@ -135,17 +202,9 @@
 }
 
 /* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+.light ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); }
+.light ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.2); }

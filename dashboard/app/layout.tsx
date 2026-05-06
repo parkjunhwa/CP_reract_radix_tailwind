@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "@/lib/theme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,9 +25,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} dark`}>
-      <body className="antialiased bg-[#080810]">
-        <TooltipProvider>{children}</TooltipProvider>
+    <html lang="ko" className={`${geistSans.variable} ${geistMono.variable} dark`}>
+      <body className="antialiased bg-[#080810] dark:bg-[#080810]">
+        <ThemeProvider>
+          <TooltipProvider>
+            <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
+            {children}
+          </TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
