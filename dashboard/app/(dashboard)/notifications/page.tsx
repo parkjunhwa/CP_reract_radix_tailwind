@@ -1,141 +1,48 @@
 "use client";
-
 import { useState } from "react";
+import { Bell, Check, Trash2 } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import {
-  ShoppingBag, UserPlus, AlertTriangle, CheckCircle2,
-  Globe, TrendingUp, BellOff, Trash2, CheckCheck,
-} from "lucide-react";
-
-type NType = "order" | "client" | "alert" | "payment" | "system" | "market";
-
-interface Notification {
-  id: string; type: NType; title: string; body: string;
-  time: string; read: boolean; priority: "high" | "medium" | "low";
-}
-
-const INITIAL: Notification[] = [
-  { id:"N-001", type:"order",  title:"New high-value order", body:"ORD-7821 · James Worthington · Patek Philippe Nautilus 5711 · $142,000", time:"2 min ago", read:false, priority:"high" },
-  { id:"N-002", type:"alert",  title:"Low inventory warning", body:"Hermès Birkin 35 Crocodile — only 1 unit remaining in stock", time:"18 min ago", read:false, priority:"high" },
-  { id:"N-003", type:"client", title:"New Platinum client", body:"Mei Lin Zhang has been upgraded to Platinum tier (LTV: $1.85M)", time:"34 min ago", read:false, priority:"medium" },
-  { id:"N-004", type:"payment",title:"Payment confirmed", body:"ORD-7819 · Richard Mille RM 011 · $215,000 wire transfer settled", time:"1h ago", read:false, priority:"medium" },
-  { id:"N-005", type:"order",  title:"Order cancelled", body:"ORD-7815 · Elena Petrov · Vintage Bordeaux · $28,500 — client requested cancellation", time:"2h ago", read:false, priority:"medium" },
-  { id:"N-006", type:"market", title:"New market activated", body:"Middle East region is now live — 3 countries, 2 logistics partners onboarded", time:"3h ago", read:true, priority:"low" },
-  { id:"N-007", type:"system", title:"Monthly target exceeded", body:"April 2026 revenue hit $8.1M — 8% above the $7.5M target. Congratulations!", time:"5h ago", read:true, priority:"low" },
-  { id:"N-008", type:"alert",  title:"Overdue invoice", body:"INV-2026-0139 · Sofia Marchetti · €89,500 — 5 days overdue", time:"6h ago", read:true, priority:"high" },
-  { id:"N-009", type:"client", title:"New client registration", body:"Amara Osei from Lagos, Nigeria joined — first order pending verification", time:"8h ago", read:true, priority:"low" },
-  { id:"N-010", type:"system", title:"Scheduled maintenance", body:"Platform maintenance window: May 10, 02:00–04:00 UTC. No downtime expected.", time:"1d ago", read:true, priority:"low" },
-  { id:"N-011", type:"payment",title:"Failed payment attempt", body:"ORD-7808 · Giovanni Esposito · €75,000 bank transfer declined by issuing bank", time:"1d ago", read:true, priority:"high" },
-  { id:"N-012", type:"order",  title:"Large order processing", body:"ORD-7812 · William Hargreaves · Bugatti Sculpture · $485,000 — awaiting authentication", time:"2d ago", read:true, priority:"medium" },
+const NOTES = [
+  {id:1,avatar:"CF",color:"from-violet-500 to-purple-700",title:"Congratulations Flora 🎉",sub:"Won the monthly bestseller gold badge",time:"1h ago",read:false,type:"award"},
+  {id:2,avatar:"CB",color:"from-sky-500 to-blue-700",title:"Cecilia Becker",sub:"Accepted your connection request",time:"12h ago",read:false,type:"social"},
+  {id:3,avatar:"BW",color:"from-emerald-500 to-teal-700",title:"New message from Bernard Woods",sub:"You have new message from Bernard Woods",time:"May 18, 8:26 AM",read:true,type:"message"},
+  {id:4,avatar:"MR",color:"from-amber-500 to-orange-700",title:"Monthly Report Generated",sub:"July month financial report is generated",time:"Apr 24, 10:30 AM",read:true,type:"report"},
+  {id:5,avatar:"GA",color:"from-rose-500 to-pink-700",title:"Application Approved 🚀",sub:"Your Meta Gadgets project application has been approved",time:"Feb 17, 12:17 PM",read:true,type:"system"},
+  {id:6,avatar:"HM",color:"from-teal-500 to-cyan-700",title:"New message from Harry",sub:"You have new message from Harry",time:"Jan 6, 1:48 PM",read:true,type:"message"},
 ];
-
-const TYPE_CFG: Record<NType, { icon:React.ElementType; cls:string }> = {
-  order:   { icon:ShoppingBag,  cls:"bg-violet-500/15 text-violet-400" },
-  client:  { icon:UserPlus,     cls:"bg-sky-500/15 text-sky-400" },
-  alert:   { icon:AlertTriangle,cls:"bg-amber-500/15 text-amber-400" },
-  payment: { icon:CheckCircle2, cls:"bg-emerald-500/15 text-emerald-400" },
-  system:  { icon:Globe,        cls:"bg-[var(--t-input-bg)] t-text-40" },
-  market:  { icon:TrendingUp,   cls:"bg-fuchsia-500/15 text-fuchsia-400" },
-};
-const PRIORITY_CFG = {
-  high:   "bg-red-500/10 text-red-400 border-red-500/20",
-  medium: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  low:    "bg-[var(--t-input-bg)] t-text-40 border-[color:var(--t-border-2)]",
-};
-
+const TYPE_BADGE: Record<string,string> = { award:"bg-amber-500/10 text-amber-400 border-amber-500/20", social:"bg-sky-500/10 text-sky-400 border-sky-500/20", message:"bg-violet-500/10 text-violet-400 border-violet-500/20", report:"bg-emerald-500/10 text-emerald-400 border-emerald-500/20", system:"bg-rose-500/10 text-rose-400 border-rose-500/20" };
 export default function NotificationsPage() {
-  const [notifs, setNotifs] = useState(INITIAL);
-  const [filter, setFilter] = useState<"all" | "unread" | NType>("all");
-
-  const filtered = notifs.filter(n => {
-    if (filter === "unread") return !n.read;
-    if (filter !== "all") return n.type === filter;
-    return true;
-  });
-
-  const unreadCount = notifs.filter(n => !n.read).length;
-
-  const markAll = () => setNotifs(ns => ns.map(n => ({ ...n, read:true })));
-  const markOne = (id: string) => setNotifs(ns => ns.map(n => n.id===id ? { ...n, read:true } : n));
-  const deleteOne = (id: string) => setNotifs(ns => ns.filter(n => n.id !== id));
-
+  const [notes, setNotes] = useState(NOTES);
+  const unread = notes.filter(n=>!n.read).length;
   return (
-    <div className="space-y-4 pb-4">
-      {/* Header bar */}
+    <div className="space-y-4 pb-4 max-w-2xl">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          {(["all","unread","order","client","alert","payment","system","market"] as const).map(f => (
-            <button key={f} onClick={() => setFilter(f)}
-              className={cn("px-3 h-8 rounded-lg text-xs font-medium capitalize transition-colors",
-                filter===f
-                  ? "text-white"
-                  : "t-text-40 hover:t-text-80 hover:bg-[var(--t-hover)] border")
-              }
-              style={filter===f ? { backgroundColor: "var(--t-accent)" } : { borderColor: "var(--t-border-2)" }}
-            >
-              {f}{f==="unread" && unreadCount > 0 && <span className="ml-1.5 bg-violet-400/20 text-violet-300 text-[10px] px-1.5 rounded-full">{unreadCount}</span>}
-            </button>
-          ))}
-        </div>
-        {unreadCount > 0 && (
-          <button onClick={markAll} className="flex items-center gap-1.5 text-xs text-violet-400 hover:text-violet-300 transition-colors">
-            <CheckCheck className="w-3.5 h-3.5" /> Mark all read
-          </button>
-        )}
+        <div className="flex items-center gap-2"><Bell className="w-5 h-5 t-text-50"/><h2 className="t-text font-semibold text-sm">Notifications</h2>{unread>0&&<Badge className="text-[10px] px-1.5 h-4 border" style={{backgroundColor:"var(--t-accent-soft)",borderColor:"var(--t-border-2)",color:"var(--t-accent-text)"}}>{unread} unread</Badge>}</div>
+        <button onClick={()=>setNotes(n=>n.map(x=>({...x,read:true})))} className="text-xs t-text-40 hover:t-text-70 transition-colors">Mark all as read</button>
       </div>
-
-      {/* Notification list */}
-      <div className="panel t-divide">
-        {filtered.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 gap-3">
-            <BellOff className="w-8 h-8 t-text-20" aria-hidden="true" />
-            <p className="t-text-30 text-sm">No notifications</p>
-          </div>
-        )}
-        {filtered.map(n => {
-          const { icon: Icon, cls } = TYPE_CFG[n.type];
-          return (
-            <div
-              key={n.id}
-              className={cn(
-                "flex items-start gap-4 px-5 py-4 t-hover transition-colors group",
-                !n.read && "bg-[var(--t-accent-soft)]"
-              )}
-            >
-              {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-violet-500 flex-shrink-0 mt-2" />}
-              {n.read && <span className="w-1.5 h-1.5 flex-shrink-0" />}
-              <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0", cls)}>
-                <Icon className="w-4.5 h-4.5" aria-hidden="true" />
+      <div className="panel divide-y" style={{borderColor:"var(--t-border)"}}>
+        {notes.map(n=>(
+          <div key={n.id} className={cn("flex items-start gap-3 px-5 py-4 transition-colors",!n.read&&"bg-[var(--luxe-accent-2)]","hover:bg-[var(--t-hover)]")}>
+            <Avatar className="w-9 h-9 flex-shrink-0"><AvatarFallback className={cn("bg-gradient-to-br text-white text-[10px] font-bold",n.color)}>{n.avatar}</AvatarFallback></Avatar>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-start justify-between gap-2">
+                <p className={cn("text-xs leading-snug",n.read?"t-text-60":"t-text-80 font-medium")}>{n.title}</p>
+                <span className="t-text-30 text-[10px] flex-shrink-0">{n.time}</span>
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <p className={cn("text-sm font-medium", n.read ? "t-text-60" : "t-text")}>{n.title}</p>
-                    <p className="t-text-40 text-xs mt-0.5 leading-relaxed">{n.body}</p>
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <Badge className={cn("text-[10px] px-1.5 border", PRIORITY_CFG[n.priority])}>{n.priority}</Badge>
-                    <span className="t-text-30 text-[11px]">{n.time}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                {!n.read && (
-                  <button onClick={() => markOne(n.id)} title="Mark as read"
-                    className="w-7 h-7 rounded-lg hover:bg-[var(--t-hover)] flex items-center justify-center t-text-30 hover:t-text transition-colors"
-                  >
-                    <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
-                  </button>
-                )}
-                <button onClick={() => deleteOne(n.id)} title="Delete"
-                  className="w-7 h-7 rounded-lg hover:bg-red-500/10 flex items-center justify-center t-text-30 hover:text-red-400 transition-colors">
-                  <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
-                </button>
+              <p className="t-text-40 text-[10px] mt-0.5">{n.sub}</p>
+              <div className="flex items-center gap-2 mt-1.5">
+                <Badge className={cn("text-[9px] px-1.5 border capitalize",TYPE_BADGE[n.type]||"")}>{n.type}</Badge>
               </div>
             </div>
-          );
-        })}
+            <div className="flex items-center gap-1 flex-shrink-0">
+              {!n.read&&<button onClick={()=>setNotes(ns=>ns.map(x=>x.id===n.id?{...x,read:true}:x))} className="p-1 rounded t-text-30 hover:text-emerald-400 transition-colors" title="Mark as read"><Check className="w-3.5 h-3.5"/></button>}
+              <button onClick={()=>setNotes(ns=>ns.filter(x=>x.id!==n.id))} className="p-1 rounded t-text-30 hover:text-red-400 transition-colors" title="Delete"><Trash2 className="w-3.5 h-3.5"/></button>
+            </div>
+          </div>
+        ))}
+        {notes.length===0&&<div className="py-12 text-center"><Bell className="w-10 h-10 mx-auto mb-3 t-text-20"/><p className="t-text-40 text-sm">No notifications</p></div>}
       </div>
     </div>
   );
