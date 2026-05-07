@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { Diamond } from "lucide-react";
+import * as Form from "@radix-ui/react-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 function pad(n: number) { return String(n).padStart(2, "0"); }
 
@@ -30,22 +33,39 @@ export default function ComingSoonPage() {
         <p className="t-text-40 text-sm max-w-md mx-auto">We are working hard to bring you something amazing. Stay tuned!</p>
       </div>
       {/* Countdown */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         {[["Days", diff.d], ["Hours", diff.h], ["Minutes", diff.m], ["Seconds", diff.s]].map(([label, val]) => (
-          <div key={label as string} className="panel p-4 w-20 text-center">
+          <div key={label as string} className="panel p-4 w-30 text-center">
             <p className="t-text font-bold text-3xl tabular-nums">{pad(val as number)}</p>
             <p className="t-text-30 text-[10px] uppercase tracking-wider mt-1">{label}</p>
           </div>
         ))}
       </div>
       {/* Subscribe */}
-      <div className="flex gap-2 max-w-sm w-full">
-        <input placeholder="Enter your email…"
-          className="flex-1 h-10 px-4 rounded-lg border text-sm outline-none t-text-70 placeholder:t-text-30 focus:border-[var(--t-accent)] transition-colors"
-          style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }} />
-        <button className="h-10 px-4 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-colors whitespace-nowrap"
-          style={{ backgroundColor: "var(--t-accent)" }}>Notify Me</button>
-      </div>
+      <Form.Root className="flex gap-2 max-w-sm w-full">
+        <Form.Field name="email" className="flex-1">
+          <Form.Label className="sr-only">Email</Form.Label>
+          <Form.Control asChild>
+            <Input
+              type="email"
+              required
+              placeholder="Enter your email…"
+              aria-label="Email"
+              className="h-10 text-sm t-text-70 placeholder:t-text-30"
+            />
+          </Form.Control>
+        </Form.Field>
+        <Form.Submit asChild>
+          <Button
+            type="submit"
+            size="lg"
+            className="text-white border-0 hover:opacity-90"
+            style={{ backgroundColor: "var(--t-accent)" }}
+          >
+            Notify Me
+          </Button>
+        </Form.Submit>
+      </Form.Root>
     </div>
   );
 }

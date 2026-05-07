@@ -4,6 +4,9 @@ import { useState } from "react";
 import { AlertTriangle, Info, CheckCircle2, Trash2 } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
+import * as Form from "@radix-ui/react-form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 function BasicDialog() {
@@ -19,22 +22,28 @@ function BasicDialog() {
         <Dialog.Content className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 w-full max-w-md rounded-xl p-6 shadow-2xl" style={{ backgroundColor: "var(--luxe-sidebar-2)", border: "1px solid var(--t-border-2)" }}>
           <Dialog.Title className="t-text font-semibold text-base mb-1">Edit Profile</Dialog.Title>
           <Dialog.Description className="t-text-40 text-xs mb-5">Update your account information below.</Dialog.Description>
-          <div className="space-y-3">
+          <Form.Root className="space-y-3">
             {[["Full Name", "James Worthington"], ["Email", "j.worthington@luxe.com"], ["Phone", "+1 (212) 555-0100"]].map(([label, val]) => (
-              <div key={label} className="space-y-1">
-                <label className="t-text-40 text-xs">{label}</label>
-                <input defaultValue={val} className="w-full h-9 px-3 rounded-lg border text-xs t-text-70 outline-none focus:border-[var(--t-accent)]" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }} />
-              </div>
+              <Form.Field key={label} name={label!.toLowerCase().replace(/\W+/g, "_")} className="space-y-1">
+                <Form.Label asChild>
+                  <Label className="t-text-40 text-xs font-normal">{label}</Label>
+                </Form.Label>
+                <Form.Control asChild>
+                  <Input defaultValue={val} className="h-9 text-xs t-text-70" />
+                </Form.Control>
+              </Form.Field>
             ))}
-          </div>
-          <div className="flex justify-end gap-2 mt-5">
-            <Dialog.Close asChild>
-              <button className="h-9 px-4 rounded-lg border text-xs font-medium t-text-60 hover:bg-[var(--t-hover)] transition-colors" style={{ borderColor: "var(--t-border-2)" }}>Cancel</button>
-            </Dialog.Close>
-            <Dialog.Close asChild>
-              <button className="h-9 px-4 rounded-lg text-white text-xs font-medium hover:opacity-90" style={{ backgroundColor: "var(--t-accent)" }}>Save Changes</button>
-            </Dialog.Close>
-          </div>
+            <div className="flex justify-end gap-2 mt-5">
+              <Dialog.Close asChild>
+                <button type="button" className="h-9 px-4 rounded-lg border text-xs font-medium t-text-60 hover:bg-[var(--t-hover)] transition-colors" style={{ borderColor: "var(--t-border-2)" }}>Cancel</button>
+              </Dialog.Close>
+              <Dialog.Close asChild>
+                <Form.Submit asChild>
+                  <button className="h-9 px-4 rounded-lg text-white text-xs font-medium hover:opacity-90" style={{ backgroundColor: "var(--t-accent)" }}>Save Changes</button>
+                </Form.Submit>
+              </Dialog.Close>
+            </div>
+          </Form.Root>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
@@ -120,12 +129,8 @@ const examples = [
 
 export default function DialogExamplesPage() {
   return (
-    <div className="space-y-4 pb-4 max-w-3xl">
-      <div className="panel p-5">
-        <h2 className="t-text font-semibold text-sm mb-1">Dialog Examples</h2>
-        <p className="t-text-40 text-xs">Interactive dialog components built with Radix UI primitives.</p>
-      </div>
-      <div className="space-y-4">
+    <div className="space-y-3 pb-0">
+      <div className="space-y-3">
         {examples.map((ex) => (
           <div key={ex.title} className="panel p-5 space-y-3">
             <div>

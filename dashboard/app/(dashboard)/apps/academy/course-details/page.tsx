@@ -36,7 +36,7 @@ export default function CourseDetailsPage() {
   const progress = Math.round((doneLessons / totalLessons) * 100);
 
   return (
-    <div className="space-y-4 pb-4">
+    <div className="space-y-3 pb-0">
       {/* Hero */}
       <div className="panel p-6">
         <div className="flex flex-col md:flex-row gap-6">
@@ -58,7 +58,7 @@ export default function CourseDetailsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
         {/* Curriculum */}
         <div className="xl:col-span-2 space-y-3">
           <div className="panel p-5">
@@ -67,7 +67,7 @@ export default function CourseDetailsPage() {
               <span className="t-text-40 text-xs">{doneLessons}/{totalLessons} completed</span>
             </div>
             <Progress value={progress} className="h-1.5 mb-4" />
-            <div className="space-y-4">
+            <div className="space-y-3">
               {curriculum.map((mod, mi) => (
                 <div key={mi}>
                   <h3 className="t-text-60 text-xs font-semibold mb-2">{mod.section}</h3>
@@ -94,9 +94,9 @@ export default function CourseDetailsPage() {
         </div>
 
         {/* Sidebar info */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {/* Progress card */}
-          <div className="panel p-5 space-y-4">
+          <div className="panel p-5 space-y-3">
             <h3 className="t-text font-semibold text-sm">Your Progress</h3>
             <div className="text-center">
               <p className="t-text font-bold text-4xl">{progress}%</p>
@@ -129,7 +129,7 @@ export default function CourseDetailsPage() {
                 <p className="t-text-40 text-xs">{instructor.title}</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 text-xs t-text-40">
+            <div className="flex items-center gap-3 text-xs t-text-40">
               <div className="flex items-center gap-1"><Star className="w-3 h-3 text-amber-400" /><span>{instructor.rating}</span></div>
               <div className="flex items-center gap-1"><Users className="w-3 h-3" /><span>{instructor.students.toLocaleString()}</span></div>
               <div className="flex items-center gap-1"><BookOpen className="w-3 h-3" /><span>{instructor.courses} courses</span></div>

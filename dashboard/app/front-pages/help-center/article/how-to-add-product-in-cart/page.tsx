@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { ChevronRight, ChevronLeft, Search, Calendar, Clock, ShoppingCart, ShieldCheck } from "lucide-react";
+import * as Form from "@radix-ui/react-form";
+import { Input } from "@/components/ui/input";
 
 const RELATED = [
   "Template kits",
@@ -124,15 +126,20 @@ export default function HelpCenterArticleCartPage() {
         {/* SIDEBAR */}
         <aside className="lg:col-span-4 space-y-6 lg:sticky lg:top-20 self-start">
           <div className="panel p-5">
-            <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 t-text-30" />
-              <input
-                type="search"
-                placeholder="Search…"
-                className="w-full h-10 pl-9 pr-3 rounded-lg border text-sm outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40"
-                style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text-70)" }}
-              />
-            </div>
+            <Form.Root className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 t-text-30 pointer-events-none z-10" />
+              <Form.Field name="query">
+                <Form.Label className="sr-only">Search</Form.Label>
+                <Form.Control asChild>
+                  <Input
+                    type="search"
+                    placeholder="Search…"
+                    aria-label="Search articles"
+                    className="h-10 pl-9 text-sm"
+                  />
+                </Form.Control>
+              </Form.Field>
+            </Form.Root>
           </div>
 
           <div className="panel">

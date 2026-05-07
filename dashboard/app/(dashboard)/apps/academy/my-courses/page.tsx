@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { Search, BookOpen, Clock, Users, Star, Play, Lock, CheckCircle2 } from "lucide-react";
+import * as Form from "@radix-ui/react-form";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 
 type CourseStatus = "in_progress" | "completed" | "not_started";
 
@@ -53,9 +55,9 @@ export default function MyCoursesPage() {
   };
 
   return (
-    <div className="space-y-4 pb-4">
+    <div className="space-y-3 pb-0">
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
           { label: "Total Courses", value: stats.total, color: "text-violet-400" },
           { label: "In Progress", value: stats.inProgress, color: "text-amber-400" },
@@ -72,11 +74,22 @@ export default function MyCoursesPage() {
       {/* Toolbar */}
       <div className="panel">
         <div className="flex flex-wrap items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
-          <div className="flex items-center gap-2 h-9 px-3 rounded-lg border flex-1 min-w-[200px]" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
-            <Search className="w-3.5 h-3.5 t-text-30" />
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search courses or instructors…"
-              className="flex-1 bg-transparent text-xs outline-none text-[color:var(--t-text-70)] placeholder:text-[color:var(--t-text-30)]" />
-          </div>
+          <Form.Root className="flex-1 min-w-[200px]">
+            <Form.Field name="search">
+              <div className="flex items-center gap-2 h-9 px-3 rounded-lg border" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
+                <Search className="w-3.5 h-3.5 t-text-30" />
+                <Form.Control asChild>
+                  <Input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search courses or instructors…"
+                    aria-label="Search courses"
+                    className="h-9 border-0 bg-transparent px-0 text-xs shadow-none focus-visible:ring-0"
+                  />
+                </Form.Control>
+              </div>
+            </Form.Field>
+          </Form.Root>
           <div className="flex gap-1">
             {(["all", "in_progress", "completed", "not_started"] as const).map((f) => (
               <button key={f} onClick={() => setFilter(f)}

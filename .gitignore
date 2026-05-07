@@ -1,3 +1,10 @@
-# Vuexy/full template copy for local reference only — do not edit or run codegen against it.
-# Not tracked; copy patterns into dashboard/ separately as needed.
+
 full-version/
+
+# Dashboard build artifacts
+dashboard/.next/
+dashboard/node_modules/
+dashboard/tsconfig.tsbuildinfo
+
+# Local agent/worktree artifacts
+.claude/

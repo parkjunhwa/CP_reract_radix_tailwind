@@ -45,13 +45,13 @@ const avatarColors = ["from-violet-500 to-purple-700", "from-sky-500 to-blue-700
 
 export default function AcademyDashboardPage() {
   return (
-    <div className="space-y-4 pb-4">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="space-y-3 pb-0">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {kpis.map((k) => {
           const Icon = k.icon;
           const positive = k.change >= 0;
           return (
-            <div key={k.label} className="panel p-4 flex items-center gap-4">
+            <div key={k.label} className="panel p-4 flex items-center gap-3">
               <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0", k.bg)}>
                 <Icon className={cn("w-5 h-5", k.color)} aria-hidden="true" />
               </div>
@@ -68,7 +68,7 @@ export default function AcademyDashboardPage() {
         })}
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
         <div className="xl:col-span-2 panel p-5">
           <h3 className="t-text font-semibold text-sm mb-1">Monthly Enrollments</h3>
           <p className="t-text-30 text-xs mb-4">New student enrollments per month</p>
@@ -85,7 +85,7 @@ export default function AcademyDashboardPage() {
 
         <div className="panel p-5">
           <h3 className="t-text font-semibold text-sm mb-4">Top Instructors</h3>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {instructors.map((ins, i) => (
               <div key={ins.name} className="flex items-center gap-3">
                 <div className={cn("w-9 h-9 rounded-full bg-gradient-to-br text-white text-xs font-bold flex items-center justify-center flex-shrink-0", avatarColors[i])}>

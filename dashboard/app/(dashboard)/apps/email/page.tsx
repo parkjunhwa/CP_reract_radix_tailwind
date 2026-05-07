@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { Search, Star, Trash2, Archive, Tag, RefreshCcw, ChevronDown, Paperclip, Reply, Forward, MoreHorizontal, Inbox, Send, FileText, AlertCircle, Plus } from "lucide-react";
+import * as Form from "@radix-ui/react-form";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 
 interface Email {
   id: string; from: string; avatar: string; subject: string;
@@ -58,12 +60,12 @@ export default function EmailPage() {
       <div className="panel flex overflow-hidden" style={{ height: "calc(100vh - 140px)", minHeight: 600 }}>
         {/* Left panel: folders */}
         <div className="w-48 flex-shrink-0 flex flex-col" style={{ borderRight: "1px solid var(--t-border)" }}>
-          <div className="p-2">
-            <button className="" style={{ backgroundColor: "var(--t-accent)" }}>
+          <div className="h-14 px-3 flex items-center" style={{ borderBottom: "1px solid var(--t-border)" }}>
+            <button className="w-full h-9 rounded-lg text-white text-xs font-medium flex items-center justify-center gap-2 transition-opacity hover:opacity-90" style={{ backgroundColor: "var(--t-accent)" }}>
               <Plus className="w-3.5 h-3.5" /> Compose
             </button>
           </div>
-          <nav className="px-2 space-y-0.5">
+          <nav className="px-2 pt-2 space-y-0.5">
             {folders.map((f) => {
               const Icon = f.icon;
               return (
@@ -91,12 +93,23 @@ export default function EmailPage() {
 
         {/* Email list */}
         <div className="w-72 flex-shrink-0 flex flex-col" style={{ borderRight: "1px solid var(--t-border)" }}>
-          <div className="p-3" style={{ borderBottom: "1px solid var(--t-border)" }}>
-            <div className="flex items-center gap-2 h-8 px-3 rounded-lg border" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
-              <Search className="w-3 h-3 t-text-30" />
-              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search emails…"
-                className="flex-1 bg-transparent text-xs outline-none text-[color:var(--t-text-70)] placeholder:text-[color:var(--t-text-30)]" />
-            </div>
+          <div className="h-14 px-3 flex items-center" style={{ borderBottom: "1px solid var(--t-border)" }}>
+            <Form.Root className="w-full">
+              <Form.Field name="search">
+                <div className="flex items-center gap-2 h-8 w-full px-3 rounded-lg border" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
+                  <Search className="w-3 h-3 t-text-30" />
+                  <Form.Control asChild>
+                    <Input
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      placeholder="Search emails…"
+                      aria-label="Search emails"
+                      className="h-8 border-0 bg-transparent px-0 text-xs shadow-none focus-visible:ring-0"
+                    />
+                  </Form.Control>
+                </div>
+              </Form.Field>
+            </Form.Root>
           </div>
           <div className="flex-1 overflow-y-auto">
             {filtered.map((email, i) => (
@@ -133,19 +146,21 @@ export default function EmailPage() {
         <div className="flex-1 flex flex-col min-w-0">
           {selectedEmail ? (
             <>
-              <div className="flex items-center gap-2 px-5 py-3" style={{ borderBottom: "1px solid var(--t-border)" }}>
-                <button className="p-1.5 rounded-md t-text-30 hover:t-text-70 hover:bg-[var(--t-hover)] transition-colors"><Archive className="w-4 h-4" /></button>
-                <button className="p-1.5 rounded-md t-text-30 hover:t-text-70 hover:bg-[var(--t-hover)] transition-colors"><Trash2 className="w-4 h-4" /></button>
-                <button className="p-1.5 rounded-md t-text-30 hover:t-text-70 hover:bg-[var(--t-hover)] transition-colors"><Tag className="w-4 h-4" /></button>
-                <button className="p-1.5 rounded-md t-text-30 hover:t-text-70 hover:bg-[var(--t-hover)] transition-colors"><RefreshCcw className="w-4 h-4" /></button>
+              <div className="flex items-center gap-2 h-14 px-5" style={{ borderBottom: "1px solid var(--t-border)" }}>
+                <button aria-label="Archive" className="p-1.5 rounded-md t-text-30 hover:t-text-70 hover:bg-[var(--t-hover)] transition-colors"><Archive className="w-4 h-4" /></button>
+                <button aria-label="Delete" className="p-1.5 rounded-md t-text-30 hover:t-text-70 hover:bg-[var(--t-hover)] transition-colors"><Trash2 className="w-4 h-4" /></button>
+                <button aria-label="Add label" className="p-1.5 rounded-md t-text-30 hover:t-text-70 hover:bg-[var(--t-hover)] transition-colors"><Tag className="w-4 h-4" /></button>
+                <button aria-label="Refresh" className="p-1.5 rounded-md t-text-30 hover:t-text-70 hover:bg-[var(--t-hover)] transition-colors"><RefreshCcw className="w-4 h-4" /></button>
                 <div className="flex-1" />
-                <button onClick={() => setStarred(prev => { const n = new Set(prev); n.has(selectedEmail.id) ? n.delete(selectedEmail.id) : n.add(selectedEmail.id); return n; })}
+                <button
+                  aria-label={starred.has(selectedEmail.id) ? "Unstar email" : "Star email"}
+                  onClick={() => setStarred(prev => { const n = new Set(prev); n.has(selectedEmail.id) ? n.delete(selectedEmail.id) : n.add(selectedEmail.id); return n; })}
                   className={cn("p-1.5 rounded-md transition-colors", starred.has(selectedEmail.id) ? "text-amber-400" : "t-text-30 hover:text-amber-400")}>
                   <Star className="w-4 h-4" />
                 </button>
-                <button className="p-1.5 rounded-md t-text-30 hover:t-text-70 hover:bg-[var(--t-hover)] transition-colors"><MoreHorizontal className="w-4 h-4" /></button>
+                <button aria-label="More actions" className="p-1.5 rounded-md t-text-30 hover:t-text-70 hover:bg-[var(--t-hover)] transition-colors"><MoreHorizontal className="w-4 h-4" /></button>
               </div>
-              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              <div className="flex-1 overflow-y-auto p-6 space-y-3">
                 <h2 className="t-text font-semibold text-base">{selectedEmail.subject}</h2>
                 <div className="flex items-center gap-3">
                   <Avatar className="w-9 h-9 flex-shrink-0">

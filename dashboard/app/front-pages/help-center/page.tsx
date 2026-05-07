@@ -6,8 +6,10 @@ import {
   Search, ShoppingCart, HelpCircle, DollarSign, Palette, Lock, User, ChevronRight,
   Rocket, Gift, FileText, ArrowRight, Mail, MessageCircle,
 } from "lucide-react";
+import * as Form from "@radix-ui/react-form";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const POPULAR = [
   { slug: "getting-started", title: "Getting started", icon: Rocket, sub: "Whether you're new or a power user, this article will get you up to speed." },
@@ -55,17 +57,22 @@ export default function HelpCenterPage() {
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight mt-4">
             Hello, how can we <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">help?</span>
           </h1>
-          <div className="mt-8 relative max-w-xl mx-auto">
-            <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 t-text-30" />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Ask a question…"
-              className="w-full h-12 pl-11 pr-4 rounded-xl border text-sm outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40"
-              style={{ backgroundColor: "var(--t-surface)", borderColor: "var(--t-border-2)", color: "var(--t-text-70)" }}
-            />
-          </div>
+          <Form.Root className="mt-8 relative max-w-xl mx-auto">
+            <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 t-text-30 pointer-events-none z-10" />
+            <Form.Field name="query">
+              <Form.Label className="sr-only">Search</Form.Label>
+              <Form.Control asChild>
+                <Input
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Ask a question…"
+                  aria-label="Search help center"
+                  className="h-12 pl-11 text-sm"
+                />
+              </Form.Control>
+            </Form.Field>
+          </Form.Root>
           <p className="t-text-40 text-xs mt-4">
             Common topics: <span className="text-violet-300">eCommerce</span>, <span className="text-violet-300">blogging</span>, <span className="text-violet-300">payments</span>
           </p>

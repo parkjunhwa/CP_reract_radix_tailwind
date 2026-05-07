@@ -22,10 +22,9 @@ export default function RadixIndexPage() {
 
   return (
     <ExampleShell
-      breadcrumbs={[{ label: "Dashboard", href: "/" }, { label: "Radix" }]}
       title="Radix Primitives"
       description="모든 프리미티브 예제"
-      className="max-w-[1800px] mx-auto"
+      showPreamble={false}
     >
       <RadixAllDemos />
     </ExampleShell>

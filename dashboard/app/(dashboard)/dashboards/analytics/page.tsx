@@ -17,7 +17,7 @@ const metrics = [
 
 export default function AnalyticsPage() {
   return (
-    <div className="space-y-4 pb-4">
+    <div className="space-y-3 pb-0">
       {/* Metric row */}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
         {metrics.map(m => (
@@ -36,7 +36,7 @@ export default function AnalyticsPage() {
       <Charts />
 
       {/* Insight cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {[
           { title:"Top Revenue Month", value:"December 2025", detail:"$9.4M — 834 orders", color:"text-violet-400" },
           { title:"Best-Selling Category", value:"Luxury Watches", detail:"$10.76M · 38% of total revenue", color:"text-amber-400" },

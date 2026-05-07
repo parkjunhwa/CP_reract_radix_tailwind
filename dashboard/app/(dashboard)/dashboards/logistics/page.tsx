@@ -49,13 +49,13 @@ const statusConfig: Record<VehicleStatus, { label: string; cls: string }> = {
 
 export default function LogisticsDashboardPage() {
   return (
-    <div className="space-y-4 pb-4">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="space-y-3 pb-0">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {kpis.map((k) => {
           const Icon = k.icon;
           const positive = k.change >= 0;
           return (
-            <div key={k.label} className="panel p-4 flex items-center gap-4">
+            <div key={k.label} className="panel p-4 flex items-center gap-3">
               <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0", k.bg)}>
                 <Icon className={cn("w-5 h-5", k.color)} aria-hidden="true" />
               </div>
@@ -72,7 +72,7 @@ export default function LogisticsDashboardPage() {
         })}
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
         <div className="panel p-5">
           <h3 className="t-text font-semibold text-sm mb-1">Weekly Deliveries</h3>
           <p className="t-text-30 text-xs mb-4">Delivered vs pending this week</p>

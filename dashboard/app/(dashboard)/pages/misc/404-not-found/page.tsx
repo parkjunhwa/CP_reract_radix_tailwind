@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowLeft, Search } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+
 export default function NotFoundPage() {
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center text-center px-4 space-y-6">
@@ -18,13 +20,17 @@ export default function NotFoundPage() {
         </p>
       </div>
       <div className="flex flex-wrap items-center justify-center gap-3">
-        <Link href="/" className="h-10 px-5 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-colors flex items-center gap-2"
-          style={{ backgroundColor: "var(--t-accent)" }}>
-          <ArrowLeft className="w-4 h-4" /> Go to Dashboard
+        <Link href="/">
+          <Button
+            size="lg"
+            className="text-white border-0 hover:opacity-90"
+            style={{ backgroundColor: "var(--t-accent)" }}
+          >
+            <ArrowLeft className="w-4 h-4 shrink-0" /> Go to Dashboard
+          </Button>
         </Link>
-        <Link href="/pages/faq" className="h-10 px-5 rounded-lg border text-sm font-medium t-text-60 hover:bg-[var(--t-hover)] transition-colors"
-          style={{ borderColor: "var(--t-border-2)" }}>
-          Help & FAQ
+        <Link href="/pages/faq">
+          <Button variant="outline" size="lg">Help & FAQ</Button>
         </Link>
       </div>
     </div>

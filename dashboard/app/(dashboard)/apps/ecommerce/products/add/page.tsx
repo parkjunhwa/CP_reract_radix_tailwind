@@ -1,32 +1,34 @@
 "use client";
 
+import * as Form from "@radix-ui/react-form";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function EcommerceProductAddPage() {
   return (
-    <div className="space-y-4 pb-4 max-w-2xl">
-      <div className="panel p-5">
-        <h2 className="t-text font-semibold text-lg">Products · Add</h2>
-        <p className="t-text-40 text-sm mt-1">Minimal form scaffold — mirrors full-version route.</p>
-      </div>
-      <div className="panel p-5 space-y-4">
-        {[
-          ["Product name", "text", "Limited edition tote"],
-          ["SKU", "text", "LX-NEW-101"],
-          ["Base price (USD)", "number", "1299"],
-        ].map(([label, type, ph]) => (
-          <label key={label as string} className="block space-y-1.5">
-            <span className="t-text-50 text-xs font-medium">{label}</span>
-            <input
-              type={type as string}
-              placeholder={ph as string}
-              className="w-full h-10 px-3 rounded-lg border text-sm outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40"
-              style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text-70)" }}
-            />
-          </label>
+    <div className="space-y-3 pb-0">
+      <Form.Root className="panel p-5 space-y-3">
+        {(
+          [
+            ["Product name", "text", "Limited edition tote", "product_name"],
+            ["SKU", "text", "LX-NEW-101", "sku"],
+            ["Base price (USD)", "number", "1299", "base_price"],
+          ] as const
+        ).map(([label, type, ph, name]) => (
+          <Form.Field key={name} name={name} className="block space-y-1.5">
+            <Form.Label asChild>
+              <Label className="t-text-50 text-xs font-medium">{label}</Label>
+            </Form.Label>
+            <Form.Control asChild>
+              <Input type={type} placeholder={ph} className="h-10 text-sm" />
+            </Form.Control>
+          </Form.Field>
         ))}
-        <Button type="button" className="w-full sm:w-auto">Save draft</Button>
-      </div>
+        <Form.Submit asChild>
+          <Button type="submit" className="w-full sm:w-auto">Save draft</Button>
+        </Form.Submit>
+      </Form.Root>
     </div>
   );
 }

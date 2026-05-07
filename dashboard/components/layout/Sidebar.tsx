@@ -12,12 +12,12 @@ import {
   Layout, CheckSquare, GitMerge, Table2, PieChart,
   Home, BarChart2, ExternalLink, BarChart, Boxes,
   BookOpen, Navigation, Shield, ListTree,
+  Component as ComponentIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-/** Vuexy template docs base (aligned with full-version `NEXT_PUBLIC_DOCS_URL`). */
 const DOCS_BASE = (
   process.env.NEXT_PUBLIC_DOCS_URL ??
   "https://demos.pixinvent.com/vuexy-nextjs-admin-template/documentation"
@@ -76,7 +76,6 @@ const appsSection: NavSectionLabel = {
     {
       label: "eCommerce", icon: ShoppingCart, href: "#apps-ecommerce",
       children: [
-        { label: "Dashboard", href: "/apps/ecommerce/dashboard" },
         {
           label: "Products",
           href: "#ecom-products",
@@ -110,7 +109,6 @@ const appsSection: NavSectionLabel = {
     {
       label: "Academy", icon: GraduationCap, href: "#apps-academy",
       children: [
-        { label: "Dashboard",      href: "/apps/academy/dashboard" },
         { label: "My Courses",     href: "/apps/academy/my-courses" },
         { label: "Course Details", href: "/apps/academy/course-details" },
       ],
@@ -118,7 +116,6 @@ const appsSection: NavSectionLabel = {
     {
       label: "Logistics", icon: Truck, href: "#apps-logistics",
       children: [
-        { label: "Dashboard", href: "/apps/logistics/dashboard" },
         { label: "Fleet",     href: "/apps/logistics/fleet" },
       ],
     },
@@ -239,8 +236,24 @@ const formsSection: NavSectionLabel = {
     { label: "Form Validation", icon: CheckSquare, href: "/forms/form-validation" },
     { label: "Form Wizard",    icon: GitMerge,    href: "/forms/form-wizard" },
     { label: "React Table",    icon: Table2,      href: "/react-table" },
-    { label: "Form Elements",  icon: CheckSquare, href: docHref("/docs/user-interface/form-elements"), external: true },
-    { label: "MUI Tables",    icon: Table2,      href: docHref("/docs/user-interface/mui-table"),      external: true },
+  ],
+};
+
+const userInterfaceSection: NavSectionLabel = {
+  label: "User Interface", isSection: true,
+  children: [
+    {
+      label: "Foundation", icon: BookOpen, href: "#ui-foundation",
+      children: [
+        { label: "Colors",     href: "/user-interface/foundation/colors" },
+        { label: "Typography", href: "/user-interface/foundation/typography" },
+        { label: "Shadows",    href: "/user-interface/foundation/shadows" },
+        { label: "Icons",      href: "/user-interface/foundation/icons" },
+      ],
+    },
+    { label: "Components",    icon: ComponentIcon, href: "/user-interface/components" },
+    { label: "Form Elements", icon: CheckSquare,   href: "/user-interface/form-elements" },
+    { label: "MUI Table",     icon: Table2,        href: "/user-interface/mui-table" },
   ],
 };
 
@@ -252,10 +265,9 @@ const chartsSection: NavSectionLabel = {
       children: [
         { label: "Apex Charts", href: "/charts/apex-charts" },
         { label: "Recharts",    href: "/charts/recharts" },
+        { label: "Chart.js",    href: "/charts/chart-js" },
       ],
     },
-    { label: "Foundation",  icon: BookOpen, href: docHref("/docs/user-interface/foundation"), external: true },
-    { label: "Components",  icon: Boxes,    href: docHref("/docs/user-interface/components"), external: true },
     /* 페이지 없음: 접기·펼치기 UX 확인용 (로컬 #만 사용) */
     {
       label: "Menu Examples",
@@ -811,7 +823,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
     );
   };
 
-  const allSections: NavItemType[] = [...mainNav, appsSection, formsSection, chartsSection];
+  const allSections: NavItemType[] = [...mainNav, appsSection, formsSection, userInterfaceSection, chartsSection];
 
   return (
     <aside aria-label="Sidebar navigation"
@@ -843,7 +855,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
       <Separator aria-hidden="true" style={{ backgroundColor: "var(--luxe-border)" }} />
 
       {/* Scrollable nav */}
-      <nav aria-label="Primary navigation" className="flex-1 flex flex-col gap-0.5 px-2 py-4 overflow-y-auto overflow-x-hidden">
+      <nav aria-label="Primary navigation" className="flex-1 min-h-0 flex flex-col gap-0.5 px-2 py-4 overflow-y-auto overflow-x-hidden">
         {!collapsed && (
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] px-2 mb-2 opacity-40"
             style={{ color: "var(--luxe-text)" }} aria-hidden="true">Main Menu</p>

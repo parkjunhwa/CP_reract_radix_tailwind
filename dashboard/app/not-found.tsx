@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-/** Global 404 — Vuexy full-version의 `[lang]/[...not-found]`와 같은 역할입니다. */
+/** Global 404 — */
 export default function RootNotFound() {
   return (
     <div

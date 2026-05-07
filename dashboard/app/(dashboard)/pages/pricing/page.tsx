@@ -80,9 +80,9 @@ export default function PricingPage() {
   const [yearly, setYearly] = useState(false);
 
   return (
-    <div className="space-y-6 pb-4 max-w-5xl">
+    <div className="space-y-3 pb-0">
       {/* Header */}
-      <div className="panel p-8 text-center space-y-4">
+      <div className="panel p-8 text-center space-y-3">
         <h1 className="t-text font-bold text-2xl">Simple, Transparent Pricing</h1>
         <p className="t-text-40 text-sm max-w-lg mx-auto">Choose the plan that fits your business. Scale up or down at any time.</p>
         <div className="flex items-center justify-center gap-3">
@@ -99,13 +99,13 @@ export default function PricingPage() {
       </div>
 
       {/* Plans */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {plans.map((plan) => {
           const Icon = plan.icon;
           const price = yearly ? plan.yearlyPrice : plan.monthlyPrice;
           return (
             <div key={plan.id}
-              className={cn("panel p-6 flex flex-col gap-5 relative", plan.popular ? `border-2 ${plan.border}` : "")}>
+              className={cn("panel p-6 flex flex-col gap-3 relative", plan.popular ? `border-2 ${plan.border}` : "")}>
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-white px-3 py-1 rounded-full" style={{ backgroundColor: "var(--t-accent)" }}>Most Popular</span>

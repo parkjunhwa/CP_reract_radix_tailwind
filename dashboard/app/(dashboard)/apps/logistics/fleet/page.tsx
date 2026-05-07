@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { Truck, MapPin, Fuel, AlertTriangle, CheckCircle2, Clock, MoreHorizontal, Search, Plus } from "lucide-react";
+import * as Form from "@radix-ui/react-form";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
 
 type VehicleStatus = "active" | "maintenance" | "idle" | "offline";
 
@@ -46,9 +48,9 @@ export default function FleetPage() {
   const counts = { all: FLEET.length, active: FLEET.filter(v => v.status === "active").length, maintenance: FLEET.filter(v => v.status === "maintenance").length, idle: FLEET.filter(v => v.status === "idle").length, offline: FLEET.filter(v => v.status === "offline").length };
 
   return (
-    <div className="space-y-4 pb-4">
+    <div className="space-y-3 pb-0">
       {/* Summary */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {(["active", "maintenance", "idle", "offline"] as VehicleStatus[]).map((s) => {
           const cfg = statusConfig[s];
           const Icon = cfg.icon;
@@ -68,11 +70,22 @@ export default function FleetPage() {
       <div className="panel">
         {/* Toolbar */}
         <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
-          <div className="flex-1 flex items-center gap-2 h-9 px-3 rounded-lg border" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
-            <Search className="w-3.5 h-3.5 t-text-30" />
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by vehicle ID, driver or plate…"
-              className="flex-1 bg-transparent text-xs outline-none text-[color:var(--t-text-70)] placeholder:text-[color:var(--t-text-30)]" />
-          </div>
+          <Form.Root className="flex-1">
+            <Form.Field name="search">
+              <div className="flex items-center gap-2 h-9 px-3 rounded-lg border" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
+                <Search className="w-3.5 h-3.5 t-text-30" />
+                <Form.Control asChild>
+                  <Input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search by vehicle ID, driver or plate…"
+                    aria-label="Search vehicles"
+                    className="h-9 border-0 bg-transparent px-0 text-xs shadow-none focus-visible:ring-0"
+                  />
+                </Form.Control>
+              </div>
+            </Form.Field>
+          </Form.Root>
           <button className="h-9 px-3 rounded-lg text-white text-xs flex items-center gap-1.5 font-medium" style={{ backgroundColor: "var(--t-accent)" }}>
             <Plus className="w-3.5 h-3.5" /> Add Vehicle
           </button>
@@ -113,7 +126,9 @@ export default function FleetPage() {
                     <td className="px-5 py-3.5"><span className="t-text-50 text-xs">{v.deliveries}</span></td>
                     <td className="px-5 py-3.5"><Badge className={cn("text-[10px] px-2 border", cls)}>{label}</Badge></td>
                     <td className="px-3 py-3.5">
-                      <button className="t-text-30 hover:t-text-70 transition-colors"><MoreHorizontal className="w-4 h-4" /></button>
+                      <button aria-label="More actions" className="t-text-30 hover:t-text-70 transition-colors">
+                        <MoreHorizontal className="w-4 h-4" />
+                      </button>
                     </td>
                   </tr>
                 );

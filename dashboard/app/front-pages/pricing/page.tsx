@@ -103,7 +103,7 @@ export default function PricingPage() {
               <div
                 key={p.key}
                 className={cn(
-                  "panel p-7 flex flex-col gap-5 relative",
+                  "panel p-7 flex flex-col gap-3 relative",
                   p.current && "border-violet-500/60 ring-1 ring-violet-500/30 shadow-xl shadow-violet-900/30"
                 )}
               >

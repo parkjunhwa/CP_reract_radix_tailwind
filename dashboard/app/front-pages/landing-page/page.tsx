@@ -6,9 +6,13 @@ import {
   Rocket, Code2, FileText, CheckCircle2, Users, BookOpen, Diamond, Star,
   Headphones, ShieldCheck, Mail, Phone, ArrowRight, Sparkles, Quote,
 } from "lucide-react";
+import * as Form from "@radix-ui/react-form";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import FaqList from "../_components/FaqList";
 
 const FEATURES = [
@@ -28,7 +32,7 @@ const STATS = [
 ];
 
 const REVIEWS = [
-  { brand: "Pinterest", color: "text-rose-400", desc: "I've never used a theme as versatile and flexible as Vuexy. It's my go-to for building dashboard sites on almost any project.", name: "Eugenia Moore", title: "Founder, Pinterest", rating: 5 },
+  { brand: "Pinterest", color: "text-rose-400", desc: "I've never used a theme as versatile and flexible as LUXE. It's my go-to for building dashboard sites on almost any project.", name: "Eugenia Moore", title: "Founder, Pinterest", rating: 5 },
   { brand: "Netflix", color: "text-red-400", desc: "Materio is awesome — and I particularly enjoy knowing that if I get stuck on something, the docs and team are there.", name: "Tommy Hoffman", title: "Founder, Netflix", rating: 5 },
   { brand: "Airbnb", color: "text-pink-400", desc: "This template is superior in so many ways. The code, the design, the regular updates, the support — it's the whole package.", name: "Ava Park", title: "CTO, Airbnb", rating: 5 },
 ];
@@ -109,7 +113,7 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <div className="col-span-9 space-y-4">
+              <div className="col-span-9 space-y-3">
                 <div className="grid grid-cols-3 gap-3">
                   {STATS.slice(0, 3).map((s) => (
                     <div key={s.label} className="rounded-xl border p-3" style={{ borderColor: "var(--t-border)" }}>
@@ -139,11 +143,11 @@ export default function LandingPage() {
 
       {/* PRODUCT STAT */}
       <section className="mx-auto max-w-7xl px-5 lg:px-8 -mt-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {STATS.map((s) => {
             const Icon = s.icon;
             return (
-              <div key={s.label} className="panel p-5 flex items-center gap-4">
+              <div key={s.label} className="panel p-5 flex items-center gap-3">
                 <div className={cn("w-11 h-11 rounded-xl bg-gradient-to-br flex items-center justify-center shrink-0", s.color)}>
                   <Icon className="w-5 h-5 text-white" />
                 </div>
@@ -425,7 +429,7 @@ export default function LandingPage() {
         </div>
 
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-5 gap-6">
-          <div className="lg:col-span-2 panel p-6 flex flex-col gap-5">
+          <div className="lg:col-span-2 panel p-6 flex flex-col gap-3">
             <div className="rounded-xl border h-44 flex items-center justify-center" style={{ borderColor: "var(--t-border)", backgroundColor: "var(--t-surface-2)" }}>
               <Headphones className="w-10 h-10 text-violet-400" />
             </div>
@@ -451,7 +455,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <form
+          <Form.Root
             className="lg:col-span-3 panel p-6 flex flex-col gap-4"
             onSubmit={(e) => e.preventDefault()}
           >
@@ -463,35 +467,39 @@ export default function LandingPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
-                { label: "Full name", type: "text", placeholder: "Jane Doe" },
-                { label: "Email address", type: "email", placeholder: "you@brand.com" },
+                { name: "fullName", label: "Full name", type: "text", placeholder: "Jane Doe" },
+                { name: "email", label: "Email address", type: "email", placeholder: "you@brand.com" },
               ].map((f) => (
-                <label key={f.label} className="space-y-1.5">
-                  <span className="t-text-50 text-xs font-medium">{f.label}</span>
-                  <input
-                    type={f.type}
-                    placeholder={f.placeholder}
-                    className="w-full h-10 px-3 rounded-lg border text-sm outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40"
-                    style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text-70)" }}
-                  />
-                </label>
+                <Form.Field key={f.name} name={f.name} className="space-y-1.5">
+                  <Form.Label asChild>
+                    <Label className="t-text-50 text-xs font-medium">{f.label}</Label>
+                  </Form.Label>
+                  <Form.Control asChild>
+                    <Input type={f.type} placeholder={f.placeholder} className="h-10 text-sm" />
+                  </Form.Control>
+                </Form.Field>
               ))}
             </div>
-            <label className="space-y-1.5">
-              <span className="t-text-50 text-xs font-medium">Message</span>
-              <textarea
-                rows={6}
-                placeholder="Tell us about your project…"
-                className="w-full px-3 py-2.5 rounded-lg border text-sm outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40"
-                style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text-70)" }}
-              />
-            </label>
+            <Form.Field name="message" className="space-y-1.5">
+              <Form.Label asChild>
+                <Label className="t-text-50 text-xs font-medium">Message</Label>
+              </Form.Label>
+              <Form.Control asChild>
+                <Textarea
+                  rows={6}
+                  placeholder="Tell us about your project…"
+                  className="text-sm"
+                />
+              </Form.Control>
+            </Form.Field>
             <div>
-              <Button size="lg" type="submit" className="bg-violet-600 hover:bg-violet-700 text-white border-violet-700">
-                Send inquiry
-              </Button>
+              <Form.Submit asChild>
+                <Button size="lg" type="submit" className="bg-violet-600 hover:bg-violet-700 text-white border-violet-700">
+                  Send inquiry
+                </Button>
+              </Form.Submit>
             </div>
-          </form>
+          </Form.Root>
         </div>
       </section>
     </div>

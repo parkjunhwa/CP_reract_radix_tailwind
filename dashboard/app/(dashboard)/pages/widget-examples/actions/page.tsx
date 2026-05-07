@@ -8,8 +8,8 @@ export default function ActionsWidgetsPage() {
   const btnSolid = "h-9 px-4 rounded-lg text-white text-xs font-medium hover:opacity-90 transition-all flex items-center gap-1.5";
   const btnOutline = "h-9 px-4 rounded-lg border text-xs font-medium t-text-60 hover:bg-[var(--t-hover)] transition-colors flex items-center gap-1.5";
   return (
-    <div className="space-y-4 pb-4">
-      <div className="panel p-5 space-y-4">
+    <div className="space-y-3 pb-0">
+      <div className="panel p-5 space-y-3">
         <h3 className="t-text font-semibold text-sm">Solid Buttons</h3>
         <div className="flex flex-wrap gap-2">
           {[["var(--t-accent)","Primary"],["#10b981","Success"],["#f59e0b","Warning"],["#ef4444","Danger"],["#0ea5e9","Info"]].map(([c,l])=>(
@@ -17,7 +17,7 @@ export default function ActionsWidgetsPage() {
           ))}
         </div>
       </div>
-      <div className="panel p-5 space-y-4">
+      <div className="panel p-5 space-y-3">
         <h3 className="t-text font-semibold text-sm">Action Icon Buttons</h3>
         <div className="flex flex-wrap gap-2">
           {[Download,Share2,Edit,Copy,Trash2,ExternalLink,RefreshCcw,Upload,Archive,Plus].map((Icon,i)=>(
@@ -27,7 +27,7 @@ export default function ActionsWidgetsPage() {
           ))}
         </div>
       </div>
-      <div className="panel p-5 space-y-4">
+      <div className="panel p-5 space-y-3">
         <h3 className="t-text font-semibold text-sm">Interactive Toggles</h3>
         <div className="space-y-3">
           {[{id:1,name:"Patek Philippe Nautilus"},{id:2,name:"Richard Mille RM 011"},{id:3,name:"Cartier Diamond Set"}].map(item=>(

@@ -9,6 +9,7 @@ import {
   Calendar, FileText, Users, Shield, LayoutDashboard,
   ChevronDown, Check,
 } from "lucide-react";
+import * as Form from "@radix-ui/react-form";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -16,6 +17,7 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
@@ -26,7 +28,6 @@ const SEARCH_ITEMS = [
   { section: "Dashboards",   name: "eCommerce",        url: "/dashboards/ecommerce" },
   { section: "Dashboards",   name: "Academy",          url: "/dashboards/academy" },
   { section: "Dashboards",   name: "Logistics",        url: "/dashboards/logistics" },
-  { section: "Apps",         name: "eCommerce app",    url: "/apps/ecommerce/dashboard" },
   { section: "Apps",         name: "Products",         url: "/apps/ecommerce/products/list" },
   { section: "Apps",         name: "Orders",           url: "/apps/ecommerce/orders/list" },
   { section: "Apps",         name: "Email",            url: "/apps/email" },
@@ -52,6 +53,7 @@ const SEARCH_ITEMS = [
   { section: "Forms",        name: "React Table",      url: "/react-table" },
   { section: "Charts",       name: "Apex Charts",      url: "/charts/apex-charts" },
   { section: "Charts",       name: "Recharts",         url: "/charts/recharts" },
+  { section: "Charts",       name: "Chart.js",         url: "/charts/chart-js" },
   { section: "Widgets",      name: "Widget Basic",     url: "/pages/widget-examples/basic" },
   { section: "Widgets",      name: "Widget Statistics", url: "/pages/widget-examples/statistics" },
   { section: "Wizards",      name: "Checkout Wizard",  url: "/pages/wizard-examples/checkout" },
@@ -128,13 +130,24 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
         {/* Input */}
         <div className="flex items-center gap-3 px-4 py-3.5" style={{ borderBottom: "1px solid var(--t-border)" }}>
           <Search className="w-4 h-4 t-text-30 flex-shrink-0" />
-          <input ref={inputRef} value={query} onChange={e => setQuery(e.target.value)}
-            placeholder="Search pages, apps, features…"
-            className="flex-1 bg-transparent text-sm outline-none t-text-70 placeholder:t-text-30"
-            onKeyDown={e => e.key === "Escape" && onClose()} />
+          <Form.Root className="flex-1">
+            <Form.Field name="query">
+              <Form.Control asChild>
+                <Input
+                  ref={inputRef}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search pages, apps, features…"
+                  aria-label="Search"
+                  className="h-auto border-0 bg-transparent px-0 text-sm shadow-none focus-visible:ring-0 t-text-70 placeholder:t-text-30"
+                  onKeyDown={(e) => e.key === "Escape" && onClose()}
+                />
+              </Form.Control>
+            </Form.Field>
+          </Form.Root>
           <kbd className="text-[10px] px-1.5 py-0.5 rounded border font-mono t-text-30 hidden sm:block"
             style={{ borderColor: "var(--t-border-2)" }}>esc</kbd>
-          <button onClick={onClose} className="t-text-30 hover:t-text-70 transition-colors">
+          <button aria-label="Close search" onClick={onClose} className="t-text-30 hover:t-text-70 transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -188,7 +201,7 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
           )}
         </div>
         {/* Footer */}
-        <div className="flex items-center gap-4 px-4 py-2 text-[10px] t-text-30"
+        <div className="flex items-center gap-3 px-4 py-2 text-[10px] t-text-30"
           style={{ borderTop: "1px solid var(--t-border)" }}>
           <span className="flex items-center gap-1">
             <kbd className="px-1 py-0.5 rounded border font-mono" style={{ borderColor: "var(--t-border-2)" }}>↑↓</kbd> navigate
@@ -275,10 +288,6 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
     return () => document.removeEventListener("keydown", handler);
   }, []);
 
-  const segments = pathname.split("/").filter(Boolean);
-  const rawTitle = segments[segments.length - 1] ?? "";
-  const title = rawTitle.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase()) || "Dashboard";
-
   return (
     <>
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
@@ -293,7 +302,6 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
             className={cn(iconBtn, "md:hidden outline-none")} style={{ color: "var(--luxe-text-40)" }}>
             <Menu className="w-4 h-4" />
           </button>
-          <h1 className="font-semibold text-base truncate" style={{ color: "var(--luxe-text)" }}>{title}</h1>
         </div>
 
         {/* Center: search */}
@@ -309,14 +317,14 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
         {/* Right */}
         <div className="flex items-center gap-1 md:gap-1.5">
           {/* Mobile search */}
-          <button onClick={() => setSearchOpen(true)}
+          <button aria-label="Open search" onClick={() => setSearchOpen(true)}
             className={cn(iconBtn, "md:hidden outline-none")} style={{ color: "var(--luxe-text-40)" }}>
             <Search className="w-4 h-4" />
           </button>
 
           {/* Theme */}
           <DropdownMenu>
-            <DropdownMenuTrigger className={cn(iconBtn, "outline-none")} style={{ color: "var(--luxe-text-40)" }}>
+            <DropdownMenuTrigger aria-label="Theme" className={cn(iconBtn, "outline-none")} style={{ color: "var(--luxe-text-40)" }}>
               <ThemeIcon className="w-4 h-4" suppressHydrationWarning />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-32 border"

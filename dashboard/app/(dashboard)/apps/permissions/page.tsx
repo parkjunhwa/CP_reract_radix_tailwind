@@ -56,7 +56,7 @@ const PERMISSION_GROUPS = [
 
 export default function PermissionsPage() {
   return (
-    <div className="space-y-4 pb-4">
+    <div className="space-y-3 pb-0">
       {/* Summary */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {ROLES.map((role, i) => {

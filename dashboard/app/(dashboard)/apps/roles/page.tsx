@@ -35,8 +35,8 @@ export default function RolesPage() {
   const selectedRole = ROLES.find(r => r.id === selected);
 
   return (
-    <div className="space-y-4 pb-4">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="space-y-3 pb-0">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
           { label: "Total Roles", value: ROLES.length, icon: Shield, color: "text-violet-400" },
           { label: "Total Users", value: ROLES.reduce((acc, r) => acc + r.users, 0), icon: Users, color: "text-sky-400" },
@@ -53,7 +53,7 @@ export default function RolesPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
         {/* Role list */}
         <div className="xl:col-span-1 panel">
           <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
@@ -83,8 +83,8 @@ export default function RolesPage() {
 
         {/* Role detail */}
         {selectedRole && (
-          <div className="xl:col-span-2 space-y-4">
-            <div className="panel p-5 space-y-4">
+          <div className="xl:col-span-2 space-y-3">
+            <div className="panel p-5 space-y-3">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center border", colorStyles[selectedRole.color])}>

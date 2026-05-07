@@ -12,11 +12,11 @@ type EventColor = "violet" | "sky" | "emerald" | "amber" | "rose";
 interface CalEvent { id: string; title: string; date: number; time: string; color: EventColor; allDay?: boolean }
 
 const colorMap: Record<EventColor, string> = {
-  violet: "bg-violet-500/20 text-violet-300 border-violet-500/30",
-  sky:    "bg-sky-500/20 text-sky-300 border-sky-500/30",
-  emerald:"bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
-  amber:  "bg-amber-500/20 text-amber-300 border-amber-500/30",
-  rose:   "bg-rose-500/20 text-rose-300 border-rose-500/30",
+  violet: "bg-violet-500/20 text-violet-600 border-violet-500/30",
+  sky:    "bg-sky-500/20 text-sky-600 border-sky-500/30",
+  emerald:"bg-emerald-500/20 text-emerald-600 border-emerald-500/30",
+  amber:  "bg-amber-500/20 text-amber-600 border-amber-500/30",
+  rose:   "bg-rose-500/20 text-rose-600 border-rose-500/30",
 };
 
 const EVENTS: CalEvent[] = [
@@ -66,7 +66,7 @@ export default function CalendarPage() {
   const getEventsForDay = (day: number) => EVENTS.filter(e => e.date === day);
 
   return (
-    <div className="space-y-4 pb-4">
+    <div className="space-y-3 pb-0">
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-4">
         {/* Calendar grid */}
         <div className="xl:col-span-3 panel p-5">
@@ -128,7 +128,7 @@ export default function CalendarPage() {
         </div>
 
         {/* Upcoming events */}
-        <div className="panel p-5 space-y-4">
+        <div className="panel p-5 space-y-3">
           <h3 className="t-text font-semibold text-sm">Upcoming Events</h3>
           <div className="space-y-2">
             {upcomingEvents.map((ev, i) => (

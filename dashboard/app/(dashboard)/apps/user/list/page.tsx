@@ -2,8 +2,10 @@
 
 import { useState, useMemo } from "react";
 import { Search, Plus, MoreHorizontal, UserCheck, UserX, Shield, Crown } from "lucide-react";
+import * as Form from "@radix-ui/react-form";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 type UserRole = "Admin" | "Manager" | "Editor" | "Viewer";
@@ -50,9 +52,9 @@ export default function UserListPage() {
     ), [search, roleFilter]);
 
   return (
-    <div className="space-y-4 pb-4">
+    <div className="space-y-3 pb-0">
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {(["Admin", "Manager", "Editor", "Viewer"] as UserRole[]).map((role) => {
           const { cls, icon: Icon } = roleConfig[role];
           return (
@@ -71,11 +73,22 @@ export default function UserListPage() {
 
       <div className="panel">
         <div className="flex flex-wrap items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
-          <div className="flex items-center gap-2 h-9 px-3 rounded-lg border flex-1 min-w-[200px]" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
-            <Search className="w-3.5 h-3.5 t-text-30" />
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search users…"
-              className="flex-1 bg-transparent text-xs outline-none text-[color:var(--t-text-70)] placeholder:text-[color:var(--t-text-30)]" />
-          </div>
+          <Form.Root className="flex-1 min-w-[200px]">
+            <Form.Field name="search">
+              <div className="flex items-center gap-2 h-9 px-3 rounded-lg border" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
+                <Search className="w-3.5 h-3.5 t-text-30" />
+                <Form.Control asChild>
+                  <Input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search users…"
+                    aria-label="Search users"
+                    className="h-9 border-0 bg-transparent px-0 text-xs shadow-none focus-visible:ring-0"
+                  />
+                </Form.Control>
+              </div>
+            </Form.Field>
+          </Form.Root>
           <div className="flex gap-1">
             {(["all", "Admin", "Manager", "Editor", "Viewer"] as const).map((r) => (
               <button key={r} onClick={() => setRoleFilter(r)}
@@ -124,7 +137,9 @@ export default function UserListPage() {
                     <td className="px-5 py-3.5"><span className="t-text-40 text-xs">{user.lastLogin}</span></td>
                     <td className="px-5 py-3.5"><span className="t-text-50 text-xs">{user.orders}</span></td>
                     <td className="px-3 py-3.5">
-                      <button className="t-text-30 hover:t-text-70 transition-colors"><MoreHorizontal className="w-4 h-4" /></button>
+                      <button aria-label="More actions" className="t-text-30 hover:t-text-70 transition-colors">
+                        <MoreHorizontal className="w-4 h-4" />
+                      </button>
                     </td>
                   </tr>
                 );

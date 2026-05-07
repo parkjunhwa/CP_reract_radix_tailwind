@@ -124,7 +124,7 @@ export default function AnalyticsCharts() {
             </LineChart>
           </ResponsiveContainer>
         </div>
-        <div className="flex items-center gap-4 mt-3">
+        <div className="flex items-center gap-3 mt-3">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-0.5 bg-emerald-500 inline-block rounded" />
             <span className="t-text-40 text-xs">Retention %</span>

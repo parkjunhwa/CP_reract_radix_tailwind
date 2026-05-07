@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
+import { PagePreamble } from "@/components/layout/PagePreamble";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -17,7 +18,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [mobileOpen]);
 
   return (
-    <div className="layout-bg flex h-screen overflow-hidden" style={{ backgroundColor: "var(--luxe-bg)" }}>
+    <div className="layout-bg fixed inset-0 flex overflow-hidden t-bg">
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
@@ -42,13 +43,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
         <Header onMenuToggle={() => setMobileOpen(o => !o)} />
         <main
           id="main-content"
-          className="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-6"
+          className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-4 md:p-4"
           tabIndex={-1}
         >
+          <PagePreamble />
           {children}
         </main>
       </div>

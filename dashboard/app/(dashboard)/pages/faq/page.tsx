@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { Search, ChevronDown, ChevronRight, Mail, MessageCircle } from "lucide-react";
+import * as Form from "@radix-ui/react-form";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 
 interface FAQ { q: string; a: string }
 interface Category { label: string; icon: string; faqs: FAQ[] }
@@ -70,16 +72,27 @@ export default function FAQPage() {
   })).filter(cat => (activeCategory ? cat.label === activeCategory : true) && cat.faqs.length > 0);
 
   return (
-    <div className="space-y-6 pb-4 max-w-4xl">
+    <div className="space-y-3 pb-0">
       {/* Hero search */}
-      <div className="panel p-8 text-center space-y-4">
+      <div className="panel p-8 text-center space-y-3">
         <h1 className="t-text font-bold text-2xl">How can we help you?</h1>
         <p className="t-text-40 text-sm">Search our knowledge base or browse categories below</p>
-        <div className="max-w-lg mx-auto flex items-center gap-2 h-11 px-4 rounded-xl border" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
-          <Search className="w-4 h-4 t-text-30 flex-shrink-0" />
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search FAQs…"
-            className="flex-1 bg-transparent text-sm outline-none text-[color:var(--t-text-70)] placeholder:text-[color:var(--t-text-30)]" />
-        </div>
+        <Form.Root className="max-w-lg mx-auto">
+          <Form.Field name="search">
+            <div className="flex items-center gap-2 h-11 px-4 rounded-xl border" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
+              <Search className="w-4 h-4 t-text-30 flex-shrink-0" />
+              <Form.Control asChild>
+                <Input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search FAQs…"
+                  aria-label="Search FAQs"
+                  className="h-11 border-0 bg-transparent px-0 text-sm shadow-none focus-visible:ring-0"
+                />
+              </Form.Control>
+            </div>
+          </Form.Field>
+        </Form.Root>
       </div>
 
       {/* Category filters */}
@@ -101,7 +114,7 @@ export default function FAQPage() {
       </div>
 
       {/* FAQ Accordion */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         {filteredCategories.map((cat) => (
           <div key={cat.label} className="panel overflow-hidden">
             <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
@@ -141,7 +154,7 @@ export default function FAQPage() {
             { icon: Mail, label: "Email Support", sub: "support@luxe.com", color: "text-violet-400" },
             { icon: MessageCircle, label: "Live Chat", sub: "Available 9 AM – 6 PM EST", color: "text-sky-400" },
           ].map(({ icon: Icon, label, sub, color }) => (
-            <button key={label} className="flex items-center gap-4 p-4 rounded-xl border text-left hover:bg-[var(--t-hover)] transition-colors"
+            <button key={label} className="flex items-center gap-3 p-4 rounded-xl border text-left hover:bg-[var(--t-hover)] transition-colors"
               style={{ borderColor: "var(--t-border-2)" }}>
               <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "var(--t-hover)" }}>
                 <Icon className={cn("w-5 h-5", color)} />

@@ -27,7 +27,7 @@ const stacked = [
 
 export default function StatisticsWidgetsPage() {
   return (
-    <div className="space-y-4 pb-4">
+    <div className="space-y-3 pb-0">
       <div className="panel p-5">
         <h2 className="t-text font-semibold text-sm mb-4">KPI Cards — Horizontal</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
@@ -53,10 +53,10 @@ export default function StatisticsWidgetsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
         <div className="panel p-5">
           <h3 className="t-text font-semibold text-sm mb-4">Top Products by Revenue</h3>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {horizontal.map(p => (
               <div key={p.label}>
                 <div className="flex justify-between items-baseline mb-1.5">
@@ -77,9 +77,9 @@ export default function StatisticsWidgetsPage() {
 
         <div className="panel p-5">
           <h3 className="t-text font-semibold text-sm mb-4">Client Segmentation</h3>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {stacked.map(s => (
-              <div key={s.label} className="flex items-center gap-4">
+              <div key={s.label} className="flex items-center gap-3">
                 <div className="flex-1">
                   <div className="flex justify-between mb-1.5">
                     <span className="t-text-60 text-xs">{s.label}</span>

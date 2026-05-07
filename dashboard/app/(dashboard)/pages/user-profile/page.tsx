@@ -1,9 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import * as Form from "@radix-ui/react-form";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import {
   User, Mail, Phone, MapPin, Calendar, Shield,
@@ -53,7 +57,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="space-y-4 pb-4">
+    <div className="space-y-3 pb-0">
       {/* Profile hero card */}
       <div
         className="rounded-xl border p-6"
@@ -136,23 +140,33 @@ export default function ProfilePage() {
 
         {/* Bio */}
         <div className="mt-5 pt-5" style={{ borderTop: "1px solid var(--luxe-border)" }}>
-          <label className="text-xs font-medium mb-1.5 block" style={{ color: "var(--luxe-text-40)" }}>Bio</label>
           {editing ? (
-            <textarea
-              value={form.bio}
-              onChange={e => setForm(f => ({ ...f, bio: e.target.value }))}
-              rows={3}
-              className="w-full rounded-lg px-3 py-2 text-sm border resize-none outline-none focus:border-violet-500/60 transition-colors"
-              style={{ backgroundColor: "var(--luxe-surface-2)", borderColor: "var(--luxe-border-2)", color: "var(--luxe-text-60)" }}
-            />
+            <Form.Root>
+              <Form.Field name="bio" className="space-y-1.5">
+                <Form.Label asChild>
+                  <Label className="text-xs font-medium" style={{ color: "var(--luxe-text-40)" }}>Bio</Label>
+                </Form.Label>
+                <Form.Control asChild>
+                  <Textarea
+                    value={form.bio}
+                    onChange={(e) => setForm(f => ({ ...f, bio: e.target.value }))}
+                    rows={3}
+                    className="text-sm resize-none"
+                  />
+                </Form.Control>
+              </Form.Field>
+            </Form.Root>
           ) : (
-            <p className="text-sm leading-relaxed" style={{ color: "var(--luxe-text-50)" }}>{form.bio}</p>
+            <>
+              <Label className="text-xs font-medium mb-1.5 block" style={{ color: "var(--luxe-text-40)" }}>Bio</Label>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--luxe-text-50)" }}>{form.bio}</p>
+            </>
           )}
         </div>
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {STATS.map(({ label, value, icon: Icon, color }) => (
           <div
             key={label}
@@ -168,14 +182,14 @@ export default function ProfilePage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Personal info form */}
         <div
           className="lg:col-span-2 rounded-xl border p-6"
           style={{ backgroundColor: "var(--luxe-surface)", borderColor: "var(--luxe-border)" }}
         >
           <h3 className="font-semibold text-sm mb-5" style={{ color: "var(--luxe-text)" }}>Personal information</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Form.Root className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {([
               { label: "Name",     key: "name"     as const },
               { label: "Email",    key: "email"    as const },
@@ -183,32 +197,24 @@ export default function ProfilePage() {
               { label: "Phone",    key: "phone"    as const },
               { label: "Location", key: "location" as const },
             ]).map(({ label, key }) => (
-              <div key={key}>
-                <label
-                  htmlFor={`field-${key}`}
-                  className="text-xs mb-1.5 block"
-                  style={{ color: "var(--luxe-text-40)" }}
-                >
-                  {label}
-                </label>
-                <input
-                  id={`field-${key}`}
-                  value={form[key]}
-                  onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-                  readOnly={!editing}
-                  className={cn(
-                    "w-full rounded-lg px-3 py-2 text-sm outline-none border transition-colors",
-                    editing ? "focus:border-violet-500/60" : "cursor-default"
-                  )}
-                  style={{
-                    backgroundColor: editing ? "var(--luxe-surface-2)" : "transparent",
-                    borderColor: editing ? "var(--luxe-border-2)" : "var(--luxe-border)",
-                    color: "var(--luxe-text-60)",
-                  }}
-                />
-              </div>
+              <Form.Field key={key} name={key} className="space-y-1.5">
+                <Form.Label asChild>
+                  <Label htmlFor={`field-${key}`} className="text-xs" style={{ color: "var(--luxe-text-40)" }}>
+                    {label}
+                  </Label>
+                </Form.Label>
+                <Form.Control asChild>
+                  <Input
+                    id={`field-${key}`}
+                    value={form[key]}
+                    onChange={(e) => setForm(f => ({ ...f, [key]: e.target.value }))}
+                    readOnly={!editing}
+                    className={cn("h-10 text-sm", !editing && "cursor-default border-transparent bg-transparent")}
+                  />
+                </Form.Control>
+              </Form.Field>
             ))}
-          </div>
+          </Form.Root>
 
           <Separator className="my-5" style={{ backgroundColor: "var(--luxe-border)" }} />
 
@@ -234,7 +240,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Right column */}
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-3">
           {/* Roles & Permissions */}
           <div
             className="rounded-xl border p-5"

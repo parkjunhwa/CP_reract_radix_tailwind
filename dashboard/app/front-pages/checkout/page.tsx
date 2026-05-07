@@ -6,9 +6,13 @@ import {
   ShoppingBag, MapPin, CreditCard, Check, ArrowLeft, ArrowRight, Plus, Minus, Trash2,
   Wallet, ShieldCheck,
 } from "lucide-react";
+import * as Form from "@radix-ui/react-form";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 type Step = 0 | 1 | 2;
 
@@ -70,7 +74,10 @@ export default function CheckoutPage() {
       </ol>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-8 panel p-6 lg:p-8 min-h-[420px]">
+        <Form.Root
+          className="lg:col-span-8 panel p-6 lg:p-8 min-h-[420px]"
+          onSubmit={(e) => { e.preventDefault(); if (step < 2) setStep((s) => ((s + 1) as Step)); }}
+        >
           {step === 0 && (
             <div className="space-y-5">
               <div className="flex items-baseline justify-between">
@@ -135,33 +142,36 @@ export default function CheckoutPage() {
                 <p className="t-text-50 text-sm mt-1">We&apos;ll send tracking info to your email and phone.</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  { id: "home", title: "Home", desc: "9 Mercer St, NY 10013", default: true },
-                  { id: "office", title: "Office", desc: "1 Park Ave, NY 10016" },
-                ].map((a) => (
-                  <label
-                    key={a.id}
-                    className="rounded-xl border p-4 cursor-pointer t-hover flex items-start gap-3"
-                    style={{ borderColor: "var(--t-border-2)" }}
-                  >
-                    <input type="radio" name="address" defaultChecked={a.default} className="accent-violet-500 mt-1" />
-                    <div>
-                      <p className="text-sm font-semibold t-text">{a.title}</p>
-                      <p className="t-text-50 text-xs mt-0.5">{a.desc}</p>
-                    </div>
-                  </label>
-                ))}
-              </div>
+              <Form.Field name="address" asChild>
+                <RadioGroup defaultValue="home" className="grid grid-cols-2 gap-3">
+                  {[
+                    { id: "home", title: "Home", desc: "9 Mercer St, NY 10013" },
+                    { id: "office", title: "Office", desc: "1 Park Ave, NY 10016" },
+                  ].map((a) => (
+                    <Label
+                      key={a.id}
+                      htmlFor={`addr-${a.id}`}
+                      className="rounded-xl border p-4 cursor-pointer t-hover flex items-start gap-3 font-normal"
+                      style={{ borderColor: "var(--t-border-2)" }}
+                    >
+                      <RadioGroupItem id={`addr-${a.id}`} value={a.id} className="mt-1" />
+                      <div>
+                        <p className="text-sm font-semibold t-text">{a.title}</p>
+                        <p className="t-text-50 text-xs mt-0.5">{a.desc}</p>
+                      </div>
+                    </Label>
+                  ))}
+                </RadioGroup>
+              </Form.Field>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field label="Full name" placeholder="Jane Doe" />
-                <Field label="Phone" placeholder="+1 415 555 0192" />
-                <div className="sm:col-span-2"><Field label="Street address" placeholder="123 Mercer St, Apt 4B" /></div>
-                <Field label="City" placeholder="New York" />
-                <Field label="ZIP / Postal" placeholder="10013" mono />
-                <Field label="State / Region" placeholder="NY" />
-                <Field label="Country" placeholder="United States" />
+                <Field name="fullName" label="Full name" placeholder="Jane Doe" />
+                <Field name="phone" label="Phone" placeholder="+1 415 555 0192" />
+                <div className="sm:col-span-2"><Field name="street" label="Street address" placeholder="123 Mercer St, Apt 4B" /></div>
+                <Field name="city" label="City" placeholder="New York" />
+                <Field name="zip" label="ZIP / Postal" placeholder="10013" mono />
+                <Field name="state" label="State / Region" placeholder="NY" />
+                <Field name="country" label="Country" placeholder="United States" />
               </div>
             </div>
           )}
@@ -172,32 +182,35 @@ export default function CheckoutPage() {
                 <h2 className="text-xl font-bold">Payment</h2>
                 <p className="t-text-50 text-sm mt-1">Choose how you&apos;d like to pay for this order.</p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[
-                  { id: "card", label: "Credit / Debit Card", icon: CreditCard, caption: "Encrypted via Stripe" },
-                  { id: "paypal", label: "PayPal", icon: Wallet, caption: "Pay with your PayPal account" },
-                ].map((m, i) => (
-                  <label
-                    key={m.id}
-                    className="rounded-xl border p-4 cursor-pointer t-hover flex items-start gap-3"
-                    style={{ borderColor: "var(--t-border-2)" }}
-                  >
-                    <input type="radio" name="pay" defaultChecked={i === 0} className="accent-violet-500 mt-1" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold t-text inline-flex items-center gap-2">
-                        <m.icon className="w-4 h-4 text-violet-300" />
-                        {m.label}
-                      </p>
-                      <p className="t-text-50 text-xs mt-1">{m.caption}</p>
-                    </div>
-                  </label>
-                ))}
-              </div>
+              <Form.Field name="payMethod" asChild>
+                <RadioGroup defaultValue="card" className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {[
+                    { id: "card", label: "Credit / Debit Card", icon: CreditCard, caption: "Encrypted via Stripe" },
+                    { id: "paypal", label: "PayPal", icon: Wallet, caption: "Pay with your PayPal account" },
+                  ].map((m) => (
+                    <Label
+                      key={m.id}
+                      htmlFor={`pay-${m.id}`}
+                      className="rounded-xl border p-4 cursor-pointer t-hover flex items-start gap-3 font-normal"
+                      style={{ borderColor: "var(--t-border-2)" }}
+                    >
+                      <RadioGroupItem id={`pay-${m.id}`} value={m.id} className="mt-1" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold t-text inline-flex items-center gap-2">
+                          <m.icon className="w-4 h-4 text-violet-300" />
+                          {m.label}
+                        </p>
+                        <p className="t-text-50 text-xs mt-1">{m.caption}</p>
+                      </div>
+                    </Label>
+                  ))}
+                </RadioGroup>
+              </Form.Field>
               <div className="grid grid-cols-1 sm:grid-cols-6 gap-4">
-                <div className="sm:col-span-6"><Field label="Card number" placeholder="8763 2345 3478 0921" mono /></div>
-                <div className="sm:col-span-3"><Field label="Card holder" placeholder="Jane Doe" /></div>
-                <div className="sm:col-span-2"><Field label="EXP. date" placeholder="05/2026" mono /></div>
-                <div className="sm:col-span-1"><Field label="CVV" placeholder="734" mono /></div>
+                <div className="sm:col-span-6"><Field name="cardNumber" label="Card number" placeholder="8763 2345 3478 0921" mono /></div>
+                <div className="sm:col-span-3"><Field name="cardHolder" label="Card holder" placeholder="Jane Doe" /></div>
+                <div className="sm:col-span-2"><Field name="expDate" label="EXP. date" placeholder="05/2026" mono /></div>
+                <div className="sm:col-span-1"><Field name="cvv" label="CVV" placeholder="734" mono /></div>
               </div>
             </div>
           )}
@@ -225,21 +238,28 @@ export default function CheckoutPage() {
               </Button>
             )}
           </div>
-        </div>
+        </Form.Root>
 
         {/* Order summary */}
-        <aside className="lg:col-span-4 panel p-6 lg:p-7 h-fit lg:sticky lg:top-20 space-y-4">
+        <aside className="lg:col-span-4 panel p-6 lg:p-7 h-fit lg:sticky lg:top-20 space-y-3">
           <h3 className="font-bold t-text">Order summary</h3>
           <div className="rounded-xl border p-4 space-y-3" style={{ borderColor: "var(--t-border)", backgroundColor: "var(--t-surface-2)" }}>
-            <div className="flex items-center gap-3">
-              <input
-                type="text"
-                placeholder="Promo code"
-                className="flex-1 h-9 px-3 rounded-lg border text-sm outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40"
-                style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text-70)" }}
-              />
-              <Button size="sm">Apply</Button>
-            </div>
+            <Form.Root className="flex items-center gap-3" onSubmit={(e) => e.preventDefault()}>
+              <Form.Field name="promo" className="flex-1">
+                <Form.Label className="sr-only">Promo code</Form.Label>
+                <Form.Control asChild>
+                  <Input
+                    type="text"
+                    placeholder="Promo code"
+                    aria-label="Promo code"
+                    className="h-9 text-sm"
+                  />
+                </Form.Control>
+              </Form.Field>
+              <Form.Submit asChild>
+                <Button size="sm" type="submit">Apply</Button>
+              </Form.Submit>
+            </Form.Root>
             <p className="t-text-40 text-xs">Try <span className="font-mono text-violet-300">LUXE10</span> for 10% off.</p>
           </div>
           <ul className="text-sm space-y-2">
@@ -273,19 +293,19 @@ function Row({ k, v, muted }: { k: string; v: string; muted?: boolean }) {
   );
 }
 
-function Field({ label, placeholder, mono }: { label: string; placeholder?: string; mono?: boolean }) {
+function Field({ name, label, placeholder, mono }: { name: string; label: string; placeholder?: string; mono?: boolean }) {
   return (
-    <label className="space-y-1.5 block">
-      <span className="t-text-50 text-xs font-medium">{label}</span>
-      <input
-        type="text"
-        placeholder={placeholder}
-        className={cn(
-          "w-full h-10 px-3 rounded-lg border text-sm outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40",
-          mono && "font-mono tracking-wider",
-        )}
-        style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text-70)" }}
-      />
-    </label>
+    <Form.Field name={name} className="space-y-1.5 block">
+      <Form.Label asChild>
+        <Label className="t-text-50 text-xs font-medium">{label}</Label>
+      </Form.Label>
+      <Form.Control asChild>
+        <Input
+          type="text"
+          placeholder={placeholder}
+          className={cn("h-10 text-sm", mono && "font-mono tracking-wider")}
+        />
+      </Form.Control>
+    </Form.Field>
   );
 }

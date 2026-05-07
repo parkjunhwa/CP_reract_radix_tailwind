@@ -10,11 +10,7 @@ const customers = [
 
 export default function EcommerceCustomersListPage() {
   return (
-    <div className="space-y-4 pb-4">
-      <div className="panel p-5">
-        <h2 className="t-text font-semibold text-lg">Customers · List</h2>
-        <p className="t-text-40 text-sm mt-1">Sample records; Details uses id from full-version menu (879861).</p>
-      </div>
+    <div className="space-y-3 pb-0">
       <div className="panel overflow-x-auto">
         <table className="w-full text-sm">
           <thead>

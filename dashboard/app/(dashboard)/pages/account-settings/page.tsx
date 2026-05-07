@@ -1,9 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import * as Form from "@radix-ui/react-form";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { User, Shield, Bell, CreditCard, Key, Palette, Save, Eye, EyeOff, Check } from "lucide-react";
 
@@ -16,13 +24,8 @@ const TABS = [
   { id:"appearance", label:"Appearance",  icon:Palette },
 ];
 
-function Toggle({ checked, onChange }: { checked: boolean; onChange: (v:boolean)=>void }) {
-  return (
-    <button onClick={() => onChange(!checked)}
-      className={cn("relative w-9 h-5 rounded-full transition-colors flex-shrink-0", checked ? "bg-violet-600" : "bg-[var(--t-input-bg)]")}>
-      <span className={cn("absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform", checked && "translate-x-4")} />
-    </button>
-  );
+function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label?: string }) {
+  return <Switch checked={checked} onCheckedChange={onChange} aria-label={label} />;
 }
 
 function Field({ label, desc, children }: { label:string; desc?:string; children:React.ReactNode }) {
@@ -46,17 +49,13 @@ export default function SettingsPage() {
   const [alerts, setAlerts] = useState({ emailOrders:true, emailPayments:true, emailAlerts:true, pushOrders:false, pushPayments:true, pushAlerts:true, weeklyReport:true, monthlyReport:true });
   const [appearance, setAppearance] = useState({ theme:"dark", density:"comfortable", accentColor:"violet" });
 
-  const save = () => { setSaved(true); setTimeout(()=>setSaved(false), 2000); };
-
-  const inputCls =
-    "w-full rounded-lg px-3 py-2 text-sm outline-none transition-colors border " +
-    "text-[color:var(--t-text-70)] placeholder:text-[color:var(--t-text-30)]";
+  const save = () => { setSaved(true); setTimeout(() => setSaved(false), 2000); };
 
   return (
-    <div className="flex gap-6 pb-6">
+    <div className="flex gap-4 pb-0">
       {/* Sidebar tabs */}
-      <div className="w-48 flex-shrink-0">
-        <div className="panel p-2 flex flex-col gap-1">
+      <div className="w-48 shrink-0 self-stretch">
+        <div className="panel h-full p-2 flex flex-col gap-1">
           {TABS.map((t) => {
             const Icon = t.icon;
             const active = tab === t.id;
@@ -97,7 +96,7 @@ export default function SettingsPage() {
                 <p className="t-text-40 text-xs mt-0.5">Update your personal details and public profile</p>
               </div>
               {/* Avatar */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 <Avatar className="w-16 h-16">
                   <AvatarFallback className="bg-gradient-to-br from-violet-500 to-purple-700 text-white text-xl font-bold">JP</AvatarFallback>
                 </Avatar>
@@ -109,47 +108,69 @@ export default function SettingsPage() {
                 </div>
               </div>
               <Separator style={{ backgroundColor: "var(--t-border)" }} />
-              <div className="grid grid-cols-2 gap-4">
+              <Form.Root className="grid grid-cols-2 gap-4">
                 {[
-                  { label:"Full Name", key:"name" as const },
-                  { label:"Email Address", key:"email" as const },
-                  { label:"Job Title", key:"title" as const },
-                  { label:"Company", key:"company" as const },
-                  { label:"Phone Number", key:"phone" as const },
-                ].map(f => (
-                  <div key={f.key} className={f.key==="phone" ? "col-span-2 md:col-span-1" : ""}>
-                    <label className="t-text-50 text-xs mb-1.5 block">{f.label}</label>
-                    <input
-                      value={profile[f.key]}
-                      onChange={e=>setProfile(p=>({...p,[f.key]:e.target.value}))}
-                      className={inputCls}
-                      style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}
-                    />
-                  </div>
+                  { label: "Full Name", key: "name" as const },
+                  { label: "Email Address", key: "email" as const },
+                  { label: "Job Title", key: "title" as const },
+                  { label: "Company", key: "company" as const },
+                  { label: "Phone Number", key: "phone" as const },
+                ].map((f) => (
+                  <Form.Field key={f.key} name={f.key} className={cn("space-y-1.5", f.key === "phone" && "col-span-2 md:col-span-1")}>
+                    <Form.Label asChild>
+                      <Label htmlFor={`profile-${f.key}`}>{f.label}</Label>
+                    </Form.Label>
+                    <Form.Control asChild>
+                      <Input
+                        id={`profile-${f.key}`}
+                        size="lg"
+                        className="text-sm"
+                        value={profile[f.key]}
+                        onChange={(e) => setProfile((p) => ({ ...p, [f.key]: e.target.value }))}
+                      />
+                    </Form.Control>
+                  </Form.Field>
                 ))}
-                <div>
-                  <label className="t-text-50 text-xs mb-1.5 block">Timezone</label>
-                  <select value={profile.timezone} onChange={e=>setProfile(p=>({...p,timezone:e.target.value}))}
-                    className={cn(inputCls, "cursor-pointer")}
-                    style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}
+                <Form.Field name="timezone" className="space-y-1.5">
+                  <Form.Label asChild>
+                    <Label htmlFor="profile-timezone">Timezone</Label>
+                  </Form.Label>
+                  <Select
+                    value={profile.timezone}
+                    onValueChange={(v) => setProfile((p) => ({ ...p, timezone: v }))}
                   >
-                    <option value="Asia/Seoul">Asia/Seoul (KST +9)</option>
-                    <option value="America/New_York">America/New_York (EST -5)</option>
-                    <option value="Europe/London">Europe/London (GMT 0)</option>
-                    <option value="Europe/Paris">Europe/Paris (CET +1)</option>
-                    <option value="Asia/Tokyo">Asia/Tokyo (JST +9)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="t-text-50 text-xs mb-1.5 block">Language</label>
-                  <select value={profile.language} onChange={e=>setProfile(p=>({...p,language:e.target.value}))}
-                    className={cn(inputCls, "cursor-pointer")}
-                    style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}
+                    <SelectTrigger id="profile-timezone" className="w-full h-10 text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Asia/Seoul">Asia/Seoul (KST +9)</SelectItem>
+                      <SelectItem value="America/New_York">America/New_York (EST -5)</SelectItem>
+                      <SelectItem value="Europe/London">Europe/London (GMT 0)</SelectItem>
+                      <SelectItem value="Europe/Paris">Europe/Paris (CET +1)</SelectItem>
+                      <SelectItem value="Asia/Tokyo">Asia/Tokyo (JST +9)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </Form.Field>
+                <Form.Field name="language" className="space-y-1.5">
+                  <Form.Label asChild>
+                    <Label htmlFor="profile-language">Language</Label>
+                  </Form.Label>
+                  <Select
+                    value={profile.language}
+                    onValueChange={(v) => setProfile((p) => ({ ...p, language: v }))}
                   >
-                    <option>English</option><option>Korean</option><option>Japanese</option><option>French</option>
-                  </select>
-                </div>
-              </div>
+                    <SelectTrigger id="profile-language" className="w-full h-10 text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="English">English</SelectItem>
+                      <SelectItem value="Korean">Korean</SelectItem>
+                      <SelectItem value="Japanese">Japanese</SelectItem>
+                      <SelectItem value="French">French</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </Form.Field>
+              </Form.Root>
             </div>
           )}
 
@@ -159,22 +180,34 @@ export default function SettingsPage() {
                 <h3 className="t-text font-semibold text-base">Security Settings</h3>
                 <p className="t-text-40 text-xs mt-0.5">Manage your password and two-factor authentication</p>
               </div>
-              <div className="space-y-4">
-                <div>
-                  <label className="t-text-50 text-xs mb-1.5 block">Current Password</label>
-                  <input type="password" placeholder="••••••••••••" className={inputCls} style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }} />
-                </div>
+              <Form.Root className="space-y-3">
+                <Form.Field name="currentPassword" className="space-y-1.5">
+                  <Form.Label asChild>
+                    <Label htmlFor="security-current">Current Password</Label>
+                  </Form.Label>
+                  <Form.Control asChild>
+                    <Input id="security-current" type="password" placeholder="••••••••••••" size="lg" className="text-sm" />
+                  </Form.Control>
+                </Form.Field>
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="t-text-50 text-xs mb-1.5 block">New Password</label>
-                    <input type="password" placeholder="Min. 12 characters" className={inputCls} style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }} />
-                  </div>
-                  <div>
-                    <label className="t-text-50 text-xs mb-1.5 block">Confirm Password</label>
-                    <input type="password" placeholder="Repeat new password" className={inputCls} style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }} />
-                  </div>
+                  <Form.Field name="newPassword" className="space-y-1.5">
+                    <Form.Label asChild>
+                      <Label htmlFor="security-new">New Password</Label>
+                    </Form.Label>
+                    <Form.Control asChild>
+                      <Input id="security-new" type="password" placeholder="Min. 12 characters" size="lg" className="text-sm" />
+                    </Form.Control>
+                  </Form.Field>
+                  <Form.Field name="confirmPassword" className="space-y-1.5">
+                    <Form.Label asChild>
+                      <Label htmlFor="security-confirm">Confirm Password</Label>
+                    </Form.Label>
+                    <Form.Control asChild>
+                      <Input id="security-confirm" type="password" placeholder="Repeat new password" size="lg" className="text-sm" />
+                    </Form.Control>
+                  </Form.Field>
                 </div>
-              </div>
+              </Form.Root>
               <Separator style={{ backgroundColor: "var(--t-border)" }} />
               <div>
                 <h4 className="t-text-70 text-sm font-medium mb-3">Two-Factor Authentication</h4>
@@ -256,10 +289,10 @@ export default function SettingsPage() {
                 <h3 className="t-text font-semibold text-base">Billing & Subscription</h3>
                 <p className="t-text-40 text-xs mt-0.5">Manage your plan and payment methods</p>
               </div>
-              <div className="rounded-xl border border-violet-500/30 bg-violet-600/10 p-5 flex items-center justify-between">
+              <div className="rounded-xl border border-violet-500/80 bg-violet-600/10 p-5 flex items-center justify-between">
                 <div>
-                  <Badge className="bg-violet-600/30 text-violet-300 border-violet-500/30 mb-2">Enterprise Plan</Badge>
-                  <p className="text-white font-semibold text-lg">$2,400 / month</p>
+                  <Badge className="bg-violet-600/20 text-violet-500 border-violet-500/30 mb-2">Enterprise Plan</Badge>
+                  <p className="text-violet-600 font-semibold text-lg">$2,400 / month</p>
                   <p className="t-text-40 text-xs mt-0.5">Unlimited users · 5TB storage · Priority support</p>
                 </div>
                 <button
@@ -286,7 +319,7 @@ export default function SettingsPage() {
                       </div>
                     </div>
                     {card.primary
-                      ? <Badge className="bg-violet-500/10 text-violet-400 border-violet-500/20 text-[10px]">Primary</Badge>
+                      ? <Badge className="bg-violet-500/10 text-violet-500 border-violet-500/20 text-[10px]">Primary</Badge>
                       : <button className="t-text-40 hover:t-text text-xs transition-colors">Set primary</button>
                     }
                   </div>
@@ -319,7 +352,12 @@ export default function SettingsPage() {
                   </div>
                   <div className="flex items-center gap-2 rounded-lg px-3 py-2 font-mono border" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
                     <span className="flex-1 t-text-40 text-xs">{showKey ? apiKey.key.replace("...","x7y8z9abc0def1") : apiKey.key}</span>
-                    <button onClick={()=>setShowKey(!showKey)} className="t-text-30 hover:t-text transition-colors">
+                    <button
+                      type="button"
+                      onClick={() => setShowKey(!showKey)}
+                      aria-label={showKey ? "Hide API key" : "Show API key"}
+                      className="t-text-30 hover:t-text transition-colors"
+                    >
                       {showKey ? <EyeOff className="w-3.5 h-3.5" aria-hidden="true" /> : <Eye className="w-3.5 h-3.5" aria-hidden="true" />}
                     </button>
                   </div>
@@ -345,7 +383,7 @@ export default function SettingsPage() {
                   {[["dark","Dark"],["light","Light"],["system","System"]].map(([v,l]) => (
                     <button key={v} onClick={() => setAppearance(a=>({...a,theme:v}))}
                       className={cn("flex-1 py-3 rounded-xl border text-sm font-medium transition-all",
-                        appearance.theme===v ? "border-violet-500/50 bg-violet-600/15 text-violet-300" : "border-[color:var(--t-border-2)] t-text-40 hover:t-text")}>
+                        appearance.theme===v ? "border-[color:var(--t-accent)] bg-[var(--luxe-accent-2)] t-accent-text" : "border-[color:var(--t-border-2)] t-text-40 hover:t-text")}>
                       {l}
                     </button>
                   ))}
@@ -357,7 +395,7 @@ export default function SettingsPage() {
                   {[["compact","Compact"],["comfortable","Comfortable"],["spacious","Spacious"]].map(([v,l]) => (
                     <button key={v} onClick={() => setAppearance(a=>({...a,density:v}))}
                       className={cn("flex-1 py-3 rounded-xl border text-sm font-medium transition-all",
-                        appearance.density===v ? "border-violet-500/50 bg-violet-600/15 text-violet-300" : "border-[color:var(--t-border-2)] t-text-40 hover:t-text")}>
+                        appearance.density===v ? "border-[color:var(--t-accent)] bg-[var(--luxe-accent-2)] t-accent-text" : "border-[color:var(--t-border-2)] t-text-40 hover:t-text")}>
                       {l}
                     </button>
                   ))}
@@ -367,9 +405,15 @@ export default function SettingsPage() {
                 <p className="t-text-50 text-xs uppercase tracking-wider mb-3">Accent Color</p>
                 <div className="flex gap-3">
                   {[["violet","#7c3aed"],["emerald","#10b981"],["sky","#0ea5e9"],["amber","#f59e0b"],["rose","#f43f5e"]].map(([name,color]) => (
-                    <button key={name} onClick={() => setAppearance(a=>({...a,accentColor:name}))}
+                    <button
+                      key={name}
+                      type="button"
+                      onClick={() => setAppearance(a=>({...a,accentColor:name}))}
+                      aria-label={`Use ${name} accent color`}
+                      title={`Use ${name} accent color`}
                       className={cn("w-9 h-9 rounded-xl border-2 transition-all", appearance.accentColor===name ? "border-white scale-110" : "border-transparent")}
-                      style={{ backgroundColor:color }} />
+                      style={{ backgroundColor:color }}
+                    />
                   ))}
                 </div>
               </div>
@@ -378,12 +422,19 @@ export default function SettingsPage() {
 
           {/* Save button */}
           <div className="px-6 py-4 flex justify-end" style={{ borderTop: "1px solid var(--t-border)" }}>
-            <button onClick={save}
-              className={cn("flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition-all",
-                saved ? "bg-emerald-600 text-white" : "bg-violet-600 hover:bg-violet-500 text-white")}>
+            <Button
+              size="lg"
+              onClick={save}
+              className={cn(
+                "px-5 text-sm font-medium",
+                saved
+                  ? "bg-emerald-600 hover:bg-emerald-500 text-white border-emerald-700"
+                  : "bg-violet-600 hover:bg-violet-500 text-white border-violet-700",
+              )}
+            >
               {saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
               {saved ? "Saved!" : "Save Changes"}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

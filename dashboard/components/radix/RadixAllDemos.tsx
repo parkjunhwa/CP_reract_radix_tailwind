@@ -265,7 +265,7 @@ function DemoAspectRatio() {
 
 function DemoAvatar() {
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-3">
       <Avatar.Root className="inline-flex items-center justify-center w-12 h-12 rounded-full overflow-hidden border" style={{ borderColor: "var(--t-border-2)", backgroundColor: "var(--t-surface-2)" }}>
         <Avatar.Image className="w-full h-full object-cover" src="https://this-image-does-not-exist.invalid/avatar.png" alt="Junhwa Park" />
         <Avatar.Fallback className="w-full h-full flex items-center justify-center text-sm font-semibold">JP</Avatar.Fallback>
@@ -403,16 +403,20 @@ function DemoDialog() {
               <X className="w-4 h-4" aria-hidden="true" />
             </Dialog.Close>
           </div>
-          <div className="mt-5 space-y-3">
-            <label className="block">
-              <span className="t-text-50 text-xs">Display name</span>
-              <input defaultValue="Junhwa Park" className="mt-1 w-full h-10 px-3 rounded-lg border text-sm outline-none" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }} />
-            </label>
-            <label className="block">
-              <span className="t-text-50 text-xs">Email</span>
-              <input defaultValue="junhwa.park@gmail.com" className="mt-1 w-full h-10 px-3 rounded-lg border text-sm outline-none" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }} />
-            </label>
-          </div>
+          <Form.Root className="mt-5 space-y-3">
+            <Form.Field name="displayName" className="space-y-1">
+              <Form.Label className="t-text-50 text-xs">Display name</Form.Label>
+              <Form.Control asChild>
+                <input defaultValue="Junhwa Park" className="w-full h-10 px-3 rounded-lg border text-sm outline-none" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }} />
+              </Form.Control>
+            </Form.Field>
+            <Form.Field name="email" className="space-y-1">
+              <Form.Label className="t-text-50 text-xs">Email</Form.Label>
+              <Form.Control asChild>
+                <input defaultValue="junhwa.park@gmail.com" className="w-full h-10 px-3 rounded-lg border text-sm outline-none" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }} />
+              </Form.Control>
+            </Form.Field>
+          </Form.Root>
           <div className="mt-5 flex justify-end gap-2">
             <Dialog.Close className={cn(btn, "hover:bg-[var(--t-hover)]")} style={{ backgroundColor: "var(--t-surface-2)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }}>
               Cancel
@@ -459,7 +463,7 @@ function DemoForm() {
   return (
     <>
       <Form.Root
-        className="max-w-md space-y-4"
+        className="max-w-md space-y-3"
         onSubmit={(e) => {
           e.preventDefault();
           const fd = new FormData(e.currentTarget);
@@ -491,7 +495,7 @@ function DemoForm() {
           </Form.Message>
         </Form.Field>
         <Form.Submit asChild>
-          <button type="submit" className="h-10 px-4 rounded-lg border text-sm font-medium hover:bg-[var(--t-hover)] transition-colors" style={{ backgroundColor: "var(--t-surface-2)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }}>
+          <button type="submit" className="inline-flex h-10 min-h-10 shrink-0 items-center justify-center px-4 rounded-lg border text-sm font-medium leading-none hover:bg-[var(--t-hover)] transition-colors" style={{ backgroundColor: "var(--t-surface-2)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }}>
             Submit
           </button>
         </Form.Submit>
@@ -535,18 +539,24 @@ function DemoHoverCard() {
 
 function DemoLabel() {
   return (
-    <div className="max-w-md space-y-2">
-      <Label.Root className="t-text-50 text-xs" htmlFor="radix-label-email">
-        Email address
-      </Label.Root>
-      <input
-        id="radix-label-email"
-        type="email"
-        placeholder="name@company.com"
-        className="w-full h-10 px-3 rounded-lg border text-sm outline-none"
-        style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }}
-      />
-    </div>
+    <Form.Root className="max-w-md space-y-2">
+      <Form.Field name="email" className="space-y-2">
+        <Form.Label asChild>
+          <Label.Root className="t-text-50 text-xs" htmlFor="radix-label-email">
+            Email address
+          </Label.Root>
+        </Form.Label>
+        <Form.Control asChild>
+          <input
+            id="radix-label-email"
+            type="email"
+            placeholder="name@company.com"
+            className="w-full h-10 px-3 rounded-lg border text-sm outline-none"
+            style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }}
+          />
+        </Form.Control>
+      </Form.Field>
+    </Form.Root>
   );
 }
 
@@ -608,8 +618,8 @@ function DemoMenubar() {
 
 function DemoNavigationMenu() {
   return (
-    <NavigationMenu.Root className="relative max-w-full overflow-x-auto pb-2">
-      <NavigationMenu.List className="flex items-center gap-2 min-w-max">
+    <NavigationMenu.Root className="relative">
+      <NavigationMenu.List className="flex items-center gap-2 flex-wrap">
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
             <Link href="/" className={linkCls} style={{ borderColor: "var(--t-border-2)", backgroundColor: "var(--t-surface-2)", color: "var(--t-text)" }}>
@@ -812,13 +822,13 @@ function DemoSelect() {
 
 function DemoSeparator() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div>
         <p className="t-text text-sm font-medium">Account</p>
         <p className="t-text-40 text-xs mt-0.5">Manage profile, security, and billing.</p>
       </div>
       <Separator.Root decorative className="h-px w-full" style={{ backgroundColor: "var(--t-border)" }} />
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <button type="button" className="px-3 h-9 rounded-lg border text-sm" style={{ borderColor: "var(--t-border-2)", backgroundColor: "var(--t-surface-2)", color: "var(--t-text)" }}>
           Profile
         </button>
@@ -1060,16 +1070,33 @@ const DEMO_BY_SLUG: Record<(typeof RADIX_PRIMITIVES)[number]["slug"], React.Reac
   tooltip: <DemoTooltip />,
 };
 
+/** Slugs whose demos need the panel body to allow floating overlays to escape. */
+const OVERFLOW_VISIBLE_SLUGS = new Set(["navigation-menu"]);
+
 export function RadixAllDemos() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch">
-      {RADIX_PRIMITIVES.map((p) => (
-        <div key={p.slug} id={`radix-${p.slug}`} className="flex h-full min-h-0 min-w-0 flex-col scroll-mt-28">
-          <ExamplePanel title={p.title} description={p.description}>
-            {DEMO_BY_SLUG[p.slug]}
-          </ExamplePanel>
-        </div>
-      ))}
+      {RADIX_PRIMITIVES.map((p) => {
+        const allowOverflow = OVERFLOW_VISIBLE_SLUGS.has(p.slug);
+        return (
+          <div
+            key={p.slug}
+            id={`radix-${p.slug}`}
+            className={
+              "flex h-full min-h-0 min-w-0 flex-col scroll-mt-28" +
+              (allowOverflow ? " relative z-30" : "")
+            }
+          >
+            <ExamplePanel
+              title={p.title}
+              description={p.description}
+              bodyClassName={allowOverflow ? "!overflow-visible" : undefined}
+            >
+              {DEMO_BY_SLUG[p.slug]}
+            </ExamplePanel>
+          </div>
+        );
+      })}
     </div>
   );
 }

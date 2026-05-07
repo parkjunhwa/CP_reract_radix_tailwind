@@ -64,14 +64,14 @@ const recentActivities = [
 
 export default function CRMPage() {
   return (
-    <div className="space-y-4 pb-4">
+    <div className="space-y-3 pb-0">
       {/* KPI row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {kpis.map((k) => {
           const Icon = k.icon;
           const positive = k.change >= 0;
           return (
-            <div key={k.label} className="panel p-4 flex items-center gap-4">
+            <div key={k.label} className="panel p-4 flex items-center gap-3">
               <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0", k.bg)}>
                 <Icon className={cn("w-5 h-5", k.color)} aria-hidden="true" />
               </div>
@@ -88,7 +88,7 @@ export default function CRMPage() {
         })}
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
         {/* Earnings chart */}
         <div className="xl:col-span-2 panel p-5">
           <h3 className="t-text font-semibold text-sm mb-1">Earnings vs Target</h3>
@@ -127,7 +127,7 @@ export default function CRMPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
         {/* Sales by country */}
         <div className="panel p-5">
           <h3 className="t-text font-semibold text-sm mb-4">Sales by Countries</h3>
@@ -176,7 +176,7 @@ export default function CRMPage() {
           <h3 className="t-text font-semibold text-sm mb-4">Activity Timeline</h3>
           <div className="relative">
             <div className="absolute left-3 top-0 bottom-0 w-px" style={{ backgroundColor: "var(--t-border)" }} />
-            <div className="space-y-4">
+            <div className="space-y-3">
               {recentActivities.map((a, i) => (
                 <div key={i} className="flex gap-3 relative">
                   <div className="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-sm z-10" style={{ backgroundColor: "var(--luxe-sidebar-2)", border: "1px solid var(--t-border-2)" }}>

@@ -8,7 +8,7 @@ const campaigns = [
 
 export default function EcommerceReferralsPage() {
   return (
-    <div className="space-y-4 pb-4">
+    <div className="space-y-3 pb-0">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
           { label: "Active codes", val: "18" },

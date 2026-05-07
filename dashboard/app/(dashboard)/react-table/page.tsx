@@ -2,7 +2,10 @@
 
 import { useState, useMemo } from "react";
 import { Search, ChevronUp, ChevronDown, ChevronsUpDown, ChevronLeft, ChevronRight, Download } from "lucide-react";
+import * as Form from "@radix-ui/react-form";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 const DATA = [
@@ -79,29 +82,42 @@ export default function ReactTablePage() {
   ];
 
   return (
-    <div className="space-y-4 pb-4">
+    <div className="space-y-3 pb-0">
       <div className="panel">
         {/* Toolbar */}
-        <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
-          <div className="flex-1 flex items-center gap-2 h-9 px-3 rounded-lg border" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
-            <Search className="w-3.5 h-3.5 t-text-30" />
-            <input value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} placeholder="Search products…"
-              className="flex-1 bg-transparent text-xs outline-none text-[color:var(--t-text-70)] placeholder:text-[color:var(--t-text-30)]" />
-          </div>
+        <Form.Root className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
+          <Form.Field name="search" className="flex-1">
+            <div className="flex items-center gap-2 h-9 px-3 rounded-lg border" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
+              <Search className="w-3.5 h-3.5 t-text-30" />
+              <Form.Control asChild>
+                <Input
+                  value={search}
+                  onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                  placeholder="Search products…"
+                  aria-label="Search products"
+                  className="h-9 border-0 bg-transparent px-0 text-xs shadow-none focus-visible:ring-0"
+                />
+              </Form.Control>
+            </div>
+          </Form.Field>
           {selected.size > 0 && (
             <span className="text-xs t-text-40">{selected.size} selected</span>
           )}
           <button className="h-9 px-3 rounded-lg border text-xs flex items-center gap-1.5 t-text-60 hover:bg-[var(--t-hover)] transition-colors" style={{ borderColor: "var(--t-border-2)" }}>
             <Download className="w-3.5 h-3.5" /> Export
           </button>
-        </div>
+        </Form.Root>
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr style={{ borderBottom: "1px solid var(--t-border)" }}>
                 <th className="w-10 px-5 py-3">
-                  <input type="checkbox" checked={allSelected} onChange={toggleAll} className="w-3.5 h-3.5 accent-violet-500" />
+                  <Checkbox
+                    checked={allSelected}
+                    onCheckedChange={() => toggleAll()}
+                    aria-label="Select all rows"
+                  />
                 </th>
                 {cols.map(col => (
                   <th key={col.key} onClick={() => toggleSort(col.key)}
@@ -117,7 +133,11 @@ export default function ReactTablePage() {
                 return (
                   <tr key={row.id} className={cn("transition-colors t-hover", selected.has(row.id) && "bg-violet-500/5")} style={{ borderBottom: "1px solid var(--t-border)" }}>
                     <td className="px-5 py-3.5">
-                      <input type="checkbox" checked={selected.has(row.id)} onChange={() => toggleSelect(row.id)} className="w-3.5 h-3.5 accent-violet-500" />
+                      <Checkbox
+                        checked={selected.has(row.id)}
+                        onCheckedChange={() => toggleSelect(row.id)}
+                        aria-label={`Select row ${row.name}`}
+                      />
                     </td>
                     <td className="px-5 py-3.5 max-w-[200px]"><span className="t-text-70 text-xs font-medium truncate block">{row.name}</span></td>
                     <td className="px-5 py-3.5"><span className="t-text-40 text-xs">{row.category}</span></td>
@@ -138,7 +158,10 @@ export default function ReactTablePage() {
             {filtered.length === 0 ? "No results" : `Showing ${(page-1)*PAGE_SIZE+1}–${Math.min(page*PAGE_SIZE, filtered.length)} of ${filtered.length}`}
           </span>
           <div className="flex items-center gap-1">
-            <button onClick={() => setPage(p => Math.max(1, p-1))} disabled={page === 1}
+            <button
+              aria-label="Previous page"
+              onClick={() => setPage(p => Math.max(1, p-1))}
+              disabled={page === 1}
               className="w-8 h-8 rounded-lg border flex items-center justify-center disabled:opacity-30 transition-colors" style={{ borderColor: "var(--t-border-2)", color: "var(--t-text-50)" }}>
               <ChevronLeft className="w-3.5 h-3.5" />
             </button>
@@ -149,7 +172,10 @@ export default function ReactTablePage() {
                 {p}
               </button>
             ))}
-            <button onClick={() => setPage(p => Math.min(totalPages, p+1))} disabled={page === totalPages || totalPages === 0}
+            <button
+              aria-label="Next page"
+              onClick={() => setPage(p => Math.min(totalPages, p+1))}
+              disabled={page === totalPages || totalPages === 0}
               className="w-8 h-8 rounded-lg border flex items-center justify-center disabled:opacity-30 transition-colors" style={{ borderColor: "var(--t-border-2)", color: "var(--t-text-50)" }}>
               <ChevronRight className="w-3.5 h-3.5" />
             </button>

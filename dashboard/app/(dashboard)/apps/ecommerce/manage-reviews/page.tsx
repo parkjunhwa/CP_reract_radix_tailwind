@@ -10,11 +10,7 @@ const reviews = [
 
 export default function EcommerceManageReviewsPage() {
   return (
-    <div className="space-y-4 pb-4">
-      <div className="panel p-5">
-        <h2 className="t-text font-semibold text-lg">Manage reviews</h2>
-        <p className="t-text-40 text-sm mt-1">Queue placeholder — moderation actions can wire to API later.</p>
-      </div>
+    <div className="space-y-3 pb-0">
       <div className="space-y-3">
         {reviews.map((r, i) => (
           <div key={i} className="panel p-5">

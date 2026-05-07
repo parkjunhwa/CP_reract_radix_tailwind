@@ -12,10 +12,10 @@ const cards = [
 ];
 export default function BasicWidgetsPage() {
   return (
-    <div className="space-y-4 pb-4">
+    <div className="space-y-3 pb-0">
       <div className="panel p-5">
         <h2 className="t-text font-semibold text-sm mb-4">Basic Stat Widgets</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {cards.map(c => { const Icon = c.icon; return (
             <div key={c.title} className="panel p-4 flex items-center gap-3">
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${c.bg}`}><Icon className={`w-5 h-5 ${c.color}`} /></div>
@@ -24,7 +24,7 @@ export default function BasicWidgetsPage() {
           ); })}
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {[{ title:"Revenue This Month", value:"$4.1M", change:"+18%", color:"text-emerald-400" },
           { title:"Deals Closed", value:"47", change:"+12%", color:"text-violet-400" },
           { title:"New Signups", value:"284", change:"+22%", color:"text-sky-400" }].map(c => (

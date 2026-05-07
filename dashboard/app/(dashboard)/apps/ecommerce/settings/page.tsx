@@ -1,25 +1,43 @@
 "use client";
 
+import { useState } from "react";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+
+const SETTINGS = [
+  { id: "apple-pay", label: "Enable Apple Pay checkout", desc: "Show the Apple Pay button on supported devices.", defaultChecked: true },
+  { id: "signature", label: "Require signature over $10k cart", desc: "Capture courier signature for high-value orders.", defaultChecked: true },
+  { id: "referral", label: "Expose referral codes during checkout", desc: "Allow customers to redeem partner referral codes.", defaultChecked: false },
+] as const;
+
 export default function EcommerceSettingsPage() {
+  const initial: Record<string, boolean> = Object.fromEntries(
+    SETTINGS.map((s) => [s.id, s.defaultChecked]),
+  );
+  const [values, setValues] = useState<Record<string, boolean>>(initial);
+
   return (
-    <div className="space-y-4 pb-4 max-w-2xl">
-      <div className="panel p-5">
-        <h2 className="t-text font-semibold text-lg">eCommerce · Settings</h2>
-        <p className="t-text-40 text-sm mt-1">Regional tax, gateways, and shipping profiles (static shell).</p>
-      </div>
-      <div className="panel p-5 space-y-4">
-        <label className="flex items-center justify-between gap-4 cursor-pointer">
-          <span className="t-text-70 text-sm">Enable Apple Pay checkout</span>
-          <input type="checkbox" defaultChecked className="accent-violet-500" />
-        </label>
-        <label className="flex items-center justify-between gap-4 cursor-pointer">
-          <span className="t-text-70 text-sm">Require signature over $10k cart</span>
-          <input type="checkbox" defaultChecked className="accent-violet-500" />
-        </label>
-        <label className="flex items-center justify-between gap-4 cursor-pointer">
-          <span className="t-text-70 text-sm">Expose referral codes during checkout</span>
-          <input type="checkbox" className="accent-violet-500" />
-        </label>
+    <div className="space-y-3 pb-0">
+      <div className="panel divide-y" style={{ borderColor: "var(--t-border)" }}>
+        {SETTINGS.map((s) => (
+          <div
+            key={s.id}
+            className="flex items-start justify-between gap-4 px-5 py-4"
+            style={{ borderColor: "var(--t-border)" }}
+          >
+            <div className="min-w-0 space-y-0.5">
+              <Label htmlFor={s.id} className="text-[color:var(--t-text-70)] text-sm cursor-pointer">
+                {s.label}
+              </Label>
+              <p className="t-text-40 text-xs">{s.desc}</p>
+            </div>
+            <Switch
+              id={s.id}
+              checked={values[s.id]}
+              onCheckedChange={(v) => setValues((cur) => ({ ...cur, [s.id]: v }))}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

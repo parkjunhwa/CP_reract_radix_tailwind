@@ -4,6 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Diamond } from "lucide-react";
+import * as Form from "@radix-ui/react-form";
+
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input, InputAddon, InputGroup } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function LoginPage() {
   const [show, setShow] = useState(false);
@@ -20,7 +26,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex" style={{ backgroundColor: "var(--luxe-bg, #0a0a0f)" }}>
+    <div data-theme="dark" className="min-h-screen flex bg-[#0a0a0f] text-white scheme-dark">
       {/* Left: branding */}
       <div className="hidden lg:flex flex-col flex-1 relative overflow-hidden"
         style={{ background: "linear-gradient(135deg, #1a0533 0%, #0a0a0f 50%, #0d1a2e 100%)" }}>
@@ -62,8 +68,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right: form */}
-      <div className="flex-1 lg:max-w-md xl:max-w-lg flex flex-col justify-center px-8 sm:px-12 py-12"
-        style={{ backgroundColor: "var(--luxe-sidebar, #0d0d14)" }}>
+      <div className="flex-1 lg:max-w-md xl:max-w-lg flex flex-col justify-center px-8 sm:px-12 py-12 bg-[#0d0d14]">
         {/* Mobile logo */}
         <div className="flex items-center gap-3 mb-10 lg:hidden">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center">
@@ -76,44 +81,84 @@ export default function LoginPage() {
           <h1 className="text-2xl font-bold text-white mb-1">Sign in</h1>
           <p className="text-slate-500 text-sm mb-8">Welcome back! Please enter your credentials.</p>
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div className="space-y-1.5">
-              <label className="text-sm text-slate-400">Email</label>
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                required placeholder="admin@luxe.com"
-                className="w-full h-11 px-4 rounded-xl border text-sm text-white outline-none transition-colors focus:border-violet-500"
-                style={{ backgroundColor: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)" }} />
-            </div>
-            <div className="space-y-1.5">
+          <Form.Root onSubmit={handleLogin} className="space-y-5">
+            <Form.Field name="email" className="space-y-1.5">
+              <Form.Label asChild>
+                <Label htmlFor="login-email" className="text-sm text-slate-400">Email</Label>
+              </Form.Label>
+              <Form.Control asChild>
+                <Input
+                  id="login-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="admin@luxe.com"
+                  size="lg"
+                  className="rounded-xl text-sm h-11 px-4"
+                />
+              </Form.Control>
+            </Form.Field>
+            <Form.Field name="password" className="space-y-1.5">
               <div className="flex justify-between">
-                <label className="text-sm text-slate-400">Password</label>
+                <Form.Label asChild>
+                  <Label htmlFor="login-password" className="text-sm text-slate-400">Password</Label>
+                </Form.Label>
                 <Link href="/forgot-password" className="text-xs text-violet-400 hover:text-violet-300 transition-colors">
                   Forgot password?
                 </Link>
               </div>
-              <div className="relative">
-                <input type={show ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)}
-                  required placeholder="••••••••"
-                  className="w-full h-11 px-4 pr-11 rounded-xl border text-sm text-white outline-none transition-colors focus:border-violet-500"
-                  style={{ backgroundColor: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)" }} />
-                <button type="button" onClick={() => setShow(s => !s)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors">
-                  {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-            <label className="flex items-center gap-2.5 cursor-pointer">
-              <input type="checkbox" defaultChecked className="w-4 h-4 rounded accent-violet-500" />
-              <span className="text-sm text-slate-400">Remember me</span>
-            </label>
-            <button type="submit" disabled={loading}
-              className="w-full h-11 rounded-xl text-white text-sm font-semibold transition-all hover:opacity-90 disabled:opacity-60 flex items-center justify-center gap-2"
-              style={{ background: "linear-gradient(135deg, #7c3aed, #5b21b6)" }}>
-              {loading ? (
-                <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Signing in…</>
-              ) : "Sign In"}
-            </button>
-          </form>
+              <InputGroup inputSize="lg" className="rounded-xl h-11 px-4">
+                <Form.Control asChild>
+                  <Input
+                    id="login-password"
+                    type={show ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    placeholder="••••••••"
+                    className="text-sm"
+                  />
+                </Form.Control>
+                <InputAddon>
+                  <button
+                    type="button"
+                    onClick={() => setShow((s) => !s)}
+                    aria-label={show ? "Hide password" : "Show password"}
+                    className="text-slate-500 hover:text-slate-300 transition-colors"
+                  >
+                    {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </InputAddon>
+              </InputGroup>
+            </Form.Field>
+            <Form.Field name="remember" className="flex items-center gap-2.5">
+              <Form.Control asChild>
+                <Checkbox id="login-remember" defaultChecked />
+              </Form.Control>
+              <Form.Label asChild>
+                <Label htmlFor="login-remember" className="text-sm text-slate-400 cursor-pointer">
+                  Remember me
+                </Label>
+              </Form.Label>
+            </Form.Field>
+            <Form.Submit asChild>
+              <Button
+                type="submit"
+                size="lg"
+                disabled={loading}
+                className="w-full rounded-xl text-white font-semibold border-0 hover:opacity-90 disabled:opacity-60"
+                style={{ background: "linear-gradient(135deg, #7c3aed, #5b21b6)" }}
+              >
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Signing in…
+                  </>
+                ) : "Sign In"}
+              </Button>
+            </Form.Submit>
+          </Form.Root>
 
           <p className="text-center text-sm text-slate-500 mt-6">
             Don&apos;t have an account?{" "}

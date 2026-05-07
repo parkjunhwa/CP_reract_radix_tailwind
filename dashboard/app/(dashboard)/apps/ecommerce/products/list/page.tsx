@@ -11,11 +11,7 @@ const rows = [
 
 export default function EcommerceProductsListPage() {
   return (
-    <div className="space-y-4 pb-4">
-      <div className="panel p-5">
-        <h2 className="t-text font-semibold text-lg">Products · List</h2>
-        <p className="t-text-40 text-sm mt-1">Vuexy-aligned route placeholder with sample SKUs.</p>
-      </div>
+    <div className="space-y-3 pb-0">
       <div className="panel overflow-x-auto">
         <table className="w-full text-sm">
           <thead>

@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Diamond, Menu, X, ArrowRight, Globe, AtSign, MessageCircle, Code2 } from "lucide-react";
+import * as Form from "@radix-ui/react-form";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const NAV_LINKS = [
   { label: "Home", href: "/front-pages/landing-page" },
@@ -150,20 +152,24 @@ export function FrontFooter() {
             <p className="t-text-50 text-sm mt-4 leading-relaxed">
               The most developer-friendly &amp; highly customizable admin template, crafted for modern luxury brands.
             </p>
-            <form className="mt-5 flex gap-2" onSubmit={(e) => e.preventDefault()}>
-              <input
-                type="email"
-                placeholder="Your email"
-                className={cn(
-                  "flex-1 h-10 px-3 rounded-lg text-sm outline-none border",
-                  "focus-visible:ring-2 focus-visible:ring-violet-500/40",
-                )}
-                style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text-70)" }}
-              />
-              <Button size="lg" type="submit" className="bg-violet-600 hover:bg-violet-700 text-white border-violet-700">
-                Subscribe
-              </Button>
-            </form>
+            <Form.Root className="mt-5 flex gap-2" onSubmit={(e) => e.preventDefault()}>
+              <Form.Field name="email" className="flex-1">
+                <Form.Label className="sr-only">Email</Form.Label>
+                <Form.Control asChild>
+                  <Input
+                    type="email"
+                    placeholder="Your email"
+                    aria-label="Email"
+                    className="h-10 text-sm"
+                  />
+                </Form.Control>
+              </Form.Field>
+              <Form.Submit asChild>
+                <Button size="lg" type="submit" className="bg-violet-600 hover:bg-violet-700 text-white border-violet-700">
+                  Subscribe
+                </Button>
+              </Form.Submit>
+            </Form.Root>
           </div>
 
           {FOOTER_GROUPS.map((g) => (
@@ -183,7 +189,7 @@ export function FrontFooter() {
         </div>
 
         <div className="mt-12 pt-6 border-t flex flex-wrap items-center justify-between gap-4" style={{ borderColor: "var(--t-border)" }}>
-          <p className="t-text-40 text-xs">© {new Date().getFullYear()} LUXE Commerce — Demo template inspired by Vuexy.</p>
+          <p className="t-text-40 text-xs">© {new Date().getFullYear()} LUXE Commerce — Demo template.</p>
           <div className="flex items-center gap-3 t-text-40">
             {[
               { Icon: AtSign, label: "Mastodon" },
