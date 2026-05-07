@@ -115,7 +115,7 @@ const charts = [
             <Pie data={pieData} cx="50%" cy="50%" innerRadius={55} outerRadius={80} dataKey="value">
               {pieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
             </Pie>
-            <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number) => `${v}%`} />
+            <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v) => `${Number(v ?? 0)}%`} />
           </PieChart>
         </ResponsiveContainer>
         <div className="flex-1 space-y-2">

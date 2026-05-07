@@ -58,8 +58,8 @@ export default function EmailPage() {
       <div className="panel flex overflow-hidden" style={{ height: "calc(100vh - 140px)", minHeight: 600 }}>
         {/* Left panel: folders */}
         <div className="w-48 flex-shrink-0 flex flex-col" style={{ borderRight: "1px solid var(--t-border)" }}>
-          <div className="p-4">
-            <button className="w-full h-9 rounded-lg text-white text-xs font-medium flex items-center justify-center gap-2" style={{ backgroundColor: "var(--t-accent)" }}>
+          <div className="p-2">
+            <button className="" style={{ backgroundColor: "var(--t-accent)" }}>
               <Plus className="w-3.5 h-3.5" /> Compose
             </button>
           </div>

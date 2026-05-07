@@ -1,2 +1,6 @@
 import { redirect } from "next/navigation";
-export default function Page() { redirect("/dashboards/ecommerce"); }
+
+/** Same pattern as Academy: app route redirects to the main dashboards view. */
+export default function EcommerceAppDashboardPage() {
+  redirect("/dashboards/ecommerce");
+}

@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import { CheckCircle2, XCircle, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -96,8 +97,8 @@ export default function PermissionsPage() {
             </thead>
             <tbody>
               {PERMISSION_GROUPS.map((group) => (
-                <>
-                  <tr key={`group-${group.group}`} style={{ backgroundColor: "var(--t-hover)" }}>
+                <Fragment key={group.group}>
+                  <tr style={{ backgroundColor: "var(--t-hover)" }}>
                     <td colSpan={ROLES.length + 1} className="px-5 py-2">
                       <span className="text-[10px] font-semibold uppercase tracking-wider t-text-40">{group.group}</span>
                     </td>
@@ -117,7 +118,7 @@ export default function PermissionsPage() {
                       ))}
                     </tr>
                   ))}
-                </>
+                </Fragment>
               ))}
             </tbody>
           </table>

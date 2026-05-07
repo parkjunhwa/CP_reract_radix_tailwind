@@ -20,11 +20,15 @@ import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 const SEARCH_ITEMS = [
+  { section: "UI",           name: "Radix UI",         url: "/radix" },
   { section: "Dashboards",   name: "CRM",              url: "/dashboards/crm" },
   { section: "Dashboards",   name: "Analytics",        url: "/dashboards/analytics" },
   { section: "Dashboards",   name: "eCommerce",        url: "/dashboards/ecommerce" },
   { section: "Dashboards",   name: "Academy",          url: "/dashboards/academy" },
   { section: "Dashboards",   name: "Logistics",        url: "/dashboards/logistics" },
+  { section: "Apps",         name: "eCommerce app",    url: "/apps/ecommerce/dashboard" },
+  { section: "Apps",         name: "Products",         url: "/apps/ecommerce/products/list" },
+  { section: "Apps",         name: "Orders",           url: "/apps/ecommerce/orders/list" },
   { section: "Apps",         name: "Email",            url: "/apps/email" },
   { section: "Apps",         name: "Chat",             url: "/apps/chat" },
   { section: "Apps",         name: "Calendar",         url: "/apps/calendar" },

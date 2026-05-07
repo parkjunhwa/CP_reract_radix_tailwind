@@ -1,26 +1,41 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard, ChevronLeft, ChevronRight, ChevronDown, Diamond,
-  Bell, Settings, HelpCircle, X, Layers,
-  ShoppingCart, GraduationCap, Truck, Mail, MessageCircle,
+  Settings, HelpCircle, X,
+  GraduationCap, Truck, Mail, MessageCircle, ShoppingCart,
   Calendar, Clipboard, FileText, User, Lock, File,
   Layout, CheckSquare, GitMerge, Table2, PieChart,
-  Home, BarChart2, ExternalLink, Tag, BarChart, Boxes,
-  BookOpen, Navigation, AlertCircle, Shield,
+  Home, BarChart2, ExternalLink, BarChart, Boxes,
+  BookOpen, Navigation, Shield, ListTree,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
+/** Vuexy template docs base (aligned with full-version `NEXT_PUBLIC_DOCS_URL`). */
+const DOCS_BASE = (
+  process.env.NEXT_PUBLIC_DOCS_URL ??
+  "https://demos.pixinvent.com/vuexy-nextjs-admin-template/documentation"
+).replace(/\/$/, "");
+
+const docHref = (path: string) => `${DOCS_BASE}${path.startsWith("/") ? path : `/${path}`}`;
+
 /* ─── Types ─────────────────────────────────────────────────── */
 type NavLeaf = {
-  label: string; href: string; icon?: React.ElementType;
-  badge?: string | null; isSection?: false; external?: boolean;
+  label: string;
+  href: string;
+  icon?: React.ElementType;
+  badge?: string | null;
+  isSection?: false;
+  external?: boolean;
+  /** full-version Others: 라벨+배지만 보이고 이동 없음 */
+  navOnly?: boolean;
+  disabled?: boolean;
 };
 type NavGroup = NavLeaf & { children: NavItemType[] };
 type NavSectionLabel = { label: string; isSection: true; children: NavItemType[] };
@@ -41,24 +56,18 @@ const mainNav: NavItemType[] = [
   {
     label: "Front Pages", icon: Home, href: "#front-pages",
     children: [
-      { label: "Landing",     href: "/front-pages/landing",     external: true },
-      { label: "Pricing",     href: "/front-pages/pricing",     external: true },
-      { label: "Payment",     href: "/front-pages/payment",     external: true },
-      { label: "Checkout",    href: "/front-pages/checkout",    external: true },
-      { label: "Help Center", href: "/front-pages/help-center", external: true },
+      { label: "Landing",     href: "/front-pages/landing-page" },
+      { label: "Pricing",     href: "/front-pages/pricing" },
+      { label: "Payment",     href: "/front-pages/payment" },
+      { label: "Checkout",    href: "/front-pages/checkout" },
+      { label: "Help Center", href: "/front-pages/help-center" },
+      {
+        label: "HC · Add product to cart",
+        href: "/front-pages/help-center/article/how-to-add-product-in-cart",
+      },
     ],
   },
   { label: "Radix UI", icon: Diamond, href: "/radix", badge: null },
-  {
-    label: "5depth Menu", icon: Layers, href: "#5depth",
-    children: [
-      { label: "1 depth", href: "#5depth-1",
-        children: [{ label: "2 depth", href: "#5depth-2",
-          children: [{ label: "3 depth", href: "#5depth-3",
-            children: [{ label: "4 depth", href: "#5depth-4",
-              children: [{ label: "5 depth (leaf)", href: "#" }] }] }] }] },
-    ],
-  },
 ];
 
 const appsSection: NavSectionLabel = {
@@ -68,28 +77,34 @@ const appsSection: NavSectionLabel = {
       label: "eCommerce", icon: ShoppingCart, href: "#apps-ecommerce",
       children: [
         { label: "Dashboard", href: "/apps/ecommerce/dashboard" },
-        { label: "Products", href: "#apps-ecommerce-products",
+        {
+          label: "Products",
+          href: "#ecom-products",
           children: [
-            { label: "List",     href: "/apps/ecommerce/products/list" },
-            { label: "Add",      href: "/apps/ecommerce/products/add" },
+            { label: "List", href: "/apps/ecommerce/products/list" },
+            { label: "Add", href: "/apps/ecommerce/products/add" },
             { label: "Category", href: "/apps/ecommerce/products/category" },
           ],
         },
-        { label: "Orders", href: "#apps-ecommerce-orders",
+        {
+          label: "Orders",
+          href: "#ecom-orders",
           children: [
-            { label: "List",    href: "/apps/ecommerce/orders/list" },
-            { label: "Details", href: "/apps/ecommerce/orders/details" },
+            { label: "List", href: "/apps/ecommerce/orders/list" },
+            { label: "Details", href: "/apps/ecommerce/orders/details/5434" },
           ],
         },
-        { label: "Customers", href: "#apps-ecommerce-customers",
+        {
+          label: "Customers",
+          href: "#ecom-customers",
           children: [
-            { label: "List",    href: "/apps/ecommerce/customers/list" },
-            { label: "Details", href: "/apps/ecommerce/customers/details" },
+            { label: "List", href: "/apps/ecommerce/customers/list" },
+            { label: "Details", href: "/apps/ecommerce/customers/details/879861" },
           ],
         },
         { label: "Manage Reviews", href: "/apps/ecommerce/manage-reviews" },
-        { label: "Referrals",      href: "/apps/ecommerce/referrals" },
-        { label: "Settings",       href: "/apps/ecommerce/settings" },
+        { label: "Referrals", href: "/apps/ecommerce/referrals" },
+        { label: "Settings", href: "/apps/ecommerce/settings" },
       ],
     },
     {
@@ -142,12 +157,13 @@ const appsSection: NavSectionLabel = {
         { label: "FAQ",              href: "/pages/faq" },
         { label: "Pricing",          href: "/pages/pricing" },
         {
-          label: "Miscellaneous", href: "#pages-misc",
+          label: "Miscellaneous",
+          href: "#pages-misc",
           children: [
-            { label: "Coming Soon",       href: "/pages/misc/coming-soon",        external: true },
-            { label: "Under Maintenance", href: "/pages/misc/under-maintenance",  external: true },
-            { label: "Page Not Found",    href: "/pages/misc/404-not-found",      external: true },
-            { label: "Not Authorized",    href: "/pages/misc/401-not-authorized", external: true },
+            { label: "Coming Soon",       href: "/pages/misc/coming-soon" },
+            { label: "Under Maintenance", href: "/pages/misc/under-maintenance" },
+            { label: "Page Not Found",    href: "/pages/misc/404-not-found" },
+            { label: "Not Authorized",    href: "/pages/misc/401-not-authorized" },
           ],
         },
       ],
@@ -157,39 +173,39 @@ const appsSection: NavSectionLabel = {
       children: [
         { label: "Login", href: "#auth-login",
           children: [
-            { label: "Login v1", href: "/pages/auth/login-v1", external: true },
-            { label: "Login v2", href: "/pages/auth/login-v2", external: true },
+            { label: "Login v1", href: "/pages/auth/login-v1" },
+            { label: "Login v2", href: "/pages/auth/login-v2" },
           ],
         },
         { label: "Register", href: "#auth-register",
           children: [
-            { label: "Register v1",          href: "/pages/auth/register-v1",          external: true },
-            { label: "Register v2",          href: "/pages/auth/register-v2",          external: true },
-            { label: "Register Multi-Steps", href: "/pages/auth/register-multi-steps", external: true },
+            { label: "Register v1",          href: "/pages/auth/register-v1" },
+            { label: "Register v2",          href: "/pages/auth/register-v2" },
+            { label: "Register Multi-Steps", href: "/pages/auth/register-multi-steps" },
           ],
         },
         { label: "Verify Email", href: "#auth-verify",
           children: [
-            { label: "Verify Email v1", href: "/pages/auth/verify-email-v1", external: true },
-            { label: "Verify Email v2", href: "/pages/auth/verify-email-v2", external: true },
+            { label: "Verify Email v1", href: "/pages/auth/verify-email-v1" },
+            { label: "Verify Email v2", href: "/pages/auth/verify-email-v2" },
           ],
         },
         { label: "Forgot Password", href: "#auth-forgot",
           children: [
-            { label: "Forgot Password v1", href: "/pages/auth/forgot-password-v1", external: true },
-            { label: "Forgot Password v2", href: "/pages/auth/forgot-password-v2", external: true },
+            { label: "Forgot Password v1", href: "/pages/auth/forgot-password-v1" },
+            { label: "Forgot Password v2", href: "/pages/auth/forgot-password-v2" },
           ],
         },
         { label: "Reset Password", href: "#auth-reset",
           children: [
-            { label: "Reset Password v1", href: "/pages/auth/reset-password-v1", external: true },
-            { label: "Reset Password v2", href: "/pages/auth/reset-password-v2", external: true },
+            { label: "Reset Password v1", href: "/pages/auth/reset-password-v1" },
+            { label: "Reset Password v2", href: "/pages/auth/reset-password-v2" },
           ],
         },
         { label: "Two Steps", href: "#auth-two-steps",
           children: [
-            { label: "Two Steps v1", href: "/pages/auth/two-steps-v1", external: true },
-            { label: "Two Steps v2", href: "/pages/auth/two-steps-v2", external: true },
+            { label: "Two Steps v1", href: "/pages/auth/two-steps-v1" },
+            { label: "Two Steps v2", href: "/pages/auth/two-steps-v2" },
           ],
         },
       ],
@@ -219,12 +235,12 @@ const appsSection: NavSectionLabel = {
 const formsSection: NavSectionLabel = {
   label: "Forms & Tables", isSection: true,
   children: [
-    { label: "Form Layouts",   icon: Layout,     href: "/forms/form-layouts" },
+    { label: "Form Layouts",   icon: Layout,      href: "/forms/form-layouts" },
     { label: "Form Validation", icon: CheckSquare, href: "/forms/form-validation" },
-    { label: "Form Wizard",    icon: GitMerge,   href: "/forms/form-wizard" },
-    { label: "React Table",    icon: Table2,     href: "/react-table" },
-    { label: "Form Elements",  icon: CheckSquare, href: "https://next.ui.shadcn.com", external: true },
-    { label: "MUI Tables",     icon: Table2,     href: "https://mui.com/material-ui/react-table/", external: true },
+    { label: "Form Wizard",    icon: GitMerge,    href: "/forms/form-wizard" },
+    { label: "React Table",    icon: Table2,      href: "/react-table" },
+    { label: "Form Elements",  icon: CheckSquare, href: docHref("/docs/user-interface/form-elements"), external: true },
+    { label: "MUI Tables",    icon: Table2,      href: docHref("/docs/user-interface/mui-table"),      external: true },
   ],
 };
 
@@ -238,37 +254,62 @@ const chartsSection: NavSectionLabel = {
         { label: "Recharts",    href: "/charts/recharts" },
       ],
     },
-    { label: "Foundation",    icon: BookOpen,    href: "https://next.ui.shadcn.com", external: true },
-    { label: "Components",    icon: Boxes,       href: "https://radix-ui.com",       external: true },
-    { label: "Menu Examples", icon: Navigation,  href: "#",                          external: true },
-    { label: "Raise Support", icon: HelpCircle,  href: "https://github.com",         external: true },
-    { label: "Documentation", icon: BookOpen,    href: "https://nextjs.org/docs",    external: true },
+    { label: "Foundation",  icon: BookOpen, href: docHref("/docs/user-interface/foundation"), external: true },
+    { label: "Components",  icon: Boxes,    href: docHref("/docs/user-interface/components"), external: true },
+    /* 페이지 없음: 접기·펼치기 UX 확인용 (로컬 #만 사용) */
     {
-      label: "Others", icon: BarChart2, href: "#others",
+      label: "Menu Examples",
+      icon: ListTree,
+      href: "#charts-menu-examples",
       children: [
-        { label: "Item with Badge", href: "#", badge: "New" },
-        { label: "External Link",   href: "https://pixinvent.com", external: true },
         {
-          label: "Menu Levels", href: "#menu-levels",
+          label: "Sample group A",
+          href: "#charts-me-a",
           children: [
-            { label: "Menu Level 2.1", href: "#" },
-            { label: "Menu Level 2.2", href: "#",
+            { label: "Nested item A1", href: "#charts-me-a1" },
+            {
+              label: "Nested item A2",
+              href: "#charts-me-a2",
+              children: [{ label: "Deep item A2a", href: "#charts-me-a2a" }],
+            },
+          ],
+        },
+        { label: "Sample group B", href: "#charts-me-b" },
+      ],
+    },
+    { label: "Raise Support",  icon: HelpCircle, href: "https://pixinvent.ticksy.com", external: true },
+    { label: "Documentation", icon: BookOpen,  href: DOCS_BASE,                      external: true },
+    {
+      label: "Others",
+      icon: BarChart2,
+      href: "#charts-others",
+      children: [
+        { label: "Item with Badge", href: "#others-badge", badge: "New", navOnly: true },
+        { label: "External Link", href: "https://pixinvent.com", external: true },
+        {
+          label: "Menu Levels",
+          href: "#menu-levels",
+          children: [
+            { label: "Menu Level 2.1", href: "#ml-21" },
+            {
+              label: "Menu Level 2.2",
+              href: "#ml-22",
               children: [
-                { label: "Menu Level 3.1", href: "#" },
-                { label: "Menu Level 3.2", href: "#" },
+                { label: "Menu Level 3.1", href: "#ml-31" },
+                { label: "Menu Level 3.2", href: "#ml-32" },
               ],
             },
           ],
         },
+        { label: "Disabled Menu", href: "#others-disabled", disabled: true },
       ],
     },
   ],
 };
 
 const bottomNav = [
-  { label: "Notifications", icon: Bell,       href: "/notifications", badge: "5" },
-  { label: "Settings",      icon: Settings,   href: "/pages/account-settings", badge: null },
-  { label: "Help",          icon: HelpCircle, href: "/pages/faq",     badge: null },
+  { label: "Settings", icon: Settings,   href: "/pages/account-settings", badge: null },
+  { label: "Help",     icon: HelpCircle, href: "/pages/faq",            badge: null },
 ];
 
 /* ─── Helpers ────────────────────────────────────────────────── */
@@ -289,6 +330,251 @@ function hasActive(item: NavItemType, pathname: string): boolean {
   if (navActive(item.href, pathname)) return true;
   if (isNavGroup(item)) return item.children.some(c => hasActive(c, pathname));
   return false;
+}
+
+/** 라우팅 가능한 주소(`/…`, 절대 URL). `#…` 플레이스홀더는 제외. */
+function isRoutableHref(href: string): boolean {
+  return (
+    href.startsWith("/") ||
+    href.startsWith("http://") ||
+    href.startsWith("https://")
+  );
+}
+
+/* ─── Expandable group: 한 행에서 링크 이동 + (자식 있으면) 펼침 통합 ─── */
+function GroupNavRow({
+  item,
+  depth,
+  open,
+  pathname,
+  active,
+  collapsed,
+  onExpandIfNeeded,
+  onToggleFold,
+  onClose,
+}: {
+  item: NavGroup;
+  depth: number;
+  open: boolean;
+  pathname: string;
+  active: boolean;
+  collapsed: boolean;
+  onExpandIfNeeded: () => void;
+  onToggleFold: () => void;
+  onClose?: () => void;
+}) {
+  const Icon = item.icon ?? Diamond;
+  const hasKids = item.children.length > 0;
+  const routable = isRoutableHref(item.href);
+  const linkActive = navActive(item.href, pathname);
+  const linkProps = item.external
+    ? ({ target: "_blank", rel: "noopener noreferrer" } as const)
+    : ({} as const);
+
+  const chevron =
+    hasKids && !collapsed ? (
+      <ChevronDown
+        aria-hidden="true"
+        className={cn(
+          "w-3.5 h-3.5 shrink-0 transition-transform opacity-45",
+          open ? "rotate-0" : "-rotate-90"
+        )}
+        style={{ color: "var(--luxe-text-40)" }}
+      />
+    ) : null;
+
+  if (depth === 0) {
+    const cls = cn(
+      "group flex items-center gap-3 px-2 py-2 rounded-lg text-sm font-medium transition-all duration-150 w-full min-w-0",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--luxe-accent)] focus-visible:ring-inset",
+      active ? "bg-[var(--luxe-accent-2)] border" : "hover:bg-[var(--t-hover)]",
+      collapsed && "justify-center"
+    );
+    const iconEl = (
+      <Icon
+        aria-hidden="true"
+        className={cn(
+          "flex-shrink-0 w-4 h-4 transition-colors",
+          active ? "text-[var(--t-accent-text)]" : "opacity-40 group-hover:opacity-70"
+        )}
+      />
+    );
+    const textStyle = active ? "var(--t-accent-text)" : "var(--luxe-text-40)";
+    const body = collapsed ? (
+      <>
+        {iconEl}
+        <span className="sr-only">{item.label}</span>
+      </>
+    ) : (
+      <>
+        {iconEl}
+        <span className="flex-1 text-left truncate" style={{ color: textStyle }}>
+          {item.label}
+        </span>
+        {item.badge && (
+          <Badge
+            className="text-[10px] h-4 px-1.5 border flex-shrink-0"
+            style={{
+              backgroundColor: "var(--t-accent-soft)",
+              borderColor: "var(--t-border-2)",
+              color: "var(--t-accent-text)",
+            }}
+          >
+            {item.badge}
+          </Badge>
+        )}
+        {item.external && routable && (
+          <ExternalLink className="w-3 h-3 opacity-30 flex-shrink-0" aria-hidden="true" />
+        )}
+        {chevron}
+      </>
+    );
+
+    if (routable) {
+      const row = (
+        <Link
+          href={item.href}
+          className={cls}
+          aria-current={linkActive ? "page" : undefined}
+          {...(hasKids ? { "aria-expanded": open } : {})}
+          onClick={() => {
+            if (hasKids) onExpandIfNeeded();
+            onClose?.();
+          }}
+          {...linkProps}
+        >
+          {body}
+        </Link>
+      );
+      if (collapsed) {
+        return (
+          <Tooltip>
+            <TooltipTrigger asChild>{row}</TooltipTrigger>
+            <TooltipContent
+              side="right"
+              className="text-xs"
+              style={
+                {
+                  "--tooltip-bg": "var(--luxe-sidebar-2)",
+                  "--tooltip-border": "var(--luxe-border-2)",
+                  "--tooltip-fg": "var(--luxe-text)",
+                } as React.CSSProperties
+              }
+            >
+              {item.label}
+            </TooltipContent>
+          </Tooltip>
+        );
+      }
+      return row;
+    }
+
+    const row = (
+      <button
+        type="button"
+        className={cn(cls, "text-left")}
+        {...(hasKids ? { "aria-expanded": open } : {})}
+        onClick={() => {
+          if (hasKids) onToggleFold();
+        }}
+      >
+        {body}
+      </button>
+    );
+    if (collapsed) {
+      return (
+        <Tooltip>
+          <TooltipTrigger asChild>{row}</TooltipTrigger>
+          <TooltipContent
+            side="right"
+            className="text-xs"
+            style={
+              {
+                "--tooltip-bg": "var(--luxe-sidebar-2)",
+                "--tooltip-border": "var(--luxe-border-2)",
+                "--tooltip-fg": "var(--luxe-text)",
+              } as React.CSSProperties
+            }
+          >
+            {item.label}
+          </TooltipContent>
+        </Tooltip>
+      );
+    }
+    return row;
+  }
+
+  /* depth > 0: 서브메뉴 그룹 */
+  const cls = cn(
+    "group flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-colors w-full min-w-0 text-left",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--luxe-accent)] focus-visible:ring-inset",
+    active ? "bg-[var(--luxe-accent-2)] border" : "hover:bg-[var(--t-hover)]"
+  );
+  const body = (
+    <>
+      <span
+        aria-hidden="true"
+        className={cn(
+          "w-1.5 h-1.5 rounded-full flex-shrink-0 transition-opacity",
+          linkActive ? "opacity-100" : "opacity-25 group-hover:opacity-50"
+        )}
+        style={{ backgroundColor: "var(--t-accent)" }}
+      />
+      <span
+        className="flex-1 truncate"
+        style={{ color: linkActive ? "var(--t-accent-text)" : "var(--luxe-text-40)" }}
+      >
+        {item.label}
+      </span>
+      {item.badge && (
+        <Badge
+          className="text-[9px] h-3.5 px-1 border flex-shrink-0"
+          style={{
+            backgroundColor: "var(--t-accent-soft)",
+            borderColor: "var(--t-border-2)",
+            color: "var(--t-accent-text)",
+          }}
+        >
+          {item.badge}
+        </Badge>
+      )}
+      {item.external && routable && (
+        <ExternalLink className="w-2.5 h-2.5 opacity-30 flex-shrink-0" aria-hidden="true" />
+      )}
+      {chevron}
+    </>
+  );
+
+  if (routable) {
+    return (
+      <Link
+        href={item.href}
+        className={cls}
+        aria-current={linkActive ? "page" : undefined}
+        {...(hasKids ? { "aria-expanded": open } : {})}
+        onClick={() => {
+          if (hasKids) onExpandIfNeeded();
+          onClose?.();
+        }}
+        {...linkProps}
+      >
+        {body}
+      </Link>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      className={cls}
+      {...(hasKids ? { "aria-expanded": open } : {})}
+      onClick={() => {
+        if (hasKids) onToggleFold();
+      }}
+    >
+      {body}
+    </button>
+  );
 }
 
 /* ─── NavItem (top-level clickable row) ─────────────────────── */
@@ -342,25 +628,79 @@ function NavItem({ label, icon: Icon, href, badge, active, collapsed, external, 
 }
 
 /* ─── SubNavItem (nested row) ───────────────────────────────── */
-function SubNavItem({ label, href, active, badge, external, onClick }: {
-  label: string; href: string; active: boolean;
-  badge?: string | null; external?: boolean; onClick?: () => void;
+function SubNavItem({
+  label, href, active, badge, external, onClick, navOnly, disabled,
+}: {
+  label: string;
+  href: string;
+  active: boolean;
+  badge?: string | null;
+  external?: boolean;
+  onClick?: () => void;
+  navOnly?: boolean;
+  disabled?: boolean;
 }) {
-  const linkProps = external ? { target: "_blank", rel: "noopener noreferrer" } : {};
+  const linkProps = external ? { target: "_blank", rel: "noopener noreferrer" as const } : {};
+  const base = cn(
+    "group flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-colors w-full",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--luxe-accent)] focus-visible:ring-inset",
+    disabled
+      ? "opacity-35 cursor-not-allowed pointer-events-none"
+      : navOnly
+        ? "cursor-default"
+        : active
+          ? "bg-[var(--luxe-accent-2)] border"
+          : "hover:bg-[var(--t-hover)]",
+  );
+
+  const inner = (
+    <>
+      <span
+        aria-hidden="true"
+        className={cn(
+          "w-1.5 h-1.5 rounded-full flex-shrink-0 transition-opacity",
+          active ? "opacity-100" : "opacity-25 group-hover:opacity-50",
+        )}
+        style={{ backgroundColor: "var(--t-accent)" }}
+      />
+      <span className="flex-1" style={{ color: active ? "var(--t-accent-text)" : "var(--luxe-text-40)" }}>
+        {label}
+      </span>
+      {badge && (
+        <Badge
+          className="text-[9px] h-3.5 px-1 border"
+          style={{
+            backgroundColor: "var(--t-accent-soft)",
+            borderColor: "var(--t-border-2)",
+            color: "var(--t-accent-text)",
+          }}
+        >
+          {badge}
+        </Badge>
+      )}
+      {external && isRoutableHref(href) && !navOnly && !disabled && (
+        <ExternalLink className="w-2.5 h-2.5 opacity-30 flex-shrink-0" aria-hidden="true" />
+      )}
+    </>
+  );
+
+  if (disabled) {
+    return (
+      <span className={base} aria-disabled="true">
+        {inner}
+      </span>
+    );
+  }
+  if (navOnly) {
+    return (
+      <span className={base} role="presentation">
+        {inner}
+      </span>
+    );
+  }
   return (
-    <Link href={href} aria-current={active ? "page" : undefined} onClick={onClick} {...linkProps}
-      className={cn(
-        "group flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-colors w-full",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--luxe-accent)] focus-visible:ring-inset",
-        active ? "bg-[var(--luxe-accent-2)] border" : "hover:bg-[var(--t-hover)]",
-      )}>
-      <span aria-hidden="true" className={cn("w-1.5 h-1.5 rounded-full flex-shrink-0 transition-opacity",
-        active ? "opacity-100" : "opacity-25 group-hover:opacity-50")}
-        style={{ backgroundColor: "var(--t-accent)" }} />
-      <span className="flex-1" style={{ color: active ? "var(--t-accent-text)" : "var(--luxe-text-40)" }}>{label}</span>
-      {badge && <Badge className="text-[9px] h-3.5 px-1 border"
-        style={{ backgroundColor: "var(--t-accent-soft)", borderColor: "var(--t-border-2)", color: "var(--t-accent-text)" }}>{badge}</Badge>}
-      {external && <ExternalLink className="w-2.5 h-2.5 opacity-30 flex-shrink-0" />}
+    <Link href={href} aria-current={active ? "page" : undefined} onClick={onClick} {...linkProps} className={base}>
+      {inner}
     </Link>
   );
 }
@@ -408,40 +748,57 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
               );
             }
             return (
-              <SubNavItem key={key} label={item.label} href={item.href}
-                active={navActive(item.href, pathname)} badge={item.badge}
-                external={item.external} onClick={onClose} />
+              <SubNavItem
+                key={key}
+                label={item.label}
+                href={item.href}
+                active={navActive(item.href, pathname)}
+                badge={item.badge}
+                external={item.external}
+                navOnly={Boolean(item.navOnly)}
+                disabled={Boolean(item.disabled)}
+                onClick={onClose}
+              />
             );
           }
 
           if (collapsed) {
+            const widenAndOpen = () => {
+              setCollapsed(false);
+              setOpenMap(m => ({ ...m, [key]: true }));
+            };
             return (
-              <NavItem key={key} label={item.label} icon={item.icon ?? Diamond} href={item.href}
-                badge={item.badge} active={active} collapsed={true} onClick={onClose} />
+              <GroupNavRow
+                key={key}
+                item={item}
+                depth={0}
+                open={false}
+                pathname={pathname}
+                active={active}
+                collapsed
+                onExpandIfNeeded={widenAndOpen}
+                onToggleFold={widenAndOpen}
+                onClose={onClose}
+              />
             );
           }
 
           const open = isOpen(key, item, depth);
-          const header = depth === 0 ? (
-            <NavItem label={item.label} icon={item.icon ?? Diamond} href={item.href}
-              badge={item.badge} active={active} collapsed={false} onClick={onClose} />
-          ) : (
-            <SubNavItem label={item.label} href={item.href}
-              active={navActive(item.href, pathname)} badge={item.badge} onClick={onClose} />
-          );
+          const expandBranch = () => setOpenMap(m => ({ ...m, [key]: true }));
 
           return (
             <div key={key} className="space-y-0.5">
-              <div className="flex items-center gap-1">
-                <div className="flex-1 min-w-0">{header}</div>
-                <button type="button" onClick={() => toggle(key)}
-                  aria-label={open ? `Collapse ${item.label}` : `Expand ${item.label}`}
-                  className="shrink-0 py-2 px-0.5 rounded-md bg-transparent transition-colors
-                    text-[var(--luxe-text-40)] hover:text-[var(--luxe-text)]
-                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--luxe-accent)]">
-                  <ChevronDown className={cn("w-3.5 h-3.5 shrink-0 transition-transform", open ? "rotate-0" : "-rotate-90")} aria-hidden="true" />
-                </button>
-              </div>
+              <GroupNavRow
+                item={item}
+                depth={depth}
+                open={open}
+                pathname={pathname}
+                active={active}
+                collapsed={false}
+                onExpandIfNeeded={() => expandBranch()}
+                onToggleFold={() => toggle(key)}
+                onClose={onClose}
+              />
               {open && (
                 <div className={cn("space-y-0.5", depth === 0 ? "pl-6" : "pl-4")}>
                   {renderItems(item.children, depth + 1)}

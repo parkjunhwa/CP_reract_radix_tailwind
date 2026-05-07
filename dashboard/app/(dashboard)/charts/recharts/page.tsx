@@ -100,7 +100,14 @@ export default function RechartsPage() {
               <YAxis dataKey="margin" type="number" tick={{ fontSize: 10, fill: "var(--t-text-40)" }} axisLine={false} tickLine={false}
                 tickFormatter={(v) => `${v}%`} name="Margin" />
               <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ strokeDasharray: "3 3" }}
-                formatter={(v: number, name: string) => [name === "margin" ? `${v}%` : `$${v.toLocaleString()}`, name === "price" ? "Price" : "Margin"]} />
+                formatter={(v, name) => {
+                  const n = Number(v ?? 0);
+                  const key = String(name);
+                  return [
+                    key === "margin" ? `${n}%` : `$${n.toLocaleString()}`,
+                    key === "price" ? "Price" : "Margin",
+                  ] as const;
+                }} />
               <Scatter data={scatterData} fill="#7c3aed" fillOpacity={0.7} />
             </ScatterChart>
           </ResponsiveContainer>
