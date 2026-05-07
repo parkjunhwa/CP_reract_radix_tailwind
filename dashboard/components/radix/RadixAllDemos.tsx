@@ -26,13 +26,13 @@ import * as ScrollArea from "@radix-ui/react-scroll-area";
 import * as Select from "@radix-ui/react-select";
 import * as Separator from "@radix-ui/react-separator";
 import * as Slider from "@radix-ui/react-slider";
-import * as Switch from "@radix-ui/react-switch";
 import * as Tabs from "@radix-ui/react-tabs";
 import * as Toast from "@radix-ui/react-toast";
 import * as Toggle from "@radix-ui/react-toggle";
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import * as Toolbar from "@radix-ui/react-toolbar";
 import * as Tooltip from "@radix-ui/react-tooltip";
+import { Switch as UISwitch } from "@/components/ui/switch";
 import {
   AlignCenter,
   AlignLeft,
@@ -868,17 +868,8 @@ function DemoSwitch() {
           <p className="t-text text-sm font-medium">Push notifications</p>
           <p className="t-text-40 text-xs mt-0.5">Get alerts for orders and payments.</p>
         </div>
-        <Switch.Root
-          checked={enabled}
-          onCheckedChange={setEnabled}
-          className={cn("w-10 h-6 rounded-full relative border transition-colors", "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--t-ring)] focus-visible:ring-offset-2")}
-          style={{ backgroundColor: enabled ? "var(--t-accent-soft)" : "var(--t-surface-2)", borderColor: "var(--t-border-2)" }}
-        >
-          <Switch.Thumb
-            className="block w-5 h-5 rounded-full transition-transform"
-            style={{ backgroundColor: "var(--t-surface)", transform: enabled ? "translateX(16px)" : "translateX(2px)" }}
-          />
-        </Switch.Root>
+        <UISwitch checked={enabled} onCheckedChange={setEnabled} />
+  
       </div>
       <p className="t-text-40 text-xs mt-3">Enabled: {enabled ? "true" : "false"}</p>
     </>

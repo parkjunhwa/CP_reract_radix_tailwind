@@ -223,7 +223,7 @@ export default function InvoiceListPage() {
                       ) : inv.balance < 0 ? (
                         <span className="text-emerald-300 text-xs font-semibold">+{fmtMoney(Math.abs(inv.balance))}</span>
                       ) : (
-                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-300 border-emerald-500/20 text-[10px]">Paid</Badge>
+                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">Paid</Badge>
                       )}
                     </td>
                     <td className="px-5 py-3.5">

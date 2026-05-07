@@ -213,7 +213,7 @@ export default function SettingsPage() {
                 <h4 className="t-text-70 text-sm font-medium mb-3">Two-Factor Authentication</h4>
                 <div className="t-divide">
                   <Field label="Authenticator App" desc="Use Google Authenticator or Authy">
-                    <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]">Enabled</Badge>
+                    <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">Enabled</Badge>
                   </Field>
                   <Field label="SMS Verification" desc="Backup via phone number +82 10 ****5678">
                     <Toggle checked={true} onChange={()=>{}} />
@@ -236,7 +236,7 @@ export default function SettingsPage() {
                       <p className="t-text-30 text-[11px]">{s.location} · {s.time}</p>
                     </div>
                     {s.current
-                      ? <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]">Current</Badge>
+                      ? <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">Current</Badge>
                       : <button className="text-red-400 hover:text-red-300 text-xs transition-colors">Revoke</button>
                     }
                   </div>

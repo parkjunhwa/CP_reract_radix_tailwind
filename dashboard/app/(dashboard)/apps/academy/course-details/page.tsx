@@ -43,8 +43,8 @@ export default function CourseDetailsPage() {
           <div className="w-full md:w-48 h-36 rounded-xl flex items-center justify-center text-6xl flex-shrink-0" style={{ backgroundColor: "var(--t-hover)" }}>💎</div>
           <div className="flex-1 min-w-0 space-y-3">
             <div className="flex flex-wrap gap-2">
-              <Badge className="text-[10px] px-2 border bg-amber-500/10 text-amber-400 border-amber-500/20">Intermediate</Badge>
-              <Badge className="text-[10px] px-2 border bg-violet-500/10 text-violet-400 border-violet-500/20">Business</Badge>
+              <Badge className="text-[10px] px-2 border bg-amber-500/10 text-amber-500 border-amber-500/20">Intermediate</Badge>
+              <Badge className="text-[10px] px-2 border bg-violet-500/10 text-violet-500 border-violet-500/20">Business</Badge>
             </div>
             <h1 className="t-text font-bold text-xl">Luxury Brand Management Fundamentals</h1>
             <p className="t-text-40 text-sm leading-relaxed">Master the art and science behind the world's most iconic luxury brands. Learn positioning, heritage storytelling, distribution strategies, and modern digital transformation in the luxury sector.</p>

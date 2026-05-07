@@ -14,8 +14,8 @@ const Switch = React.forwardRef<
     data-slot="switch"
     className={cn(
       "peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors outline-none",
-      "bg-[color:var(--t-border-3)]",
-      "focus-visible:ring-2 focus-visible:ring-[color:var(--t-ring)]/40 focus-visible:ring-offset-0",
+      "bg-[color:var(--t-surface-3)] border-[color:var(--t-border-3)] shadow-[inset_0_0_0_1px_var(--t-border)]",
+      "focus-visible:ring-1 focus-visible:ring-[color:var(--t-ring)]/40 focus-visible:ring-offset-0",
       "data-[state=checked]:bg-[color:var(--t-accent)]",
       "disabled:cursor-not-allowed disabled:opacity-50",
       className,

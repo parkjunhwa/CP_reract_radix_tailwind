@@ -44,7 +44,7 @@ function FeatureCell({ value }: { value: boolean | "addon" }) {
     );
   }
   if (value === "addon") {
-    return <Badge className="bg-amber-500/15 text-amber-300 border-amber-500/20 text-[10px]">Add-on</Badge>;
+    return <Badge className="bg-amber-500/15 text-amber-500 border-amber-500/20 text-[10px]">Add-on</Badge>;
   }
   return (
     <span className="inline-flex w-6 h-6 rounded-full bg-white/5 t-text-30 items-center justify-center mx-auto">
@@ -61,7 +61,7 @@ export default function PricingPage() {
       {/* HERO + 3 plans */}
       <section className="mx-auto max-w-7xl px-5 lg:px-8 pt-16 pb-12">
         <div className="text-center max-w-2xl mx-auto">
-          <Badge variant="outline" className="text-[10px] uppercase tracking-[0.18em] mb-3 border-violet-500/30 text-violet-300 bg-violet-500/10">
+          <Badge variant="outline" className="text-[10px] uppercase tracking-[0.18em] mb-3 border-violet-500/30 text-violet-500 bg-violet-500/10">
             Pricing Plans
           </Badge>
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
@@ -82,7 +82,7 @@ export default function PricingPage() {
             onClick={() => setBilling((b) => (b === "annual" ? "monthly" : "annual"))}
             className={cn(
               "relative w-11 h-6 rounded-full transition-colors",
-              billing === "annual" ? "bg-violet-600" : "bg-white/15",
+              billing === "annual" ? "bg-violet-600" : "bg-gray-600/15",
             )}
           >
             <span
@@ -93,7 +93,7 @@ export default function PricingPage() {
             />
           </button>
           <span className={cn("text-sm", billing === "annual" ? "t-text font-semibold" : "t-text-40")}>Pay Annually</span>
-          <Badge className="ml-1 bg-emerald-500/15 text-emerald-300 border-emerald-500/20">Save 25%</Badge>
+          <Badge className="ml-1 bg-emerald-500/15 text-emerald-500 border-emerald-500/20">Save 25%</Badge>
         </div>
 
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -136,7 +136,7 @@ export default function PricingPage() {
                       "w-full",
                       p.current
                         ? "bg-violet-600 hover:bg-violet-700 text-white border-violet-700"
-                        : "bg-violet-500/10 hover:bg-violet-500/20 text-violet-300 border-violet-500/30",
+                        : "bg-violet-500/10 hover:bg-violet-500/20 text-violet-500 border-violet-500/30",
                     )}
                   >
                     Choose {p.name}
@@ -244,7 +244,7 @@ export default function PricingPage() {
                         className={cn(
                           t === "pro"
                             ? "bg-violet-600 hover:bg-violet-700 text-white border-violet-700"
-                            : "bg-violet-500/10 hover:bg-violet-500/20 text-violet-300 border-violet-500/30",
+                            : "bg-violet-500/10 hover:bg-violet-500/20 text-violet-500 border-violet-500/30",
                         )}
                       >
                         Choose plan

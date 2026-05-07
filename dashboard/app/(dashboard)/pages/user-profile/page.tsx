@@ -84,9 +84,9 @@ export default function ProfilePage() {
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1">
               <h2 className="text-xl font-bold" style={{ color: "var(--luxe-text)" }}>{form.name}</h2>
-              <Badge className="bg-violet-600/20 text-violet-300 border-violet-500/20 text-[10px]">Admin</Badge>
+              <Badge className="bg-violet-600/20 text-violet-500 border-violet-500/20 text-[10px]">Admin</Badge>
               {saved && (
-                <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px] flex items-center gap-1">
+                <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] flex items-center gap-1">
                   <Check className="w-2.5 h-2.5" aria-hidden="true" /> Saved
                 </Badge>
               )}

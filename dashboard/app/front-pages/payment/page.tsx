@@ -166,7 +166,7 @@ export default function PaymentPage() {
             <ArrowRight className="w-4 h-4" />
           </Button>
 
-          <Badge variant="outline" className="self-start gap-1 text-[10px] border-emerald-500/30 text-emerald-300 bg-emerald-500/10">
+          <Badge variant="outline" className="self-start gap-1 text-[10px] border-emerald-500/30 text-emerald-500 bg-emerald-500/10">
             <ShieldCheck className="w-3 h-3" /> 14-day money-back guarantee
           </Badge>
 

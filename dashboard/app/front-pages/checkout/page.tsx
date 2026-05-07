@@ -272,7 +272,7 @@ export default function CheckoutPage() {
             <span className="t-text-70 text-sm">Total</span>
             <span className="t-text font-bold text-lg">${total.toLocaleString()}</span>
           </div>
-          <Badge variant="outline" className="gap-1 border-emerald-500/30 text-emerald-300 bg-emerald-500/10 text-[10px]">
+          <Badge variant="outline" className="gap-1 border-emerald-500/30 text-emerald-500 bg-emerald-500/10 text-[10px]">
             <ShieldCheck className="w-3 h-3" /> Insured · signature required at delivery
           </Badge>
           <p className="t-text-40 text-[11px] leading-relaxed pt-1">
