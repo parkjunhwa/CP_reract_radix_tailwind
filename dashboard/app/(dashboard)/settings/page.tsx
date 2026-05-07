@@ -57,13 +57,30 @@ export default function SettingsPage() {
       {/* Sidebar tabs */}
       <div className="w-48 flex-shrink-0">
         <div className="panel p-2 flex flex-col gap-1">
-          {TABS.map(t => {
+          {TABS.map((t) => {
             const Icon = t.icon;
+            const active = tab === t.id;
             return (
-              <button key={t.id} onClick={() => setTab(t.id)}
-                className={cn("flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all text-left",
-                  tab===t.id ? "bg-violet-600/20 text-violet-300" : "t-text-40 hover:t-text-80 hover:bg-[var(--t-hover)]")}>
-                <Icon className="w-4 h-4 flex-shrink-0" /> {t.label}
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setTab(t.id)}
+                className={cn(
+                  "group flex w-full items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-left transition-all duration-150",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--luxe-accent)] focus-visible:ring-inset",
+                  active
+                    ? "bg-[var(--luxe-accent-2)] border"
+                    : "hover:bg-[var(--t-hover)]"
+                )}
+              >
+                <Icon
+                  aria-hidden
+                  className={cn(
+                    "size-4 shrink-0 transition-colors",
+                    active ? "t-accent-text" : "opacity-40 group-hover:opacity-70"
+                  )}
+                />
+                <span className={cn(active ? "t-accent-text" : "t-text-40 group-hover:t-text-80")}>{t.label}</span>
               </button>
             );
           })}

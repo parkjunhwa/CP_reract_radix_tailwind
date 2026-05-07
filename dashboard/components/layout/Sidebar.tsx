@@ -1,18 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard, ShoppingBag, Users, BarChart3, Package,
   Settings, HelpCircle, ChevronLeft, ChevronRight, ChevronDown, Diamond,
-  Bell, Globe, CreditCard, FileText, X,
+  Bell, Globe, CreditCard, FileText, X, Layers,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { RADIX_PRIMITIVES } from "@/lib/radix-primitives";
 
 type TooltipCssVars = {
   "--tooltip-bg"?: string;
@@ -33,7 +32,44 @@ type NavSection = NavLeaf & {
 
 type NavItemType = NavLeaf | NavSection;
 
-const mainNavBase: readonly NavItemType[] = [
+/** Placeholder nav (no routes): 5-level nested example for the sidebar. Hash hrefs are unique for expand/collapse state. */
+const fiveDepthMenuNav: NavSection = {
+  label: "5depth Menu",
+  icon: Layers,
+  href: "#5depth",
+  badge: null,
+  children: [
+    {
+      label: "1 depth",
+      href: "#5depth-1",
+      badge: null,
+      children: [
+        {
+          label: "2 depth",
+          href: "#5depth-2",
+          badge: null,
+          children: [
+            {
+              label: "3 depth",
+              href: "#5depth-3",
+              badge: null,
+              children: [
+                {
+                  label: "4 depth",
+                  href: "#5depth-4",
+                  badge: null,
+                  children: [{ label: "5 depth (leaf)", href: "#", badge: null }],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const mainNav: readonly NavItemType[] = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/",              badge: null },
   { label: "Orders",    icon: ShoppingBag,     href: "/orders",        badge: "12" },
   { label: "Products",  icon: Package,         href: "/products",      badge: null },
@@ -42,7 +78,9 @@ const mainNavBase: readonly NavItemType[] = [
   { label: "Invoices",  icon: FileText,        href: "/invoices",      badge: null },
   { label: "Payments",  icon: CreditCard,      href: "/payments",      badge: null },
   { label: "Markets",   icon: Globe,           href: "/markets",       badge: null },
-] as const;
+  { label: "Radix",    icon: Diamond,         href: "/radix",         badge: null },
+  fiveDepthMenuNav,
+] as const satisfies readonly NavItemType[];
 
 const bottomNav = [
   { label: "Notifications", icon: Bell,       href: "/notifications", badge: "5"  },
@@ -168,43 +206,50 @@ function isSection(item: NavItemType): item is NavSection {
   return "children" in item;
 }
 
-function hasActiveDescendant(node: NavItemType, pathname: string): boolean {
-  if (pathname === node.href) return true;
-  if (pathname.startsWith(node.href + "/")) return true;
+function navHrefActive(href: string, pathname: string, hash: string): boolean {
+  if (href.includes("#")) {
+    const [path, frag] = href.split("#");
+    return pathname === path && hash === `#${frag}`;
+  }
+  if (pathname === href) return true;
+  if (href !== "/" && pathname.startsWith(`${href}/`)) return true;
+  return false;
+}
+
+function hasActiveDescendant(node: NavItemType, pathname: string, hash: string): boolean {
+  if (navHrefActive(node.href, pathname, hash)) return true;
   if (!isSection(node)) return false;
-  return node.children.some((c) => hasActiveDescendant(c, pathname));
+  return node.children.some((c) => hasActiveDescendant(c, pathname, hash));
 }
 
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const [collapsed, setCollapsed] = useState(false);
   const [openMap, setOpenMap] = useState<Record<string, boolean>>({});
   const pathname = usePathname();
-
-  const mainNav: readonly NavItemType[] = useMemo(() => {
-    const radixChildren: NavLeaf[] = RADIX_PRIMITIVES.map((p) => ({
-      label: p.title,
-      href: `/radix/${p.slug}`,
-    }));
-    return [
-      ...mainNavBase,
-      { label: "Radix", icon: Diamond, href: "/radix", badge: null, children: radixChildren },
-    ];
+  const [hash, setHash] = useState("");
+  useEffect(() => {
+    setHash(typeof window !== "undefined" ? window.location.hash : "");
+  }, [pathname]);
+  useEffect(() => {
+    const onHash = () => setHash(window.location.hash);
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
   const toggleOpen = (href: string) => setOpenMap((m) => ({ ...m, [href]: !(m[href] ?? false) }));
   const getOpen = (node: NavSection, depth: number) => {
     const explicit = openMap[node.href];
     if (explicit !== undefined) return explicit;
-    if (node.href === "/radix") return true; // default expand
-    return depth === 0 ? false : hasActiveDescendant(node, pathname);
+    return depth === 0 ? false : hasActiveDescendant(node, pathname, hash);
   };
 
   const renderNav = (items: readonly NavItemType[], depth: number) => {
-    if (depth >= 5) return null;
+    /* depth 0…5 → up to 5 nested sidebar levels under a root section (leaves at depth 5) */
+    if (depth >= 6) return null;
     return (
       <div className={cn(depth === 0 ? "flex flex-col gap-0.5" : "space-y-0.5")}>
         {items.map((item) => {
-          const active = hasActiveDescendant(item, pathname);
+          const active = hasActiveDescendant(item, pathname, hash);
 
           if (!isSection(item)) {
             if (depth === 0) {
@@ -215,7 +260,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                   icon={item.icon ?? Diamond}
                   href={item.href}
                   badge={item.badge}
-                  active={pathname === item.href}
+                  active={navHrefActive(item.href, pathname, hash)}
                   collapsed={collapsed}
                   onClick={onClose}
                 />
@@ -226,7 +271,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                 key={item.href}
                 label={item.label}
                 href={item.href}
-                active={pathname === item.href}
+                active={navHrefActive(item.href, pathname, hash)}
                 onClick={onClose}
               />
             );
@@ -261,7 +306,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                 onClick={onClose}
               />
             ) : (
-              <SubNavItem label={item.label} href={item.href} active={pathname === item.href} onClick={onClose} />
+              <SubNavItem label={item.label} href={item.href} active={navHrefActive(item.href, pathname, hash)} onClick={onClose} />
             );
 
           return (
@@ -273,16 +318,16 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                   aria-label={open ? `Collapse ${item.label} section` : `Expand ${item.label} section`}
                   onClick={() => toggleOpen(item.href)}
                   className={cn(
-                    "w-9 h-9 flex items-center justify-center rounded-lg border transition-colors",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--luxe-accent)] focus-visible:ring-inset",
-                    "hover:bg-[var(--t-hover)]"
+                    "inline-flex items-center justify-center shrink-0 py-2 px-0.5 rounded-md border-0 bg-transparent",
+                    "text-sm leading-none text-[var(--luxe-text-40)]",
+                    "transition-colors hover:text-[var(--luxe-text)] hover:bg-transparent",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--luxe-accent)] focus-visible:ring-offset-0"
                   )}
-                  style={{ borderColor: "var(--t-border-2)", color: "var(--luxe-text-40)" }}
                 >
                   {open ? (
-                    <ChevronDown className="w-4 h-4" aria-hidden="true" />
+                    <ChevronDown className="w-4 h-4 shrink-0" aria-hidden="true" />
                   ) : (
-                    <ChevronRight className="w-4 h-4" aria-hidden="true" />
+                    <ChevronRight className="w-4 h-4 shrink-0" aria-hidden="true" />
                   )}
                 </button>
               </div>

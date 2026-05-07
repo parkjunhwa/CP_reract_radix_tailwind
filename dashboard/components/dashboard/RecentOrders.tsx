@@ -23,8 +23,8 @@ export default function RecentOrders() {
     new Intl.NumberFormat("en-US", { style:"currency", currency:"USD", maximumFractionDigits:0 }).format(v);
 
   return (
-    <section aria-label="Recent orders list" className="panel flex flex-col">
-      <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom:"1px solid var(--t-border)" }}>
+    <section aria-label="Recent orders list" className="panel flex h-full min-h-0 w-full flex-col">
+      <div className="flex shrink-0 items-center justify-between px-5 py-4" style={{ borderBottom:"1px solid var(--t-border)" }}>
         <div>
           <h2 className="t-text font-semibold text-sm">Recent Orders</h2>
           <p className="t-text-30 text-xs mt-0.5">Latest transactions today</p>
@@ -34,7 +34,7 @@ export default function RecentOrders() {
         </a>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="min-h-0 flex-1 overflow-x-auto overflow-y-auto">
         <table className="w-full text-sm">
           <thead>
             <tr style={{ borderBottom:"1px solid var(--t-border)" }}>

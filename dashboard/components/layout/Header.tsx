@@ -10,8 +10,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
-import { getRadixPrimitive } from "@/lib/radix-primitives";
-
 const pageMeta: Record<string, { title: string; sub: string }> = {
   "/":               { title: "Overview",       sub: "Tuesday, May 6, 2026" },
   "/orders":         { title: "Orders",         sub: "Manage and track all transactions" },
@@ -46,17 +44,7 @@ const iconBtn = "w-9 h-9 flex items-center justify-center rounded-lg transition-
 
 export default function Header({ onMenuToggle }: HeaderProps) {
   const pathname = usePathname();
-  const meta = (() => {
-    if (pathname.startsWith("/radix/")) {
-      const slug = pathname.split("/")[2] ?? "";
-      const p = getRadixPrimitive(slug);
-      return {
-        title: p ? p.title : "Radix",
-        sub: "Radix Primitives playground",
-      };
-    }
-    return pageMeta[pathname] ?? { title: "Dashboard", sub: "" };
-  })();
+  const meta = pathname === "/radix" ? pageMeta["/radix"] : (pageMeta[pathname] ?? { title: "Dashboard", sub: "" });
   const { theme, setTheme } = useTheme();
   const ThemeIcon = theme === "light" ? Sun : theme === "system" ? Monitor : Moon;
 

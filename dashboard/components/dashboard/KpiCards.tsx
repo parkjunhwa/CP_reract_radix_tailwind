@@ -12,7 +12,7 @@ interface KpiCardProps {
 function KpiCard({ title, value, change, period, icon: Icon, prefix, suffix, accent }: KpiCardProps) {
   const isPositive = change >= 0;
   return (
-    <div className="panel relative overflow-hidden p-5 flex flex-col gap-4 hover:t-border-2 transition-all duration-200 group">
+    <div className="panel relative overflow-hidden p-5 flex flex-col gap-4 h-full min-h-0 hover:t-border-2 transition-all duration-200 group">
       <div className="flex items-start justify-between">
         <div>
           <p className="t-text-40 text-xs font-medium tracking-wide uppercase">{title}</p>
@@ -24,7 +24,7 @@ function KpiCard({ title, value, change, period, icon: Icon, prefix, suffix, acc
           <Icon className="w-5 h-5 text-white/80" aria-hidden="true" />
         </div>
       </div>
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1.5 mt-auto">
         <div className={cn(
           "flex items-center gap-0.5 text-xs font-semibold px-1.5 py-0.5 rounded-md",
           isPositive ? "text-emerald-500 bg-emerald-500/10" : "text-red-500 bg-red-500/10"
@@ -54,7 +54,7 @@ export default function KpiCards() {
   ];
 
   return (
-    <section aria-label="Key performance indicators" className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+    <section aria-label="Key performance indicators" className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 items-stretch auto-rows-fr">
       {cards.map((card) => <KpiCard key={card.title} {...card} />)}
     </section>
   );

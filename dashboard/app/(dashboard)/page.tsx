@@ -9,13 +9,13 @@ export default function DashboardPage() {
     <div className="space-y-4 pb-4">
       <KpiCards />
       <ChartsSection />
-      <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
-        <div className="xl:col-span-3"><RecentOrders /></div>
-        <div className="xl:col-span-2"><TopProducts /></div>
+      <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 items-stretch">
+        <div className="xl:col-span-3 flex h-full min-h-0"><RecentOrders /></div>
+        <div className="xl:col-span-2 flex h-full min-h-0"><TopProducts /></div>
       </div>
-      <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
-        <div className="xl:col-span-2"><TopClients /></div>
-        <div className="xl:col-span-3"><ActivityFeed /></div>
+      <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 items-stretch">
+        <div className="xl:col-span-2 flex h-full min-h-0"><TopClients /></div>
+        <div className="xl:col-span-3 flex h-full min-h-0"><ActivityFeed /></div>
       </div>
     </div>
   );
@@ -32,12 +32,12 @@ function ActivityFeed() {
     { time: "5h ago", icon: "📈", text: "Monthly target exceeded", detail: "April revenue +13.6% over target", color: "text-violet-400" },
   ];
   return (
-    <div className="panel flex flex-col h-full">
-      <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
+    <div className="panel flex h-full min-h-0 w-full flex-col">
+      <div className="shrink-0 px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
         <h3 className="t-text font-semibold text-sm">Activity Feed</h3>
         <p className="t-text-30 text-xs mt-0.5">Real-time business events</p>
       </div>
-      <div className="flex-1 overflow-y-auto">
+      <div className="min-h-0 flex-1 overflow-y-auto">
         {activities.map((a, i) => (
           <div key={i} className="flex items-start gap-3 px-5 py-3.5 t-hover transition-colors last:border-0" style={{ borderBottom: "1px solid var(--t-border)" }}>
             <span className="text-base mt-0.5 flex-shrink-0">{a.icon}</span>

@@ -10,8 +10,8 @@ export default function TopProducts() {
   const fmt = (v: number) => v >= 1_000_000 ? `$${(v/1_000_000).toFixed(2)}M` : `$${(v/1_000).toFixed(0)}K`;
 
   return (
-    <section aria-label="Top products list" className="panel flex flex-col">
-      <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom:"1px solid var(--t-border)" }}>
+    <section aria-label="Top products list" className="panel flex h-full min-h-0 w-full flex-col">
+      <div className="flex shrink-0 items-center justify-between px-5 py-4" style={{ borderBottom:"1px solid var(--t-border)" }}>
         <div>
           <h2 className="t-text font-semibold text-sm">Top Products</h2>
           <p className="t-text-30 text-xs mt-0.5">By annual revenue</p>
@@ -21,7 +21,7 @@ export default function TopProducts() {
         </a>
       </div>
 
-      <ol className="flex flex-col" style={{ borderTop:"none" }}>
+      <ol className="flex min-h-0 flex-1 flex-col overflow-y-auto" style={{ borderTop:"none" }}>
         {topProducts.map((product, i) => {
           const pct = Math.round((product.revenue / maxRevenue) * 100);
           const isPos = product.trend >= 0;

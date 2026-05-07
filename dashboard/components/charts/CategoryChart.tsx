@@ -24,12 +24,12 @@ const CustomTooltip = ({ active, payload }: ChartTooltipProps) => {
 
 export default function CategoryChart() {
   return (
-    <section aria-label="Revenue by category donut chart" className="panel p-5 flex flex-col gap-4">
+    <section aria-label="Revenue by category donut chart" className="panel flex h-full min-h-0 flex-1 flex-col gap-4 p-5">
       <div>
         <h3 className="t-text font-semibold text-sm">Revenue by Category</h3>
         <p className="t-text-30 text-xs mt-0.5">Share of revenue (YTD)</p>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex min-h-0 flex-1 items-center gap-4">
         <div className="relative w-32 h-32 shrink-0" role="img" aria-label="Revenue by category donut chart">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>

@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn, formatCompactUsd } from "@/lib/utils";
 import { Search, Plus, Crown, TrendingUp, Users, Star, Mail, Phone, MoreHorizontal } from "lucide-react";
 
 type Tier = "platinum" | "gold" | "silver" | "bronze";
@@ -53,7 +53,6 @@ export default function ClientsPage() {
         c.city.toLowerCase().includes(search.toLowerCase()))
     ), [search, tierFilter]);
 
-  const fmt = (v: number) => new Intl.NumberFormat("en-US", { style:"currency", currency:"USD", notation:"compact", maximumFractionDigits:1 }).format(v);
   const fmtFull = (v: number) => new Intl.NumberFormat("en-US", { style:"currency", currency:"USD", maximumFractionDigits:0 }).format(v);
 
   const totalLTV = CLIENTS.reduce((s,c) => s+c.totalSpent, 0);
@@ -65,7 +64,7 @@ export default function ClientsPage() {
         {[
           { label:"Total Clients", value: CLIENTS.length, sub:"all tiers", icon: Users, color:"text-violet-400" },
           { label:"Platinum Tier", value: CLIENTS.filter(c=>c.tier==="platinum").length, sub:"top spenders", icon: Crown, color:"text-amber-400" },
-          { label:"Total LTV", value: fmt(totalLTV), sub:"lifetime value", icon: TrendingUp, color:"text-emerald-400" },
+          { label:"Total LTV", value: formatCompactUsd(totalLTV), sub:"lifetime value", icon: TrendingUp, color:"text-emerald-400" },
           { label:"Active", value: CLIENTS.filter(c=>c.status==="active").length, sub:"last 90 days", icon: Star, color:"text-sky-400" },
         ].map(({ label, value, sub, icon: Icon, color }) => (
           <div key={label} className="panel p-4 flex items-center gap-3">
@@ -164,7 +163,7 @@ export default function ClientsPage() {
                       <span className="t-text-60 text-sm">{c.orders}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="t-text-50 text-xs">{fmt(c.avgOrder)}</span>
+                      <span className="t-text-50 text-xs">{formatCompactUsd(c.avgOrder)}</span>
                     </td>
                     <td className="px-5 py-3.5">
                       <span className="t-text-40 text-xs">{c.lastOrder}</span>

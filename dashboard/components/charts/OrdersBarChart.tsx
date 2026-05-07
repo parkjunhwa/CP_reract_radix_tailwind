@@ -29,12 +29,12 @@ export default function OrdersBarChart() {
   const barBottom = "var(--t-accent-h)";
 
   return (
-    <section aria-label="Monthly orders bar chart" className="panel p-5 flex flex-col gap-4">
+    <section aria-label="Monthly orders bar chart" className="panel flex h-full min-h-0 flex-1 flex-col gap-4 p-5">
       <div>
         <h3 className="t-text font-semibold text-sm">Monthly Orders</h3>
         <p className="t-text-30 text-xs mt-0.5">Orders by month · 2025</p>
       </div>
-      <div className="h-44" role="img" aria-label="2025 monthly orders bar chart">
+      <div className="min-h-44 w-full flex-1" role="img" aria-label="2025 monthly orders bar chart">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={revenueData} margin={{ top:4, right:4, bottom:0, left:0 }} barSize={14}>
             <defs>

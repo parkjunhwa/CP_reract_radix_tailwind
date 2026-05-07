@@ -3,7 +3,7 @@
 import { topCustomers } from "@/lib/data";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn, formatCompactUsd } from "@/lib/utils";
 import { ArrowUpRight, Crown } from "lucide-react";
 
 const tierConfig = {
@@ -18,12 +18,9 @@ const AV_COLORS = [
 ];
 
 export default function TopClients() {
-  const fmt = (v: number) =>
-    new Intl.NumberFormat("en-US", { style:"currency", currency:"USD", notation:"compact", maximumFractionDigits:1 }).format(v);
-
   return (
-    <section aria-label="Top clients list" className="panel flex flex-col">
-      <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom:"1px solid var(--t-border)" }}>
+    <section aria-label="Top clients list" className="panel flex h-full min-h-0 w-full flex-col">
+      <div className="flex shrink-0 items-center justify-between px-5 py-4" style={{ borderBottom:"1px solid var(--t-border)" }}>
         <div>
           <h2 className="t-text font-semibold text-sm">Top Clients</h2>
           <p className="t-text-30 text-xs mt-0.5">By lifetime value</p>
@@ -33,7 +30,7 @@ export default function TopClients() {
         </a>
       </div>
 
-      <ol className="flex flex-col divide-y" style={{ "--tw-divide-opacity":1 } as React.CSSProperties}>
+      <ol className="flex min-h-0 flex-1 flex-col divide-y overflow-y-auto" style={{ "--tw-divide-opacity":1 } as React.CSSProperties}>
         {topCustomers.map((client, i) => {
           const { label, cls } = tierConfig[client.tier];
           return (
@@ -57,7 +54,7 @@ export default function TopClients() {
                 <p className="t-text-30 text-[11px] truncate mt-0.5">{client.email}</p>
               </div>
               <div className="flex-shrink-0 text-right flex flex-col items-end gap-1">
-                <span className="t-text font-semibold text-sm">{fmt(client.totalSpent)}</span>
+                <span className="t-text font-semibold text-sm">{formatCompactUsd(client.totalSpent)}</span>
                 <Badge className={cn("text-[10px] px-1.5 py-0 border font-medium", cls)}>{label}</Badge>
               </div>
             </li>

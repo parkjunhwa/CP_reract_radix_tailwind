@@ -42,7 +42,7 @@ export default function RevenueChart() {
   const avgRevenue = revenueData.reduce((s, d) => s + d.revenue, 0) / revenueData.length;
 
   return (
-    <section aria-label="Revenue vs target chart" className="panel p-5 flex flex-col gap-4">
+    <section aria-label="Revenue vs target chart" className="panel flex h-full min-h-0 flex-1 flex-col gap-4 p-5">
       <div className="flex items-start justify-between flex-wrap gap-2">
         <div>
           <h3 className="t-text font-semibold text-sm">Revenue vs Target</h3>
@@ -63,7 +63,7 @@ export default function RevenueChart() {
         ))}
       </div>
 
-      <div className="h-56" role="img" aria-label="2025 monthly revenue and target area chart">
+      <div className="min-h-56 w-full flex-1" role="img" aria-label="2025 monthly revenue and target area chart">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={revenueData} margin={{ top:4, right:4, bottom:0, left:0 }}>
             <defs>

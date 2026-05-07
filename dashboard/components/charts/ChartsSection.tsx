@@ -8,13 +8,19 @@ const OrdersBarChart = dynamic(() => import("./OrdersBarChart"), { ssr: false })
 
 export default function ChartsSection() {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <div className="lg:col-span-2">
-        <RevenueChart />
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch">
+      <div className="lg:col-span-2 flex min-h-0 lg:min-h-[20rem]">
+        <div className="flex min-h-0 flex-1 flex-col">
+          <RevenueChart />
+        </div>
       </div>
-      <div className="flex flex-col gap-4">
-        <CategoryChart />
-        <OrdersBarChart />
+      <div className="flex min-h-0 flex-col gap-4 lg:h-full">
+        <div className="flex min-h-0 flex-1 flex-col lg:min-h-0">
+          <CategoryChart />
+        </div>
+        <div className="flex min-h-0 flex-1 flex-col lg:min-h-0">
+          <OrdersBarChart />
+        </div>
       </div>
     </div>
   );
