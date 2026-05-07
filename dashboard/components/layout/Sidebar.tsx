@@ -67,7 +67,6 @@ const mainNav: NavItemType[] = [
       },
     ],
   },
-  { label: "Radix UI", icon: Diamond, href: "/radix", badge: null },
 ];
 
 const appsSection: NavSectionLabel = {
@@ -235,7 +234,16 @@ const formsSection: NavSectionLabel = {
     { label: "Form Layouts",   icon: Layout,      href: "/forms/form-layouts" },
     { label: "Form Validation", icon: CheckSquare, href: "/forms/form-validation" },
     { label: "Form Wizard",    icon: GitMerge,    href: "/forms/form-wizard" },
-    { label: "React Table",    icon: Table2,      href: "/react-table" },
+    { label: "Radix UI", icon: Diamond, href: "/radix", badge: null },
+    {
+      label: "Table",
+      icon: Table2,
+      href: "#tables",
+      children: [
+        { label: "React Table", href: "/react-table" },
+        { label: "MUI Table", href: "/user-interface/mui-table" },
+      ],
+    },
   ],
 };
 
@@ -253,7 +261,6 @@ const userInterfaceSection: NavSectionLabel = {
     },
     { label: "Components",    icon: ComponentIcon, href: "/user-interface/components" },
     { label: "Form Elements", icon: CheckSquare,   href: "/user-interface/form-elements" },
-    { label: "MUI Table",     icon: Table2,        href: "/user-interface/mui-table" },
   ],
 };
 
@@ -823,7 +830,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
     );
   };
 
-  const allSections: NavItemType[] = [...mainNav, appsSection, formsSection, userInterfaceSection, chartsSection];
+  const allSections: NavItemType[] = [...mainNav, formsSection, appsSection, userInterfaceSection, chartsSection];
 
   return (
     <aside aria-label="Sidebar navigation"

@@ -11,6 +11,7 @@ import {
 import {
   Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardDescription, CardTitle } from "@/components/ui/card";
 
 type Dessert = {
   name: string;
@@ -78,15 +79,25 @@ const COUNTRIES: Country[] = [
 
 const fmt = (n: number) => n.toLocaleString();
 
-function Section({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
+function ExampleCard({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <section className="panel">
-      <header className="px-5 py-3.5" style={{ borderBottom: "1px solid var(--t-border)" }}>
-        <h3 className="t-text font-semibold text-sm">{title}</h3>
-        {description && <p className="t-text-40 text-xs mt-0.5">{description}</p>}
-      </header>
-      <div>{children}</div>
-    </section>
+    <Card className="panel overflow-hidden gap-0 py-0">
+      <CardHeader className="px-5 py-3.5 border-b" style={{ borderColor: "var(--t-border)" }}>
+        <CardTitle className="t-text font-semibold text-sm">{title}</CardTitle>
+        {description && <CardDescription className="t-text-40 text-xs mt-0.5">{description}</CardDescription>}
+      </CardHeader>
+      <CardContent className="px-0">
+        {children}
+      </CardContent>
+    </Card>
   );
 }
 
@@ -229,7 +240,6 @@ function CollapsibleTable() {
                       onClick={() => setOpen(isOpen ? null : d.name)}
                       className="t-text-60 t-hover-2 rounded p-0.5"
                       aria-label={isOpen ? "Collapse row" : "Expand row"}
-                      aria-expanded={isOpen}
                     >
                       {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                     </button>
@@ -502,34 +512,48 @@ function SortingSelectingTable() {
 
 export default function MuiTablePage() {
   return (
-    <div className="space-y-3">
-      <Section title="Basic Table">
-        <BasicTable />
-      </Section>
+    <div className="grid gap-3 lg:grid-cols-2">
+      <ExampleCard title="Basic Table">
+        <div className="px-5 py-4">
+          <BasicTable />
+        </div>
+      </ExampleCard>
 
-      <Section title="Dense Table">
-        <BasicTable dense />
-      </Section>
+      <ExampleCard title="Dense Table" description="More compact row spacing for data-heavy views.">
+        <div className="px-5 py-4">
+          <BasicTable dense />
+        </div>
+      </ExampleCard>
 
-      <Section title="Sticky Header" description="Header sticks to the top of the scroll container.">
-        <StickyHeaderTable />
-      </Section>
+      <ExampleCard title="Sticky Header" description="Header sticks to the top of the scroll container.">
+        <div className="px-5 py-4">
+          <StickyHeaderTable />
+        </div>
+      </ExampleCard>
 
-      <Section title="Collapsible Table" description="Expand rows to reveal nested order history.">
-        <CollapsibleTable />
-      </Section>
+      <ExampleCard title="Collapsible Table" description="Expand rows to reveal nested order history.">
+        <div className="px-5 py-4">
+          <CollapsibleTable />
+        </div>
+      </ExampleCard>
 
-      <Section title="Spanning Table" description="Cells span multiple columns and rows.">
-        <SpanningTable />
-      </Section>
+      <ExampleCard title="Spanning Table" description="Cells span multiple columns and rows.">
+        <div className="px-5 py-4">
+          <SpanningTable />
+        </div>
+      </ExampleCard>
 
-      <Section title="Customized Table" description="Branded header with zebra stripes.">
-        <CustomizedTable />
-      </Section>
+      <ExampleCard title="Customized Table" description="Branded header with zebra stripes.">
+        <div className="px-5 py-4">
+          <CustomizedTable />
+        </div>
+      </ExampleCard>
 
-      <Section title="Sorting & Selecting" description="Sort by any column and select rows with bulk indicator.">
-        <SortingSelectingTable />
-      </Section>
+      <ExampleCard title="Sorting & Selecting" description="Sort by any column and select rows with bulk indicator.">
+        <div className="px-5 py-4">
+          <SortingSelectingTable />
+        </div>
+      </ExampleCard>
     </div>
   );
 }

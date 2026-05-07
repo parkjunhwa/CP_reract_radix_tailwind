@@ -21,12 +21,12 @@ import {
 
 function Section({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="panel flex h-full min-h-0 flex-col">
+    <section className="panel flex h-full flex-col">
       <header className="shrink-0 border-b t-border px-5 py-3.5">
         <h3 className="t-text font-semibold text-sm">{title}</h3>
         {description && <p className="t-text-40 text-xs mt-0.5">{description}</p>}
       </header>
-      <div className="min-h-0 flex-1 overflow-auto p-5">{children}</div>
+      <div className="flex-1 p-5">{children}</div>
     </section>
   );
 }
@@ -389,7 +389,7 @@ function SliderDemo() {
 
 export default function FormElementsPage() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+    <div className="grid auto-rows-fr grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
       <Section title="Text Field" description="Single-line input with adornment, helper, and validation states.">
         <TextFieldDemo />
       </Section>

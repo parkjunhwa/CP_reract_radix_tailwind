@@ -2,11 +2,41 @@
 
 import * as React from "react"
 import * as SelectPrimitive from "@radix-ui/react-select"
+import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 
 const Select = SelectPrimitive.Root
+
+const selectTriggerVariants = cva(
+  cn(
+    "flex w-full items-center justify-between gap-2 rounded-lg border bg-[color:var(--t-input-bg)] outline-none transition-colors",
+    "border-[color:var(--t-border-2)] text-[color:var(--t-text-70)]",
+    "text-xs",
+    "data-placeholder:text-[color:var(--t-text-30)]",
+    "focus-visible:border-[color:var(--t-accent)] focus-visible:ring-2 focus-visible:ring-[color:var(--t-ring)]/30",
+    "disabled:cursor-not-allowed disabled:opacity-50",
+    "aria-invalid:border-red-500/60 aria-invalid:ring-red-500/20 aria-invalid:focus-visible:ring-red-500/30",
+    "data-[invalid=true]:border-red-500/60 data-[invalid=true]:ring-red-500/20 data-[invalid=true]:focus-visible:ring-red-500/30",
+    "data-[valid=true]:border-emerald-500/60",
+    "whitespace-nowrap select-none",
+    "*:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5",
+    "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  ),
+  {
+    variants: {
+      size: {
+        sm: "h-8 pl-3 pr-2.5",
+        default: "h-9 pl-3 pr-2.5",
+        lg: "h-10 pl-3.5 pr-3 text-sm",
+      },
+    },
+    defaultVariants: {
+      size: "default",
+    },
+  },
+)
 
 function SelectGroup({
   className,
@@ -36,18 +66,17 @@ function SelectValue({
 
 function SelectTrigger({
   className,
-  size = "default",
+  size,
   children,
   ...props
-}: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
-  size?: "sm" | "default"
-}) {
+}: React.ComponentProps<typeof SelectPrimitive.Trigger> &
+  VariantProps<typeof selectTriggerVariants>) {
   return (
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        "flex w-fit items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent py-2 pr-2 pl-2.5 text-sm whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-8 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        selectTriggerVariants({ size }),
         className
       )}
       {...props}

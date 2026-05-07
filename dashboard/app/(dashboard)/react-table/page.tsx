@@ -6,6 +6,7 @@ import * as Form from "@radix-ui/react-form";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardDescription, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 const DATA = [
@@ -30,9 +31,9 @@ type SortDir = "asc" | "desc" | null;
 interface SortState { col: string; dir: SortDir }
 
 const statusConfig: Record<string, { label: string; cls: string }> = {
-  active:       { label: "In Stock",    cls: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
-  low_stock:    { label: "Low Stock",   cls: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
-  out_of_stock: { label: "Out of Stock",cls: "bg-red-500/10 text-red-400 border-red-500/20" },
+  active:       { label: "In Stock",    cls: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" },
+  low_stock:    { label: "Low Stock",   cls: "bg-amber-500/10 text-amber-500 border-amber-500/20" },
+  out_of_stock: { label: "Out of Stock",cls: "bg-red-500/10 text-red-500 border-red-500/20" },
 };
 
 const PAGE_SIZE = 8;
@@ -82,10 +83,17 @@ export default function ReactTablePage() {
   ];
 
   return (
-    <div className="space-y-3 pb-0">
-      <div className="panel">
-        {/* Toolbar */}
-        <Form.Root className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
+    <div className="grid gap-3 lg:grid-cols-2 pb-0">
+      <Card className="panel overflow-hidden gap-0 py-0 lg:col-span-2">
+        <CardHeader className="px-5 py-3.5 border-b" style={{ borderColor: "var(--t-border)" }}>
+          <CardTitle className="t-text font-semibold text-sm">Interactive React Table</CardTitle>
+          <CardDescription className="t-text-40 text-xs mt-0.5">
+            Search, sort, select, and paginate a headless-style table layout.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="px-0">
+          {/* Toolbar */}
+          <Form.Root className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid var(--t-border)" }}>
           <Form.Field name="search" className="flex-1">
             <div className="flex items-center gap-2 h-9 px-3 rounded-lg border" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)" }}>
               <Search className="w-3.5 h-3.5 t-text-30" />
@@ -106,82 +114,152 @@ export default function ReactTablePage() {
           <button className="h-9 px-3 rounded-lg border text-xs flex items-center gap-1.5 t-text-60 hover:bg-[var(--t-hover)] transition-colors" style={{ borderColor: "var(--t-border-2)" }}>
             <Download className="w-3.5 h-3.5" /> Export
           </button>
-        </Form.Root>
+          </Form.Root>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr style={{ borderBottom: "1px solid var(--t-border)" }}>
-                <th className="w-10 px-5 py-3">
-                  <Checkbox
-                    checked={allSelected}
-                    onCheckedChange={() => toggleAll()}
-                    aria-label="Select all rows"
-                  />
-                </th>
-                {cols.map(col => (
-                  <th key={col.key} onClick={() => toggleSort(col.key)}
-                    className="text-left text-[11px] font-medium t-text-30 uppercase tracking-wider px-5 py-3 cursor-pointer hover:t-text-60 select-none transition-colors">
-                    <div className="flex items-center gap-1.5">{col.label}<SortIcon col={col.key} /></div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr style={{ borderBottom: "1px solid var(--t-border)" }}>
+                  <th className="w-10 px-5 py-3">
+                    <Checkbox
+                      checked={allSelected}
+                      onCheckedChange={() => toggleAll()}
+                      aria-label="Select all rows"
+                    />
                   </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {paged.map(row => {
-                const { label, cls } = statusConfig[row.status];
-                return (
-                  <tr key={row.id} className={cn("transition-colors t-hover", selected.has(row.id) && "bg-violet-500/5")} style={{ borderBottom: "1px solid var(--t-border)" }}>
-                    <td className="px-5 py-3.5">
-                      <Checkbox
-                        checked={selected.has(row.id)}
-                        onCheckedChange={() => toggleSelect(row.id)}
-                        aria-label={`Select row ${row.name}`}
-                      />
-                    </td>
-                    <td className="px-5 py-3.5 max-w-[200px]"><span className="t-text-70 text-xs font-medium truncate block">{row.name}</span></td>
-                    <td className="px-5 py-3.5"><span className="t-text-40 text-xs">{row.category}</span></td>
-                    <td className="px-5 py-3.5"><span className="t-text font-semibold text-sm">{fmt(row.price)}</span></td>
-                    <td className="px-5 py-3.5"><span className={cn("text-xs font-semibold", row.stock === 0 ? "text-red-400" : row.stock <= 3 ? "text-amber-400" : "text-emerald-400")}>{row.stock}</span></td>
-                    <td className="px-5 py-3.5"><Badge className={cn("text-[10px] px-2 border", cls)}>{label}</Badge></td>
-                    <td className="px-5 py-3.5"><span className="t-text-40 text-xs">{row.region}</span></td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        <div className="flex items-center justify-between px-5 py-3" style={{ borderTop: "1px solid var(--t-border)" }}>
-          <span className="t-text-30 text-xs">
-            {filtered.length === 0 ? "No results" : `Showing ${(page-1)*PAGE_SIZE+1}–${Math.min(page*PAGE_SIZE, filtered.length)} of ${filtered.length}`}
-          </span>
-          <div className="flex items-center gap-1">
-            <button
-              aria-label="Previous page"
-              onClick={() => setPage(p => Math.max(1, p-1))}
-              disabled={page === 1}
-              className="w-8 h-8 rounded-lg border flex items-center justify-center disabled:opacity-30 transition-colors" style={{ borderColor: "var(--t-border-2)", color: "var(--t-text-50)" }}>
-              <ChevronLeft className="w-3.5 h-3.5" />
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-              <button key={p} onClick={() => setPage(p)}
-                className={cn("w-8 h-8 rounded-lg text-xs font-medium transition-colors", page === p ? "text-white" : "t-text-50")}
-                style={page === p ? { backgroundColor: "var(--t-accent)" } : {}}>
-                {p}
-              </button>
-            ))}
-            <button
-              aria-label="Next page"
-              onClick={() => setPage(p => Math.min(totalPages, p+1))}
-              disabled={page === totalPages || totalPages === 0}
-              className="w-8 h-8 rounded-lg border flex items-center justify-center disabled:opacity-30 transition-colors" style={{ borderColor: "var(--t-border-2)", color: "var(--t-text-50)" }}>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
+                  {cols.map(col => (
+                    <th key={col.key} onClick={() => toggleSort(col.key)}
+                      className="text-left text-[11px] font-medium t-text-30 uppercase tracking-wider px-5 py-3 cursor-pointer hover:t-text-60 select-none transition-colors">
+                      <div className="flex items-center gap-1.5">{col.label}<SortIcon col={col.key} /></div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {paged.map(row => {
+                  const { label, cls } = statusConfig[row.status];
+                  return (
+                    <tr key={row.id} className={cn("transition-colors t-hover", selected.has(row.id) && "bg-violet-500/5")} style={{ borderBottom: "1px solid var(--t-border)" }}>
+                      <td className="px-5 py-3.5">
+                        <Checkbox
+                          checked={selected.has(row.id)}
+                          onCheckedChange={() => toggleSelect(row.id)}
+                          aria-label={`Select row ${row.name}`}
+                        />
+                      </td>
+                      <td className="px-5 py-3.5 max-w-[200px]"><span className="t-text-70 text-xs font-medium truncate block">{row.name}</span></td>
+                      <td className="px-5 py-3.5"><span className="t-text-40 text-xs">{row.category}</span></td>
+                      <td className="px-5 py-3.5"><span className="t-text font-semibold text-sm">{fmt(row.price)}</span></td>
+                    <td className="px-5 py-3.5"><span className={cn("text-xs font-semibold", row.stock === 0 ? "text-red-500" : row.stock <= 3 ? "text-amber-500" : "text-emerald-500")}>{row.stock}</span></td>
+                      <td className="px-5 py-3.5"><Badge className={cn("text-[10px] px-2 border", cls)}>{label}</Badge></td>
+                      <td className="px-5 py-3.5"><span className="t-text-40 text-xs">{row.region}</span></td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
-        </div>
-      </div>
+
+          {/* Pagination */}
+          <div className="flex items-center justify-between px-5 py-3" style={{ borderTop: "1px solid var(--t-border)" }}>
+            <span className="t-text-30 text-xs">
+              {filtered.length === 0 ? "No results" : `Showing ${(page-1)*PAGE_SIZE+1}–${Math.min(page*PAGE_SIZE, filtered.length)} of ${filtered.length}`}
+            </span>
+            <div className="flex items-center gap-1">
+              <button
+                aria-label="Previous page"
+                onClick={() => setPage(p => Math.max(1, p-1))}
+                disabled={page === 1}
+                className="w-8 h-8 rounded-lg border flex items-center justify-center disabled:opacity-30 transition-colors" style={{ borderColor: "var(--t-border-2)", color: "var(--t-text-50)" }}>
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                <button key={p} onClick={() => setPage(p)}
+                  className={cn("w-8 h-8 rounded-lg text-xs font-medium transition-colors", page === p ? "text-white" : "t-text-50")}
+                  style={page === p ? { backgroundColor: "var(--t-accent)" } : {}}>
+                  {p}
+                </button>
+              ))}
+              <button
+                aria-label="Next page"
+                onClick={() => setPage(p => Math.min(totalPages, p+1))}
+                disabled={page === totalPages || totalPages === 0}
+                className="w-8 h-8 rounded-lg border flex items-center justify-center disabled:opacity-30 transition-colors" style={{ borderColor: "var(--t-border-2)", color: "var(--t-text-50)" }}>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="panel overflow-hidden gap-0 py-0">
+        <CardHeader className="px-5 py-3.5 border-b" style={{ borderColor: "var(--t-border)" }}>
+          <CardTitle className="t-text font-semibold text-sm">Compact Preview</CardTitle>
+          <CardDescription className="t-text-40 text-xs mt-0.5">
+            A lightweight card for quick scanning (top 5 by current sort).
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="px-0">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr style={{ borderBottom: "1px solid var(--t-border)" }}>
+                  <th className="text-left text-[11px] font-medium t-text-30 uppercase tracking-wider px-5 py-3">Product</th>
+                  <th className="text-left text-[11px] font-medium t-text-30 uppercase tracking-wider px-5 py-3">Category</th>
+                  <th className="text-right text-[11px] font-medium t-text-30 uppercase tracking-wider px-5 py-3">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.slice(0, 5).map((row) => (
+                  <tr key={row.id} style={{ borderBottom: "1px solid var(--t-border)" }} className="t-hover">
+                    <td className="px-5 py-2.5">
+                      <span className="t-text-70 text-xs font-medium truncate block max-w-[240px]">{row.name}</span>
+                    </td>
+                    <td className="px-5 py-2.5"><span className="t-text-40 text-xs">{row.category}</span></td>
+                    <td className="px-5 py-2.5 text-right"><span className="t-text font-semibold text-sm">{fmt(row.price)}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="panel overflow-hidden gap-0 py-0">
+        <CardHeader className="px-5 py-3.5 border-b" style={{ borderColor: "var(--t-border)" }}>
+          <CardTitle className="t-text font-semibold text-sm">Status Badges</CardTitle>
+          <CardDescription className="t-text-40 text-xs mt-0.5">
+            Example of “table cell as component” using badges and emphasis.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="px-0">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr style={{ borderBottom: "1px solid var(--t-border)" }}>
+                  <th className="text-left text-[11px] font-medium t-text-30 uppercase tracking-wider px-5 py-3">Product</th>
+                  <th className="text-left text-[11px] font-medium t-text-30 uppercase tracking-wider px-5 py-3">Region</th>
+                  <th className="text-left text-[11px] font-medium t-text-30 uppercase tracking-wider px-5 py-3">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {DATA.slice(0, 6).map((row) => {
+                  const { label, cls } = statusConfig[row.status];
+                  return (
+                    <tr key={row.id} style={{ borderBottom: "1px solid var(--t-border)" }} className="t-hover">
+                      <td className="px-5 py-2.5">
+                        <span className="t-text-70 text-xs font-medium truncate block max-w-[240px]">{row.name}</span>
+                      </td>
+                      <td className="px-5 py-2.5"><span className="t-text-40 text-xs">{row.region}</span></td>
+                      <td className="px-5 py-2.5"><Badge className={cn("text-[10px] px-2 border", cls)}>{label}</Badge></td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
