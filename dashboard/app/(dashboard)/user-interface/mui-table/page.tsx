@@ -12,6 +12,7 @@ import {
   Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardDescription, CardTitle } from "@/components/ui/card";
+import { SourceFooter } from "@/components/ui/source-footer";
 
 type Dessert = {
   name: string;
@@ -554,6 +555,19 @@ export default function MuiTablePage() {
           <SortingSelectingTable />
         </div>
       </ExampleCard>
+
+      <SourceFooter className="col-span-full">
+        Layouts mirror common{" "}
+        <a className="t-accent-text underline" href="https://mui.com/material-ui/react-table/" target="_blank" rel="noopener noreferrer">
+          Material UI table
+        </a>{" "}
+        demos; markup uses this app&apos;s{" "}
+        <code className="px-1 py-0.5 rounded t-surface-2 t-text-60 text-[11px]">Table</code> components (shadcn-style) and{" "}
+        <a className="t-accent-text underline" href="https://www.radix-ui.com/primitives/docs/components/checkbox" target="_blank" rel="noopener noreferrer">
+          Radix Checkbox
+        </a>
+        .
+      </SourceFooter>
     </div>
   );
 }

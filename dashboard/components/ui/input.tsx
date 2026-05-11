@@ -7,10 +7,11 @@ import { cn } from "@/lib/utils";
 
 const inputVariants = cva(
   cn(
-    "flex w-full rounded-lg border bg-[color:var(--t-input-bg)] text-xs outline-none transition-colors",
-    "border-[color:var(--t-border-2)] text-[color:var(--t-text-70)] placeholder:text-[color:var(--t-text-30)]",
-    "focus-visible:border-[color:var(--t-accent)] focus-visible:ring-2 focus-visible:ring-[color:var(--t-ring)]/30",
-    "disabled:cursor-not-allowed disabled:opacity-50",
+    "flex w-full rounded-lg border bg-(--t-input-bg) text-xs outline-none transition-colors",
+    "border-(--t-border-2) text-(--t-text-70) placeholder:text-(--t-text-30)",
+    "focus-visible:border-(--t-accent) focus-visible:ring-2 focus-visible:ring-(--t-ring)/30",
+    "disabled:cursor-not-allowed disabled:bg-(--t-input-muted-bg) disabled:opacity-50",
+    "read-only:bg-(--t-input-muted-bg)",
     "aria-invalid:border-red-500/60 aria-invalid:ring-red-500/20 aria-invalid:focus-visible:ring-red-500/30",
     "data-[invalid=true]:border-red-500/60 data-[invalid=true]:ring-red-500/20 data-[invalid=true]:focus-visible:ring-red-500/30",
     "data-[valid=true]:border-emerald-500/60",
@@ -64,7 +65,7 @@ const InputAddon = React.forwardRef<
     ref={ref}
     data-slot="input-addon"
     className={cn(
-      "flex items-center text-[color:var(--t-text-40)] [&_svg]:h-3.5 [&_svg]:w-3.5",
+      "flex items-center text-(--t-text-40) [&_svg]:h-3.5 [&_svg]:w-3.5",
       className,
     )}
     {...props}
@@ -91,16 +92,19 @@ const InputGroup = React.forwardRef<
       data-valid={valid || undefined}
       data-size={inputSize}
       className={cn(
-        "flex w-full items-center gap-2 rounded-lg border bg-[color:var(--t-input-bg)] px-3 transition-colors",
-        "border-[color:var(--t-border-2)]",
-        "focus-within:border-[color:var(--t-accent)]",
+        "flex w-full items-center gap-2 rounded-lg border bg-(--t-input-bg) px-3 transition-colors",
+        "border-(--t-border-2)",
+        "focus-within:border-(--t-accent)",
         "data-[invalid=true]:border-red-500/60 data-[invalid=true]:focus-within:border-red-500/70",
         "data-[valid=true]:border-emerald-500/60",
+        "has-[input:disabled]:bg-(--t-input-muted-bg) has-[input:disabled]:opacity-50",
+        "has-[input:read-only]:bg-(--t-input-muted-bg)",
         "data-[size=sm]:h-8",
         "data-[size=default]:h-9",
         "data-[size=lg]:h-10 data-[size=lg]:px-3.5",
         "[&>input]:h-full [&>input]:flex-1 [&>input]:bg-transparent [&>input]:px-0 [&>input]:text-xs [&>input]:outline-none",
-        "[&>input]:text-[color:var(--t-text-70)] [&>input]:placeholder:text-[color:var(--t-text-30)]",
+        "[&>input:disabled]:bg-transparent [&>input:read-only]:bg-transparent [&>input:disabled]:opacity-100",
+        "[&>input]:text-(--t-text-70) [&>input]:placeholder:text-(--t-text-30)",
         "[&>input]:border-0 [&>input]:focus-visible:ring-0",
         className,
       )}

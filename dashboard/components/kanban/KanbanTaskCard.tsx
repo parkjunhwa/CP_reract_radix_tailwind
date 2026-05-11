@@ -16,11 +16,11 @@ function initials(name: string) {
 }
 
 const badgeColors = [
-  "bg-violet-500/10 text-violet-400 border-violet-500/20",
-  "bg-sky-500/10 text-sky-400 border-sky-500/20",
-  "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  "bg-rose-500/10 text-rose-400 border-rose-500/20",
+  "bg-violet-500/10 text-violet-500 border-violet-500/20",
+  "bg-sky-500/10 text-sky-500 border-sky-500/20",
+  "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+  "bg-amber-500/10 text-amber-500 border-amber-500/20",
+  "bg-rose-500/10 text-rose-500 border-rose-500/20",
 ];
 
 export function KanbanTaskCard({

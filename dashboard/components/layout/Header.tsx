@@ -53,8 +53,7 @@ const SEARCH_ITEMS = [
   { section: "Charts",       name: "Apex Charts",      url: "/charts/apex-charts" },
   { section: "Charts",       name: "Recharts",         url: "/charts/recharts" },
   { section: "Charts",       name: "Chart.js",         url: "/charts/chart-js" },
-  { section: "Widgets",      name: "Widget Basic",     url: "/pages/widget-examples/basic" },
-  { section: "Widgets",      name: "Widget Statistics", url: "/pages/widget-examples/statistics" },
+  { section: "Widgets",      name: "Widget Examples",  url: "/pages/widget-examples" },
   { section: "Wizards",      name: "Checkout Wizard",  url: "/pages/wizard-examples/checkout" },
   { section: "Wizards",      name: "Create Deal",      url: "/pages/wizard-examples/create-deal" },
   { section: "Auth",         name: "Login v1",         url: "/pages/auth/login-v1" },
@@ -260,7 +259,7 @@ function NotificationsDropdown() {
           ))}
         </div>
         <div className="px-4 py-2.5 text-center" style={{ borderTop: "1px solid var(--t-border)" }}>
-          <Link href="/pages/widget-examples/basic" className="text-xs t-text-50 hover:t-text-80 transition-colors">
+          <Link href="/pages/widget-examples" className="text-xs t-text-50 hover:t-text-80 transition-colors">
             View all notifications →
           </Link>
         </div>

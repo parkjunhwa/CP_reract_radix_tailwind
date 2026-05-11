@@ -42,9 +42,9 @@ const vehicles: { id: string; driver: string; route: string; status: VehicleStat
 ];
 
 const statusConfig: Record<VehicleStatus, { label: string; cls: string }> = {
-  active:      { label: "Active",      cls: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
-  maintenance: { label: "Maintenance", cls: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
-  idle:        { label: "Idle",        cls: "bg-slate-500/10 text-slate-400 border-slate-500/20" },
+  active:      { label: "Active",      cls: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" },
+  maintenance: { label: "Maintenance", cls: "bg-amber-500/10 text-amber-500 border-amber-500/20" },
+  idle:        { label: "Idle",        cls: "bg-slate-500/10 text-slate-500 border-slate-500/20" },
 };
 
 export default function LogisticsDashboardPage() {

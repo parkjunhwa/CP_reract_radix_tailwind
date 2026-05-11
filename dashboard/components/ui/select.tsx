@@ -16,7 +16,7 @@ const selectTriggerVariants = cva(
     "text-xs",
     "data-placeholder:text-[color:var(--t-text-30)]",
     "focus-visible:border-[color:var(--t-accent)] focus-visible:ring-2 focus-visible:ring-[color:var(--t-ring)]/30",
-    "disabled:cursor-not-allowed disabled:opacity-50",
+    "disabled:cursor-not-allowed disabled:bg-(--t-input-muted-bg) disabled:opacity-50",
     "aria-invalid:border-red-500/60 aria-invalid:ring-red-500/20 aria-invalid:focus-visible:ring-red-500/30",
     "data-[invalid=true]:border-red-500/60 data-[invalid=true]:ring-red-500/20 data-[invalid=true]:focus-visible:ring-red-500/30",
     "data-[valid=true]:border-emerald-500/60",

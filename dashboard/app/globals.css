@@ -21,8 +21,8 @@
     --t-text:#ffffff; --t-text-80:rgba(255,255,255,0.84); --t-text-70:rgba(255,255,255,0.74);
     --t-text-60:rgba(255,255,255,0.64); --t-text-50:rgba(255,255,255,0.54);
     --t-text-40:rgba(255,255,255,0.44); --t-text-30:rgba(255,255,255,0.34);
-    --t-text-20:rgba(255,255,255,0.24); --t-hover:rgba(255,255,255,0.04);
-    --t-hover-2:rgba(255,255,255,0.08); --t-input-bg:rgba(255,255,255,0.05);
+    --t-text-20:rgba(255,255,255,0.24); --t-hover:rgba(0,0,0,0.04);
+    --t-hover-2:rgba(0,0,0,0.08); --t-input-bg:#000000; --t-input-muted-bg:rgba(255,255,255,0.05);
     --t-accent:#7c3aed; --t-accent-h:#6d28d9; --t-accent-soft:rgba(124,58,237,0.15);
     --t-accent-text:#c4b5fd; --t-chart-grid:rgba(255,255,255,0.04);
     --t-chart-tick:rgba(255,255,255,0.28); --t-chart-tooltip:#13131f;
@@ -38,7 +38,7 @@
     --t-text-60:rgba(13,13,26,0.64); --t-text-50:rgba(13,13,26,0.54);
     --t-text-40:rgba(13,13,26,0.48); --t-text-30:rgba(13,13,26,0.38);
     --t-text-20:rgba(13,13,26,0.26); --t-hover:rgba(0,0,0,0.04);
-    --t-hover-2:rgba(0,0,0,0.07); --t-input-bg:rgba(0,0,0,0.04);
+    --t-hover-2:rgba(0,0,0,0.08); --t-input-bg:#ffffff; --t-input-muted-bg:rgba(0,0,0,0.04);
     --t-accent:#5b21b6; --t-accent-h:#4c1d95; --t-accent-soft:rgba(91,33,182,0.08);
     --t-accent-text:#5b21b6; --t-chart-grid:rgba(0,0,0,0.05);
     --t-chart-tick:rgba(0,0,0,0.38); --t-chart-tooltip:#f5f5fc;

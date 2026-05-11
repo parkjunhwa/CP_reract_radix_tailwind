@@ -3,6 +3,8 @@
 import dynamic from "next/dynamic";
 import type { ApexOptions } from "apexcharts";
 
+import { SourceFooter } from "@/components/ui/source-footer";
+
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const PALETTE = ["#7c3aed", "#10b981", "#f59e0b", "#ec4899", "#0ea5e9", "#a855f7", "#22c55e"];
@@ -458,6 +460,25 @@ export default function ApexChartsPage() {
           </div>
         ))}
       </div>
+
+      <SourceFooter>
+        Charts use{" "}
+        <a className="t-accent-text underline" href="https://apexcharts.com/" target="_blank" rel="noopener noreferrer">
+          ApexCharts
+        </a>{" "}
+        via the{" "}
+        <code className="px-1 py-0.5 rounded t-surface-2 t-text-60 text-[11px]">react-apexcharts</code>{" "}
+        wrapper (
+        <a
+          className="t-accent-text underline"
+          href="https://github.com/apexcharts/react-apexcharts"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+        ).
+      </SourceFooter>
     </div>
   );
 }

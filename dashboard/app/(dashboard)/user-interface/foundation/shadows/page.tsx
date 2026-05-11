@@ -51,13 +51,15 @@ const COLOR_LEVELS = [
 
 function ShadowTile({ label, shadow }: { label: string; shadow: string }) {
   return (
-    <div className="flex flex-col items-center gap-3 p-4 rounded-xl t-surface-2">
+    <div className="flex flex-col items-center gap-1.5 rounded-lg p-2 t-surface-2 sm:gap-2 sm:p-2.5">
       <div
-        className="h-20 w-20 rounded-md t-surface"
+        className="size-12 shrink-0 rounded-md t-surface sm:size-14"
         style={{ boxShadow: shadow }}
         aria-hidden
       />
-      <div className="t-text-50 text-[11px] font-semibold uppercase tracking-wide">{label}</div>
+      <div className="t-text-50 text-center text-[10px] font-semibold uppercase leading-tight tracking-wide sm:text-[11px]">
+        {label}
+      </div>
     </div>
   );
 }
@@ -68,7 +70,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       <header className="px-5 py-3.5" style={{ borderBottom: "1px solid var(--t-border)" }}>
         <h3 className="t-text font-semibold text-sm">{title}</h3>
       </header>
-      <div className="p-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-4 gap-2 p-5 sm:grid-cols-6 sm:gap-2.5 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12">
         {children}
       </div>
     </section>

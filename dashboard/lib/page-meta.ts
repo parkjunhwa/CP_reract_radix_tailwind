@@ -17,6 +17,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   dashboards: "Dashboards",
   forms: "Forms",
   charts: "Charts",
+  maps: "Maps",
   pages: "Pages",
   "user-interface": "User Interface",
   "front-pages": "Front Pages",
@@ -58,6 +59,8 @@ const SEGMENT_LABELS: Record<string, string> = {
   "form-wizard": "Form Wizard",
   "apex-charts": "Apex Charts",
   recharts: "Recharts",
+  google: "Google Maps",
+  vector: "Vector Maps",
   // pages / utilities
   "user-profile": "User Profile",
   "account-settings": "Account Settings",
@@ -65,10 +68,6 @@ const SEGMENT_LABELS: Record<string, string> = {
   pricing: "Pricing",
   "widget-examples": "Widget Examples",
   "wizard-examples": "Wizard Examples",
-  basic: "Basic",
-  advanced: "Advanced",
-  statistics: "Statistics",
-  actions: "Actions",
   checkout: "Checkout",
   "create-deal": "Create Deal",
   "property-listing": "Property Listing",
@@ -115,6 +114,7 @@ const NON_LINK_GROUPS = new Set([
   "foundation",
   "email",
   "front-pages",
+  "maps",
 ]);
 
 /** Routes that should not get an automatic preamble (full-screen splash, etc.). */
@@ -219,6 +219,16 @@ const PAGE_META: Record<string, PageMeta> = {
   "/charts/recharts": { title: "Recharts" },
   "/charts/chart-js": { title: "Chart.js" },
 
+  // Maps
+  "/maps/google": {
+    title: "Google Maps",
+    description: "Store locators, embedded map frames, delivery coverage, and route planning examples.",
+  },
+  "/maps/vector": {
+    title: "Vector Maps",
+    description: "SVG-based territories, routes, pins, heatmaps, and logistics map patterns.",
+  },
+
   // Apps — eCommerce
   "/apps/ecommerce/products/list": { title: "Products" },
   "/apps/ecommerce/products/add": { title: "Add Product" },
@@ -242,8 +252,14 @@ const PAGE_META: Record<string, PageMeta> = {
   "/apps/permissions": { title: "Permissions" },
 
   // Apps — Academy
-  "/apps/academy/my-courses": { title: "My Courses" },
-  "/apps/academy/course-details": { title: "Course Details" },
+  "/apps/academy/my-courses": {
+    title: "My Courses",
+    description: "Assigned learning paths, certifications, and electives for your role.",
+  },
+  "/apps/academy/course-details": {
+    title: "Course Details",
+    description: "Syllabus, cohort schedule, and progress for the sample certification path.",
+  },
 
   // Apps — Logistics
   "/apps/logistics/fleet": { title: "Fleet" },
@@ -259,11 +275,10 @@ const PAGE_META: Record<string, PageMeta> = {
   "/pages/user-profile": { title: "User Profile" },
   "/pages/faq": { title: "FAQ" },
   "/pages/pricing": { title: "Pricing" },
-  "/pages/widget-examples/basic": { title: "Basic Widgets" },
-  "/pages/widget-examples/advanced": { title: "Advanced Widgets" },
-  "/pages/widget-examples/statistics": { title: "Statistics Widgets" },
-  "/pages/widget-examples/charts": { title: "Chart Widgets" },
-  "/pages/widget-examples/actions": { title: "Action Widgets" },
+  "/pages/widget-examples": {
+    title: "Widget Examples",
+    description: "Stats, KPI, progress, leaderboard, and action widgets using lucide-react icons.",
+  },
   "/pages/wizard-examples/checkout": { title: "Checkout Wizard" },
   "/pages/wizard-examples/create-deal": { title: "Create Deal" },
   "/pages/wizard-examples/property-listing": { title: "Property Listing" },

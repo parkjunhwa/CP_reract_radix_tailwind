@@ -11,7 +11,7 @@ import {
   Calendar, Clipboard, FileText, User, Lock, File,
   Layout, CheckSquare, GitMerge, Table2, PieChart,
   Home, BarChart2, ExternalLink, BarChart,
-  BookOpen, Navigation, Shield, ListTree,
+  BookOpen, Navigation, Shield, ListTree, MapPinned,
   Component as ComponentIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +24,13 @@ const DOCS_BASE = (
 ).replace(/\/$/, "");
 
 const docHref = (path: string) => `${DOCS_BASE}${path.startsWith("/") ? path : `/${path}`}`;
+
+const collapsedTooltipStyle = {
+  "--tooltip-bg": "var(--luxe-sidebar-2)",
+  "--tooltip-border": "var(--luxe-border-2)",
+  "--tooltip-fg": "var(--luxe-text)",
+  "--tooltip-arrow-bg": "var(--luxe-border-2)",
+} as React.CSSProperties;
 
 /* ─── Types ─────────────────────────────────────────────────── */
 type NavLeaf = {
@@ -214,16 +221,7 @@ const appsSection: NavSectionLabel = {
         { label: "Create Deal",       href: "/pages/wizard-examples/create-deal" },
       ],
     },
-    {
-      label: "Widget Examples", icon: BarChart, href: "#widget-examples",
-      children: [
-        { label: "Basic",      href: "/pages/widget-examples/basic" },
-        { label: "Advanced",   href: "/pages/widget-examples/advanced" },
-        { label: "Statistics", href: "/pages/widget-examples/statistics" },
-        { label: "Charts",     href: "/pages/widget-examples/charts" },
-        { label: "Actions",    href: "/pages/widget-examples/actions" },
-      ],
-    },
+    { label: "Widget Examples", icon: BarChart, href: "/pages/widget-examples" },
   ],
 };
 
@@ -272,6 +270,13 @@ const chartsSection: NavSectionLabel = {
         { label: "Apex Charts", href: "/charts/apex-charts" },
         { label: "Recharts",    href: "/charts/recharts" },
         { label: "Chart.js",    href: "/charts/chart-js" },
+      ],
+    },
+    {
+      label: "Maps", icon: MapPinned, href: "#maps-group",
+      children: [
+        { label: "Google Maps", href: "/maps/google" },
+        { label: "Vector Maps", href: "/maps/vector" },
       ],
     },
     /* 페이지 없음: 접기·펼치기 UX 확인용 (로컬 #만 사용) */
@@ -471,13 +476,7 @@ function GroupNavRow({
             <TooltipContent
               side="right"
               className="text-xs"
-              style={
-                {
-                  "--tooltip-bg": "var(--luxe-sidebar-2)",
-                  "--tooltip-border": "var(--luxe-border-2)",
-                  "--tooltip-fg": "var(--luxe-text)",
-                } as React.CSSProperties
-              }
+              style={collapsedTooltipStyle}
             >
               {item.label}
             </TooltipContent>
@@ -506,13 +505,7 @@ function GroupNavRow({
           <TooltipContent
             side="right"
             className="text-xs"
-            style={
-              {
-                "--tooltip-bg": "var(--luxe-sidebar-2)",
-                "--tooltip-border": "var(--luxe-border-2)",
-                "--tooltip-fg": "var(--luxe-text)",
-              } as React.CSSProperties
-            }
+            style={collapsedTooltipStyle}
           >
             {item.label}
           </TooltipContent>
@@ -636,7 +629,7 @@ function NavItem({ label, icon: Icon, href, badge, active, collapsed, external, 
       <Tooltip>
         <TooltipTrigger asChild>{link}</TooltipTrigger>
         <TooltipContent side="right" className="text-xs"
-          style={{ "--tooltip-bg": "var(--luxe-sidebar-2)", "--tooltip-border": "var(--luxe-border-2)", "--tooltip-fg": "var(--luxe-text)" } as React.CSSProperties}>
+          style={collapsedTooltipStyle}>
           {label}
         </TooltipContent>
       </Tooltip>

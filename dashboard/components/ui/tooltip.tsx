@@ -9,6 +9,7 @@ type TooltipCssVars = {
   "--tooltip-bg"?: string
   "--tooltip-fg"?: string
   "--tooltip-border"?: string
+  "--tooltip-arrow-bg"?: string
 }
 
 function TooltipProvider({
@@ -47,6 +48,7 @@ function TooltipContent({
     "--tooltip-bg": styleVars?.["--tooltip-bg"] ?? "var(--t-surface-2)",
     "--tooltip-fg": styleVars?.["--tooltip-fg"] ?? "var(--t-text)",
     "--tooltip-border": styleVars?.["--tooltip-border"] ?? "var(--t-border-2)",
+    "--tooltip-arrow-bg": styleVars?.["--tooltip-arrow-bg"] ?? styleVars?.["--tooltip-bg"] ?? "var(--t-surface-2)",
   } satisfies React.CSSProperties & TooltipCssVars
 
   return (
@@ -56,7 +58,7 @@ function TooltipContent({
         sideOffset={sideOffset}
         className={cn(
           "z-50 inline-flex w-fit max-w-xs items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs shadow-md",
-          "bg-[var(--tooltip-bg)] text-[var(--tooltip-fg)] border-[color:var(--tooltip-border)]",
+          "bg-(--tooltip-bg) text-(--tooltip-fg) border-(--tooltip-border)",
           "data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95",
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
           "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
@@ -69,7 +71,7 @@ function TooltipContent({
         <TooltipPrimitive.Arrow
           width={10}
           height={6}
-          className="fill-[var(--tooltip-bg)] stroke-[var(--tooltip-border)]"
+          className="fill-(--tooltip-arrow-bg) stroke-(--tooltip-border)"
           style={{ strokeWidth: 1 }}
         />
       </TooltipPrimitive.Content>

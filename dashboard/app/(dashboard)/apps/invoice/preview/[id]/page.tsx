@@ -7,12 +7,12 @@ import { Send, Download, Printer, Pencil, DollarSign, ArrowLeft } from "lucide-r
 import * as Form from "@radix-ui/react-form";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { InvoiceStatusPill } from "@/components/invoice-status-pill";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { DatePicker } from "@/components/ui/date-picker";
 import {
-  getInvoiceById, INVOICE_LINE_ITEMS, STATUS_STYLES, fmtMoney,
+  getInvoiceById, INVOICE_LINE_ITEMS, fmtMoney,
 } from "@/lib/invoices";
 
 const TAX_RATE = 0.21;
@@ -30,8 +30,6 @@ export default function InvoicePreviewPage({ params }: { params: Promise<{ id: s
   const subtotal = INVOICE_LINE_ITEMS.reduce((s, l) => s + l.total, 0);
   const tax = +(subtotal * TAX_RATE).toFixed(2);
   const total = subtotal - DISCOUNT + tax;
-
-  const status = STATUS_STYLES[invoice.invoiceStatus];
 
   return (
     <div className="space-y-3 pb-0">
@@ -63,10 +61,7 @@ export default function InvoicePreviewPage({ params }: { params: Promise<{ id: s
               <div className="space-y-3 sm:text-right">
                 <div className="flex items-center sm:justify-end gap-2">
                   <h2 className="t-text font-bold text-xl">Invoice #{invoice.id}</h2>
-                  <Badge variant="outline" className={cn("gap-1 text-[10px]", status.cls)}>
-                    <span className={cn("inline-block w-1.5 h-1.5 rounded-full", status.dot)} />
-                    {invoice.invoiceStatus}
-                  </Badge>
+                  <InvoiceStatusPill status={invoice.invoiceStatus} />
                 </div>
                 <div className="text-xs t-text-60 space-y-1">
                   <p>Date Issued: <span className="t-text-70 font-medium">{invoice.issuedDate}</span></p>
@@ -219,7 +214,7 @@ export default function InvoicePreviewPage({ params }: { params: Promise<{ id: s
               </div>
               <div className="flex justify-between">
                 <dt className="t-text-40">Balance</dt>
-                <dd className={cn("font-semibold", invoice.balance > 0 ? "text-amber-300" : invoice.balance < 0 ? "text-emerald-300" : "t-text-70")}>
+                <dd className={cn("font-semibold", invoice.balance > 0 ? "text-amber-500" : invoice.balance < 0 ? "text-emerald-500" : "t-text-70")}>
                   {invoice.balance === 0 ? "Paid" : fmtMoney(invoice.balance)}
                 </dd>
               </div>

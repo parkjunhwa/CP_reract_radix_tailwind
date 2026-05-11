@@ -5,9 +5,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Plus, Trash2, Send, DollarSign, Eye, ArrowLeft } from "lucide-react";
 import * as Form from "@radix-ui/react-form";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { InvoiceStatusPill } from "@/components/invoice-status-pill";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  getInvoiceById, INVOICE_LINE_ITEMS, STATUS_STYLES, fmtMoney,
+  getInvoiceById, INVOICE_LINE_ITEMS, fmtMoney,
 } from "@/lib/invoices";
 
 interface LineItem { description: string; details?: string; qty: number; unitPrice: number }
@@ -32,8 +31,6 @@ export default function InvoiceEditPage({ params }: { params: Promise<{ id: stri
   const { id } = use(params);
   const invoice = getInvoiceById(id);
   if (!invoice) notFound();
-
-  const status = STATUS_STYLES[invoice.invoiceStatus];
 
   const [items, setItems] = useState<LineItem[]>(
     INVOICE_LINE_ITEMS.map((line) => ({
@@ -76,10 +73,7 @@ export default function InvoiceEditPage({ params }: { params: Promise<{ id: stri
             <ArrowLeft className="w-3.5 h-3.5" /> Back to list
           </Button>
         </Link>
-        <Badge variant="outline" className={cn("gap-1 text-[10px]", status.cls)}>
-          <span className={cn("inline-block w-1.5 h-1.5 rounded-full", status.dot)} />
-          {invoice.invoiceStatus}
-        </Badge>
+        <InvoiceStatusPill status={invoice.invoiceStatus} />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-4">

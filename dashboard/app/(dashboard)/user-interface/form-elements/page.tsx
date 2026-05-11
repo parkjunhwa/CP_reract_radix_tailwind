@@ -1,5 +1,6 @@
 "use client";
 
+import * as Popover from "@radix-ui/react-popover";
 import { useState } from "react";
 import {
   User, Mail, Lock, Eye, EyeOff, Search,
@@ -9,6 +10,9 @@ import { Input, InputAddon, InputGroup } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DatePicker } from "@/components/ui/date-picker";
+import { MonthPicker } from "@/components/ui/month-picker";
+import { SourceFooter } from "@/components/ui/source-footer";
+import { TimeScrollPicker } from "@/components/ui/time-scroll-picker";
 import { cn } from "@/lib/utils";
 
 function Section({
@@ -278,41 +282,52 @@ function AutocompleteDemo() {
   const [open, setOpen] = useState(false);
   const matches = all.filter((c) => c.toLowerCase().includes(query.toLowerCase()));
   return (
-    <div className="relative max-w-sm space-y-1.5">
-      <Label htmlFor="fe-ac">Country</Label>
-      <InputGroup>
-        <InputAddon><Search /></InputAddon>
-        <Input
-          id="fe-ac"
-          value={query}
-          onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
-          onFocus={() => setOpen(true)}
-          onBlur={() => setTimeout(() => setOpen(false), 120)}
-          placeholder="Search countries"
-        />
-      </InputGroup>
-      {open && matches.length > 0 && (
-        <div
-          className="absolute left-0 right-0 mt-1 rounded-lg overflow-hidden z-10"
-          style={{ backgroundColor: "var(--t-surface)", border: "1px solid var(--t-border)", boxShadow: "var(--t-shadow)" }}
+    <Popover.Root open={open && matches.length > 0} onOpenChange={setOpen}>
+      <div className="max-w-sm space-y-1.5">
+        <Label htmlFor="fe-ac">Country</Label>
+        <Popover.Anchor asChild>
+          <InputGroup>
+            <InputAddon><Search /></InputAddon>
+            <Input
+              id="fe-ac"
+              value={query}
+              onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
+              onFocus={() => setOpen(true)}
+              onBlur={() => setTimeout(() => setOpen(false), 120)}
+              placeholder="Search countries"
+              autoComplete="off"
+            />
+          </InputGroup>
+        </Popover.Anchor>
+      </div>
+      <Popover.Portal>
+        <Popover.Content
+          sideOffset={8}
+          align="start"
+          onOpenAutoFocus={(event) => event.preventDefault()}
+          className="z-50 max-h-56 w-[min(calc(100vw-1.5rem),24rem)] overflow-y-auto rounded-lg border border-(--t-border) bg-(--t-surface) py-1 shadow-xl outline-none"
         >
           {matches.map((m) => (
             <button
               key={m}
               type="button"
+              onMouseDown={(event) => event.preventDefault()}
               onClick={() => { setQuery(m); setOpen(false); }}
-              className="w-full text-left px-3 py-2 t-text text-sm t-hover"
+              className="w-full px-3 py-2 text-left text-sm t-text hover:bg-(--t-hover)"
             >
               {m}
             </button>
           ))}
-        </div>
-      )}
-    </div>
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   );
 }
 
 function PickerDemo() {
+  const [time, setTime] = useState("14:30");
+  const [month, setMonth] = useState("2026-05");
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-3xl">
       <div className="space-y-1.5">
@@ -321,11 +336,11 @@ function PickerDemo() {
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="fe-time">Time</Label>
-        <Input id="fe-time" type="time" />
+        <TimeScrollPicker id="fe-time" value={time} onChange={setTime} />
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="fe-month">Month</Label>
-        <Input id="fe-month" type="month" />
+        <MonthPicker id="fe-month" value={month} onChange={setMonth} />
       </div>
     </div>
   );
@@ -365,6 +380,22 @@ export default function FormElementsPage() {
       <Section title="Picker" description="Date, time, and month inputs.">
         <PickerDemo />
       </Section>
+
+      <SourceFooter className="col-span-full">
+        Controls follow{" "}
+        <a className="t-accent-text underline" href="https://ui.shadcn.com/docs/components/input" target="_blank" rel="noopener noreferrer">
+          shadcn/ui input patterns
+        </a>
+        ; date popovers use{" "}
+        <a className="t-accent-text underline" href="https://www.radix-ui.com/primitives/docs/components/popover" target="_blank" rel="noopener noreferrer">
+          Radix Popover
+        </a>{" "}
+        and{" "}
+        <a className="t-accent-text underline" href="https://react-day-picker.js.org/" target="_blank" rel="noopener noreferrer">
+          React DayPicker
+        </a>
+        .
+      </SourceFooter>
     </div>
   );
 }

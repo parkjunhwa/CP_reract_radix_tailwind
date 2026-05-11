@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardDescription, CardTitle } from "@/components/ui/card";
+import { SourceFooter } from "@/components/ui/source-footer";
 import { cn } from "@/lib/utils";
 
 const DATA = [
@@ -260,6 +261,22 @@ export default function ReactTablePage() {
           </div>
         </CardContent>
       </Card>
+
+      <SourceFooter className="col-span-full">
+        Sorting, filtering, and pagination are implemented with local React state and{" "}
+        <a className="t-accent-text underline" href="https://www.radix-ui.com/primitives/docs/components/form" target="_blank" rel="noopener noreferrer">
+          Radix UI Form
+        </a>
+        /{" "}
+        <a className="t-accent-text underline" href="https://www.radix-ui.com/primitives/docs/components/checkbox" target="_blank" rel="noopener noreferrer">
+          Checkbox
+        </a>
+        . For headless column APIs see{" "}
+        <a className="t-accent-text underline" href="https://tanstack.com/table/latest" target="_blank" rel="noopener noreferrer">
+          TanStack Table
+        </a>
+        .
+      </SourceFooter>
     </div>
   );
 }

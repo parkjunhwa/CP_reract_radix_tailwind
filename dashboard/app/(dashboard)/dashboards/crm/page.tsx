@@ -1,10 +1,10 @@
 "use client";
 
-import { TrendingUp, TrendingDown, Users, Target, Phone, DollarSign, Activity, Clock } from "lucide-react";
+import { TrendingUp, TrendingDown, Users, Target, Phone, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
-  AreaChart, Area, BarChart, Bar, RadarChart, Radar, PolarGrid, PolarAngleAxis,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  AreaChart, Area, RadarChart, Radar, PolarGrid, PolarAngleAxis,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
 
 const kpis = [
@@ -94,7 +94,7 @@ export default function CRMPage() {
           <h3 className="t-text font-semibold text-sm mb-1">Earnings vs Target</h3>
           <p className="t-text-30 text-xs mb-4">Monthly revenue ($ millions)</p>
           <ResponsiveContainer width="100%" height={220}>
-            <AreaChart data={earningsData}>
+            <AreaChart data={earningsData} margin={{ top: 8, right: 8, left: 4, bottom: 8 }}>
               <defs>
                 <linearGradient id="crm-rev" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.3} />
@@ -102,8 +102,8 @@ export default function CRMPage() {
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--t-border)" />
-              <XAxis dataKey="month" tick={{ fontSize: 10, fill: "var(--t-text-40)" }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 10, fill: "var(--t-text-40)" }} axisLine={false} tickLine={false} />
+              <XAxis dataKey="month" tick={{ fontSize: 10, fill: "var(--t-text-40)" }} axisLine={false} tickLine={false} interval={0} />
+              <YAxis width={36} tick={{ fontSize: 10, fill: "var(--t-text-40)" }} axisLine={false} tickLine={false} />
               <Tooltip contentStyle={{ backgroundColor: "var(--luxe-sidebar-2)", border: "1px solid var(--t-border-2)", borderRadius: 8, fontSize: 12 }} />
               <Area type="monotone" dataKey="revenue" stroke="#7c3aed" fill="url(#crm-rev)" strokeWidth={2} name="Revenue" />
               <Area type="monotone" dataKey="target" stroke="#10b981" fill="none" strokeWidth={2} strokeDasharray="4 2" name="Target" />
@@ -111,19 +111,40 @@ export default function CRMPage() {
           </ResponsiveContainer>
         </div>
 
-        {/* Radar chart */}
+        {/* Radar chart — legend outside SVG so axis labels (e.g. Tech) never overlap Q1/Q2 */}
         <div className="panel p-5">
           <h3 className="t-text font-semibold text-sm mb-1">Department Performance</h3>
-          <p className="t-text-30 text-xs mb-4">Q1 vs Q2 score</p>
-          <ResponsiveContainer width="100%" height={220}>
-            <RadarChart data={radarData}>
-              <PolarGrid stroke="var(--t-border)" />
-              <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10, fill: "var(--t-text-40)" }} />
-              <Radar name="Q1" dataKey="A" stroke="#7c3aed" fill="#7c3aed" fillOpacity={0.25} />
-              <Radar name="Q2" dataKey="B" stroke="#10b981" fill="#10b981" fillOpacity={0.2} />
-              <Legend wrapperStyle={{ fontSize: 11 }} />
-            </RadarChart>
-          </ResponsiveContainer>
+          <p className="t-text-30 text-xs mb-3">Q1 vs Q2 score</p>
+          <div className="h-[200px] w-full sm:h-[210px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart
+                data={radarData}
+                cx="50%"
+                cy="50%"
+                outerRadius="58%"
+                margin={{ top: 16, right: 20, bottom: 16, left: 20 }}
+              >
+                <PolarGrid stroke="var(--t-border)" />
+                <PolarAngleAxis
+                  dataKey="subject"
+                  tick={{ fontSize: 10, fill: "var(--t-text-40)" }}
+                  tickLine={false}
+                />
+                <Radar name="Q1" dataKey="A" stroke="#7c3aed" fill="#7c3aed" fillOpacity={0.25} strokeWidth={1.5} />
+                <Radar name="Q2" dataKey="B" stroke="#10b981" fill="#10b981" fillOpacity={0.2} strokeWidth={1.5} />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-x-6 text-xs t-text-50" style={{ borderColor: "var(--t-border)" }}>
+            <span className="inline-flex items-center gap-2">
+              <span className="h-2 w-4 shrink-0 rounded-sm bg-[#7c3aed]" aria-hidden />
+              <span className="t-text-60 font-medium">Q1</span>
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <span className="h-2 w-4 shrink-0 rounded-sm bg-[#10b981]" aria-hidden />
+              <span className="t-text-60 font-medium">Q2</span>
+            </span>
+          </div>
         </div>
       </div>
 
@@ -178,8 +199,9 @@ export default function CRMPage() {
             <div className="absolute left-3 top-0 bottom-0 w-px" style={{ backgroundColor: "var(--t-border)" }} />
             <div className="space-y-3">
               {recentActivities.map((a, i) => (
-                <div key={i} className="flex gap-3 relative">
-                  <div className="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-sm z-10" style={{ backgroundColor: "var(--luxe-sidebar-2)", border: "1px solid var(--t-border-2)" }}>
+                <div key={i} className="relative flex gap-3">
+                  <div className="z-10 flex h-6 w-6 shrink-0 items-center justify-center text-base leading-none bg-white">
+             
                     {a.icon}
                   </div>
                   <div>

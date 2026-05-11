@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+
+import { SourceFooter } from "@/components/ui/source-footer";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -617,6 +619,34 @@ export default function ChartJsPage() {
           <div className="h-64"><BubbleExample /></div>
         </div>
       </div>
+
+      <SourceFooter>
+        Built with{" "}
+        <a className="t-accent-text underline" href="https://www.chartjs.org/" target="_blank" rel="noopener noreferrer">
+          Chart.js
+        </a>{" "}
+        and{" "}
+        <code className="px-1 py-0.5 rounded t-surface-2 t-text-60 text-[11px]">react-chartjs-2</code> (
+        <a
+          className="t-accent-text underline"
+          href="https://github.com/reactchartjs/react-chartjs-2"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+        ); time axis uses{" "}
+        <code className="px-1 py-0.5 rounded t-surface-2 t-text-60 text-[11px]">chartjs-adapter-date-fns</code> (
+        <a
+          className="t-accent-text underline"
+          href="https://github.com/chartjs/chartjs-adapter-date-fns"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          adapter
+        </a>
+        ).
+      </SourceFooter>
     </div>
   );
 }

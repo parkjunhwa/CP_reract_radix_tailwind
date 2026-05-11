@@ -29,16 +29,16 @@ const USERS: AppUser[] = [
 ];
 
 const roleConfig: Record<UserRole, { cls: string; icon: React.ElementType }> = {
-  Admin:   { cls: "bg-violet-500/10 text-violet-400 border-violet-500/20", icon: Crown },
-  Manager: { cls: "bg-sky-500/10 text-sky-400 border-sky-500/20", icon: Shield },
-  Editor:  { cls: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20", icon: UserCheck },
-  Viewer:  { cls: "bg-slate-500/10 text-slate-400 border-slate-500/20", icon: UserCheck },
+  Admin:   { cls: "bg-violet-500/10 text-violet-500 border-violet-500/20", icon: Crown },
+  Manager: { cls: "bg-sky-500/10 text-sky-500 border-sky-500/20", icon: Shield },
+  Editor:  { cls: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20", icon: UserCheck },
+  Viewer:  { cls: "bg-slate-500/10 text-slate-500 border-slate-500/20", icon: UserCheck },
 };
 
 const statusConfig: Record<UserStatus, { label: string; cls: string }> = {
-  active:    { label: "Active",    cls: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
-  inactive:  { label: "Inactive",  cls: "bg-slate-500/10 text-slate-400 border-slate-500/20" },
-  suspended: { label: "Suspended", cls: "bg-red-500/10 text-red-400 border-red-500/20" },
+  active:    { label: "Active",    cls: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" },
+  inactive:  { label: "Inactive",  cls: "bg-slate-500/10 text-slate-500 border-slate-500/20" },
+  suspended: { label: "Suspended", cls: "bg-red-500/10 text-red-500 border-red-500/20" },
 };
 
 export default function UserListPage() {

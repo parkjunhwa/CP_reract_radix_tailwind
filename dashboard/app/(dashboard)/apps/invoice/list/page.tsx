@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import * as Form from "@radix-ui/react-form";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { InvoiceStatusPill } from "@/components/invoice-status-pill";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  INVOICES, STATUS_STYLES, fmtMoney, initials, type Invoice, type InvoiceStatus,
+  INVOICES, fmtMoney, initials, type Invoice, type InvoiceStatus,
 } from "@/lib/invoices";
 
 const STATUS_FILTERS: ("All" | InvoiceStatus)[] = [
@@ -69,10 +69,10 @@ export default function InvoiceListPage() {
     const paid = INVOICES.filter((i) => i.invoiceStatus === "Paid").reduce((s, i) => s + i.total, 0);
     const unpaid = INVOICES.filter((i) => i.balance > 0).reduce((s, i) => s + i.balance, 0);
     return [
-      { label: "Clients", value: clients.toString(), icon: Users, color: "text-violet-300 bg-violet-500/15" },
-      { label: "Invoices", value: INVOICES.length.toString(), icon: FileText, color: "text-sky-300 bg-sky-500/15" },
-      { label: "Paid", value: fmtMoney(paid), icon: CheckCircle2, color: "text-emerald-300 bg-emerald-500/15" },
-      { label: "Unpaid", value: fmtMoney(unpaid), icon: CircleOff, color: "text-amber-300 bg-amber-500/15" },
+      { label: "Clients", value: clients.toString(), icon: Users, color: "text-violet-500 bg-violet-500/15" },
+      { label: "Invoices", value: INVOICES.length.toString(), icon: FileText, color: "text-sky-500 bg-sky-500/15" },
+      { label: "Paid", value: fmtMoney(paid), icon: CheckCircle2, color: "text-emerald-500 bg-emerald-500/15" },
+      { label: "Unpaid", value: fmtMoney(unpaid), icon: CircleOff, color: "text-amber-500 bg-amber-500/15" },
     ] as const;
   }, []);
 
@@ -187,13 +187,12 @@ export default function InvoiceListPage() {
                 </tr>
               )}
               {pageRows.map((inv) => {
-                const status = STATUS_STYLES[inv.invoiceStatus];
                 return (
                   <tr key={inv.id} className="t-hover transition-colors" style={{ borderBottom: "1px solid var(--t-border)" }}>
                     <td className="px-5 py-3.5">
                       <Link
                         href={`/apps/invoice/preview/${inv.id}`}
-                        className="text-violet-300 hover:underline text-xs font-mono font-semibold"
+                        className="text-violet-500 hover:underline text-xs font-mono font-semibold"
                       >
                         #{inv.id}
                       </Link>
@@ -212,18 +211,17 @@ export default function InvoiceListPage() {
                     <td className="px-5 py-3.5 text-right t-text-70 text-xs font-semibold">{fmtMoney(inv.total)}</td>
                     <td className="px-5 py-3.5 t-text-50 text-xs">{inv.issuedDate}</td>
                     <td className="px-5 py-3.5">
-                      <Badge variant="outline" className={cn("gap-1 text-[10px]", status.cls)}>
-                        <span className={cn("inline-block w-1.5 h-1.5 rounded-full", status.dot)} />
-                        {inv.invoiceStatus}
-                      </Badge>
+                      <InvoiceStatusPill status={inv.invoiceStatus} />
                     </td>
                     <td className="px-5 py-3.5 text-right">
                       {inv.balance > 0 ? (
-                        <span className="text-amber-300 text-xs font-semibold">{fmtMoney(inv.balance)}</span>
+                        <span className="text-amber-500 text-xs font-semibold">{fmtMoney(inv.balance)}</span>
                       ) : inv.balance < 0 ? (
-                        <span className="text-emerald-300 text-xs font-semibold">+{fmtMoney(Math.abs(inv.balance))}</span>
+                        <span className="text-emerald-500 text-xs font-semibold">+{fmtMoney(Math.abs(inv.balance))}</span>
                       ) : (
-                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">Paid</Badge>
+                        <span className="inline-flex h-5 items-center rounded-4xl border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-500">
+                          Paid
+                        </span>
                       )}
                     </td>
                     <td className="px-5 py-3.5">

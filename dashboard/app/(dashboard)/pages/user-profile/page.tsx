@@ -254,7 +254,7 @@ export default function ProfilePage() {
                   <Badge className={cn(
                     "text-[10px] px-2 border",
                     role.active
-                      ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                      ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
                       : "bg-[var(--t-input-bg)] t-text-40 border-[color:var(--t-border-2)]"
                   )}>
                     {role.active ? "Active" : "Inactive"}

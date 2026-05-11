@@ -15,6 +15,7 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { SourceFooter } from "@/components/ui/source-footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
@@ -532,7 +533,7 @@ export default function ComponentsPage() {
         <CollapsibleDemo />
       </Section>
 
-      <Section title="Checkbox" description="Checkbox group states.">
+      <Section title="Checkbox" description="Stacked and inline checkbox rows.">
         <CheckboxListDemo />
       </Section>
 
@@ -540,7 +541,7 @@ export default function ComponentsPage() {
         <CheckboxCardsDemo />
       </Section>
 
-      <Section title="Radio" description="Radio group with stacked options.">
+      <Section title="Radio" description="Stacked and inline radio groups.">
         <RadioListDemo />
       </Section>
 
@@ -661,6 +662,22 @@ export default function ComponentsPage() {
       <Section title="More" description="Helper actions and quick examples.">
         <MoreDemo />
       </Section>
+
+      <SourceFooter className="col-span-full">
+        Interactive primitives and patterns reference{" "}
+        <a className="t-accent-text underline" href="https://www.radix-ui.com/primitives" target="_blank" rel="noopener noreferrer">
+          Radix UI
+        </a>{" "}
+        and{" "}
+        <a className="t-accent-text underline" href="https://ui.shadcn.com/" target="_blank" rel="noopener noreferrer">
+          shadcn/ui
+        </a>{" "}
+        documentation; icons use{" "}
+        <a className="t-accent-text underline" href="https://lucide.dev/" target="_blank" rel="noopener noreferrer">
+          Lucide
+        </a>
+        .
+      </SourceFooter>
     </div>
   );
 }

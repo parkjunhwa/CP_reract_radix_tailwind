@@ -1,8 +1,9 @@
 "use client";
 
-import * as React from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { format } from "date-fns";
+import * as React from "react";
+import { type DateRange } from "react-day-picker";
 
 import { CalendarPopoverFooter } from "@/components/ui/calendar-popover-footer";
 import {
@@ -12,48 +13,50 @@ import {
 } from "@/components/ui/date-picker-popover";
 import { LuxDayPicker } from "@/components/ui/lux-day-picker";
 
-export type DatePickerProps = Omit<
+export type DateRangePickerProps = Omit<
   React.ComponentPropsWithoutRef<"button">,
   "value" | "defaultValue" | "onChange"
 > & {
-  value?: Date;
-  onChange?: (date: Date | undefined) => void;
+  value?: DateRange;
+  onChange?: (range: DateRange | undefined) => void;
   placeholder?: string;
-  /** Uncontrolled initial date (used when `value` is not provided). */
-  defaultValue?: Date;
+  defaultValue?: DateRange;
 };
 
-export function DatePicker({
+function formatRangeLabel(range: DateRange | undefined) {
+  if (!range?.from) return undefined;
+
+  const from = format(range.from, "yyyy-MM-dd");
+  return range.to ? `${from} -> ${format(range.to, "yyyy-MM-dd")}` : `${from} ...`;
+}
+
+export function DateRangePicker({
   value,
   onChange,
   defaultValue,
-  placeholder = "Pick a date",
+  placeholder = "Pick a range",
   className,
   disabled,
   ...props
-}: DatePickerProps) {
+}: DateRangePickerProps) {
   const isControlled = value !== undefined;
-  const [internal, setInternal] = React.useState<Date | undefined>(defaultValue);
+  const [internal, setInternal] = React.useState<DateRange | undefined>(defaultValue);
   const selected = isControlled ? value : internal;
 
   const [open, setOpen] = React.useState(false);
-  const [pending, setPending] = React.useState<Date | undefined>(selected);
+  const [pending, setPending] = React.useState<DateRange | undefined>(selected);
 
   React.useEffect(() => {
     if (open) setPending(selected);
   }, [open, selected]);
 
-  const setDate = (d: Date | undefined) => {
-    if (!isControlled) setInternal(d);
-    onChange?.(d);
+  const setRange = (range: DateRange | undefined) => {
+    if (!isControlled) setInternal(range);
+    onChange?.(range);
   };
 
   const handleConfirm = () => {
-    setDate(pending);
-    setOpen(false);
-  };
-
-  const handleCancel = () => {
+    setRange(pending);
     setOpen(false);
   };
 
@@ -61,27 +64,26 @@ export function DatePicker({
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
         <CalendarPickerTrigger
-          data-slot="date-picker"
+          data-slot="date-range-picker"
           disabled={disabled}
           className={className}
-          displayValue={selected ? format(selected, "yyyy-MM-dd") : undefined}
+          displayValue={formatRangeLabel(selected)}
           placeholder={placeholder}
-          muted={!selected}
+          muted={!selected?.from}
           {...props}
         />
       </Popover.Trigger>
-
       <CalendarPickerContent>
         <CalendarPickerBody>
           <LuxDayPicker
-            mode="single"
+            mode="range"
             selected={pending}
             onSelect={setPending}
             showOutsideDays
             disabled={disabled}
           />
         </CalendarPickerBody>
-        <CalendarPopoverFooter onCancel={handleCancel} onConfirm={handleConfirm} />
+        <CalendarPopoverFooter onCancel={() => setOpen(false)} onConfirm={handleConfirm} />
       </CalendarPickerContent>
     </Popover.Root>
   );

@@ -28,10 +28,10 @@ const FLEET: Vehicle[] = [
 ];
 
 const statusConfig: Record<VehicleStatus, { label: string; cls: string; icon: React.ElementType }> = {
-  active:      { label: "Active",      cls: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20", icon: CheckCircle2 },
-  maintenance: { label: "Maintenance", cls: "bg-amber-500/10 text-amber-400 border-amber-500/20",  icon: AlertTriangle },
-  idle:        { label: "Idle",        cls: "bg-slate-500/10 text-slate-400 border-slate-500/20",  icon: Clock },
-  offline:     { label: "Offline",     cls: "bg-red-500/10 text-red-400 border-red-500/20",        icon: AlertTriangle },
+  active:      { label: "Active",      cls: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20", icon: CheckCircle2 },
+  maintenance: { label: "Maintenance", cls: "bg-amber-500/10 text-amber-500 border-amber-500/20",  icon: AlertTriangle },
+  idle:        { label: "Idle",        cls: "bg-slate-500/10 text-slate-500 border-slate-500/20",  icon: Clock },
+  offline:     { label: "Offline",     cls: "bg-red-500/10 text-red-500 border-red-500/20",        icon: AlertTriangle },
 };
 
 export default function FleetPage() {

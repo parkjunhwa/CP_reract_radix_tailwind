@@ -21,12 +21,12 @@ export interface Invoice {
 }
 
 export const STATUS_STYLES: Record<InvoiceStatus, { cls: string; dot: string }> = {
-  Paid: { cls: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20", dot: "bg-emerald-400" },
-  Sent: { cls: "bg-sky-500/10 text-sky-300 border-sky-500/20", dot: "bg-sky-400" },
-  Draft: { cls: "bg-slate-500/10 text-slate-300 border-slate-500/20", dot: "bg-slate-400" },
-  Downloaded: { cls: "bg-violet-500/10 text-violet-300 border-violet-500/20", dot: "bg-violet-400" },
-  "Past Due": { cls: "bg-red-500/10 text-red-300 border-red-500/20", dot: "bg-red-400" },
-  "Partial Payment": { cls: "bg-amber-500/10 text-amber-300 border-amber-500/20", dot: "bg-amber-400" },
+  Paid: { cls: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20", dot: "bg-emerald-500" },
+  Sent: { cls: "bg-sky-500/10 text-sky-500 border-sky-500/20", dot: "bg-sky-500" },
+  Draft: { cls: "bg-slate-500/10 text-slate-500 border-slate-500/20", dot: "bg-slate-500" },
+  Downloaded: { cls: "bg-violet-500/10 text-violet-500 border-violet-500/20", dot: "bg-violet-500" },
+  "Past Due": { cls: "bg-red-500/10 text-red-500 border-red-500/20", dot: "bg-red-500" },
+  "Partial Payment": { cls: "bg-amber-500/10 text-amber-500 border-amber-500/20", dot: "bg-amber-500" },
 };
 
 export const INVOICES: Invoice[] = [

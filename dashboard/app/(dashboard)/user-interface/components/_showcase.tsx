@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import * as Menubar from "@radix-ui/react-menubar";
@@ -10,7 +10,6 @@ import * as OTP from "@radix-ui/react-one-time-password-field";
 import * as Popover from "@radix-ui/react-popover";
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import {
-  Calendar as CalendarIcon,
   Check,
   ChevronDown,
   CreditCard,
@@ -22,11 +21,11 @@ import {
   Trash2,
   User,
 } from "lucide-react";
-import { type DateRange } from "react-day-picker";
 
-import { CalendarPopoverFooter } from "@/components/ui/calendar-popover-footer";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DatePicker } from "@/components/ui/date-picker";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
 import {
   Dialog,
   DialogClose,
@@ -39,7 +38,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input, InputAddon, InputGroup } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LuxDayPicker } from "@/components/ui/lux-day-picker";
 import { TimeScrollPicker } from "@/components/ui/time-scroll-picker";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -228,20 +226,49 @@ export function CollapsibleDemo() {
 export function CheckboxListDemo() {
   const [a, setA] = useState(true);
   const [b, setB] = useState(false);
+  const [h1, setH1] = useState(true);
+  const [h2, setH2] = useState(false);
+  const [h3, setH3] = useState(true);
   return (
-    <div className="space-y-2.5">
-      <label className="flex items-center gap-2.5">
-        <Checkbox checked={a} onCheckedChange={(v) => setA(v === true)} id="sc-a" />
-        <span className="text-sm t-text-70">Notify me about product updates</span>
-      </label>
-      <label className="flex items-center gap-2.5">
-        <Checkbox checked={b} onCheckedChange={(v) => setB(v === true)} id="sc-b" />
-        <span className="text-sm t-text-70">Subscribe to weekly digest</span>
-      </label>
-      <label className="flex items-center gap-2.5 opacity-50">
-        <Checkbox disabled id="sc-c" />
-        <span className="text-sm t-text-50">Unavailable option</span>
-      </label>
+    <div className="space-y-5">
+      <div>
+        <p className="mb-2 text-[10px] font-medium uppercase tracking-wide t-text-40">Stacked (vertical)</p>
+        <div className="space-y-2.5">
+          <label className="flex items-center gap-2.5">
+            <Checkbox checked={a} onCheckedChange={(v) => setA(v === true)} id="sc-a" />
+            <span className="text-sm t-text-70">Notify me about product updates</span>
+          </label>
+          <label className="flex items-center gap-2.5">
+            <Checkbox checked={b} onCheckedChange={(v) => setB(v === true)} id="sc-b" />
+            <span className="text-sm t-text-70">Subscribe to weekly digest</span>
+          </label>
+          <label className="flex items-center gap-2.5 opacity-50">
+            <Checkbox disabled id="sc-c" />
+            <span className="text-sm t-text-50">Unavailable option</span>
+          </label>
+        </div>
+      </div>
+      <div>
+        <p className="mb-2 text-[10px] font-medium uppercase tracking-wide t-text-40">Inline (horizontal)</p>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          <label className="flex cursor-pointer items-center gap-2">
+            <Checkbox checked={h1} onCheckedChange={(v) => setH1(v === true)} id="sc-h1" />
+            <span className="text-sm t-text-70">Email</span>
+          </label>
+          <label className="flex cursor-pointer items-center gap-2">
+            <Checkbox checked={h2} onCheckedChange={(v) => setH2(v === true)} id="sc-h2" />
+            <span className="text-sm t-text-70">SMS</span>
+          </label>
+          <label className="flex cursor-pointer items-center gap-2">
+            <Checkbox checked={h3} onCheckedChange={(v) => setH3(v === true)} id="sc-h3" />
+            <span className="text-sm t-text-70">Push</span>
+          </label>
+          <label className="flex cursor-pointer items-center gap-2 opacity-50">
+            <Checkbox disabled id="sc-h4" />
+            <span className="text-sm t-text-50">Slack</span>
+          </label>
+        </div>
+      </div>
     </div>
   );
 }
@@ -290,20 +317,46 @@ export function CheckboxCardsDemo() {
 
 export function RadioListDemo() {
   return (
-    <RadioGroup defaultValue="a" className="gap-2.5">
-      <label className="flex items-center gap-2.5">
-        <RadioGroupItem value="a" id="rd-a" />
-        <span className="text-sm t-text-70">Standard shipping</span>
-      </label>
-      <label className="flex items-center gap-2.5">
-        <RadioGroupItem value="b" id="rd-b" />
-        <span className="text-sm t-text-70">Express (+$12)</span>
-      </label>
-      <label className="flex items-center gap-2.5 opacity-50">
-        <RadioGroupItem value="c" id="rd-c" disabled />
-        <span className="text-sm t-text-50">Pickup (unavailable)</span>
-      </label>
-    </RadioGroup>
+    <div className="space-y-5">
+      <div>
+        <p className="mb-2 text-[10px] font-medium uppercase tracking-wide t-text-40">Stacked (vertical)</p>
+        <RadioGroup defaultValue="a" className="flex flex-col gap-2.5">
+          <label className="flex cursor-pointer items-center gap-2.5">
+            <RadioGroupItem value="a" id="rd-a" />
+            <span className="text-sm t-text-70">Standard shipping</span>
+          </label>
+          <label className="flex cursor-pointer items-center gap-2.5">
+            <RadioGroupItem value="b" id="rd-b" />
+            <span className="text-sm t-text-70">Express (+$12)</span>
+          </label>
+          <label className="flex cursor-pointer items-center gap-2.5 opacity-50">
+            <RadioGroupItem value="c" id="rd-c" disabled />
+            <span className="text-sm t-text-50">Pickup (unavailable)</span>
+          </label>
+        </RadioGroup>
+      </div>
+      <div>
+        <p className="mb-2 text-[10px] font-medium uppercase tracking-wide t-text-40">Inline (horizontal)</p>
+        <RadioGroup defaultValue="card" className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          <label className="flex cursor-pointer items-center gap-2">
+            <RadioGroupItem value="card" id="rd-h-card" />
+            <span className="text-sm t-text-70">Card</span>
+          </label>
+          <label className="flex cursor-pointer items-center gap-2">
+            <RadioGroupItem value="ach" id="rd-h-ach" />
+            <span className="text-sm t-text-70">Bank transfer</span>
+          </label>
+          <label className="flex cursor-pointer items-center gap-2">
+            <RadioGroupItem value="wallet" id="rd-h-wallet" />
+            <span className="text-sm t-text-70">Wallet</span>
+          </label>
+          <label className="flex cursor-pointer items-center gap-2 opacity-50">
+            <RadioGroupItem value="cod" id="rd-h-cod" disabled />
+            <span className="text-sm t-text-50">COD</span>
+          </label>
+        </RadioGroup>
+      </div>
+    </div>
   );
 }
 
@@ -344,69 +397,12 @@ export function OtpFieldDemo() {
 }
 
 export function DateRangePickerDemo() {
-  const [range, setRange] = useState<DateRange | undefined>();
-  const [pending, setPending] = useState<DateRange | undefined>(range);
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (open) setPending(range);
-  }, [open, range]);
-
-  return (
-    <Popover.Root open={open} onOpenChange={setOpen}>
-      <Popover.Trigger asChild>
-        <button
-          type="button"
-          className={cn(
-            "flex h-9 w-full max-w-full items-center gap-2 rounded-lg border px-3 text-xs outline-none transition-colors",
-            "border-[color:var(--t-border-2)] bg-[color:var(--t-input-bg)] text-[color:var(--t-text-70)]",
-            "focus-visible:border-[color:var(--t-accent)] focus-visible:ring-2 focus-visible:ring-[color:var(--t-ring)]/30",
-          )}
-        >
-          <CalendarIcon className="size-3.5 shrink-0 opacity-50" />
-          <span className="min-w-0 flex-1 truncate text-left">
-            {range?.from
-              ? `${format(range.from, "yyyy-MM-dd")}${range.to ? ` → ${format(range.to, "yyyy-MM-dd")}` : " …"}`
-              : "Pick a range"}
-          </span>
-        </button>
-      </Popover.Trigger>
-      <Popover.Portal>
-        <Popover.Content
-          sideOffset={8}
-          align="start"
-          className="z-50 w-fit min-w-0 max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-xl border border-[color:var(--t-border-2)] bg-[color:var(--t-surface)] p-0 shadow-xl"
-        >
-          <div className="px-2 pb-0.5 pt-2">
-            <LuxDayPicker
-              mode="range"
-              selected={pending}
-              onSelect={setPending}
-              showOutsideDays
-            />
-          </div>
-          <CalendarPopoverFooter
-            onCancel={() => setOpen(false)}
-            onConfirm={() => {
-              setRange(pending);
-              setOpen(false);
-            }}
-          />
-        </Popover.Content>
-      </Popover.Portal>
-    </Popover.Root>
-  );
+  return <DateRangePicker />;
 }
 
 export function DateTimePickerDemo() {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const [pending, setPending] = useState<Date | undefined>(date);
   const [time, setTime] = useState("14:30");
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (open) setPending(date);
-  }, [open, date]);
 
   const combined = useMemo(() => {
     if (!date || !time) return undefined;
@@ -419,43 +415,7 @@ export function DateTimePickerDemo() {
   return (
     <div className="max-w-full space-y-2">
       <div className="grid gap-2 sm:grid-cols-2">
-        <Popover.Root open={open} onOpenChange={setOpen}>
-          <Popover.Trigger asChild>
-            <button
-              type="button"
-              className={cn(
-                "flex h-9 items-center gap-2 rounded-lg border px-3 text-xs",
-                "border-[color:var(--t-border-2)] bg-[color:var(--t-input-bg)] text-[color:var(--t-text-70)]",
-                "focus-visible:border-[color:var(--t-accent)] focus-visible:ring-2 focus-visible:ring-[color:var(--t-ring)]/30",
-              )}
-            >
-              <CalendarIcon className="size-3.5 shrink-0 text-[color:var(--t-text-40)]" aria-hidden />
-              {date ? format(date, "yyyy-MM-dd") : "Date"}
-            </button>
-          </Popover.Trigger>
-          <Popover.Portal>
-            <Popover.Content
-              sideOffset={8}
-              className="z-50 w-fit min-w-0 max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-xl border border-[color:var(--t-border-2)] bg-[color:var(--t-surface)] p-0 shadow-xl"
-            >
-              <div className="px-2 pb-0.5 pt-2">
-                <LuxDayPicker
-                  mode="single"
-                  selected={pending}
-                  onSelect={setPending}
-                  showOutsideDays
-                />
-              </div>
-              <CalendarPopoverFooter
-                onCancel={() => setOpen(false)}
-                onConfirm={() => {
-                  setDate(pending);
-                  setOpen(false);
-                }}
-              />
-            </Popover.Content>
-          </Popover.Portal>
-        </Popover.Root>
+        <DatePicker value={date} onChange={setDate} placeholder="Date" />
         <TimeScrollPicker value={time} onChange={setTime} />
       </div>
       <p className="text-[10px] t-text-40">
@@ -729,6 +689,12 @@ export function PopoverKitchenDemo() {
             </Popover.Close>
             <Button size="sm">Apply</Button>
           </div>
+          <Popover.Arrow
+            width={12}
+            height={7}
+            className="fill-(--t-border-2) stroke-(--t-border-2)"
+            style={{ strokeWidth: 1 }}
+          />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
@@ -760,10 +726,10 @@ export function SegmentedControlDemo() {
 export function BadgesExtendedDemo() {
   return (
     <div className="flex flex-wrap gap-2">
-      <span className="rounded-full bg-violet-500/15 px-2 py-0.5 text-[11px] font-medium text-violet-600 dark:text-violet-300">Primary tone</span>
-      <span className="rounded-md border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-[11px] text-emerald-700 dark:text-emerald-300">Success</span>
-      <span className="rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-[11px] text-amber-800 dark:text-amber-200">Warning</span>
-      <span className="rounded-md border border-red-500/40 bg-red-500/10 px-2 py-0.5 text-[11px] text-red-700 dark:text-red-300">Error</span>
+      <span className="rounded-md border border-blue-500/40 bg-blue-500/15 px-2 py-0.5 text-[11px] font-medium text-blue-600 dark:text-blue-500">Primary tone</span>
+      <span className="rounded-md border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-[11px] text-emerald-700 dark:text-emerald-500">Success</span>
+      <span className="rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-[11px] text-amber-800 dark:text-amber-500">Warning</span>
+      <span className="rounded-md border border-red-500/40 bg-red-500/10 px-2 py-0.5 text-[11px] text-red-700 dark:text-red-500">Error</span>
     </div>
   );
 }

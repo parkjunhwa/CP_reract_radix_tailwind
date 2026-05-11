@@ -1,5 +1,6 @@
 "use client";
 
+import { SourceFooter } from "@/components/ui/source-footer";
 import {
   AreaChart, Area, BarChart, Bar, LineChart, Line,
   ComposedChart, Scatter, ScatterChart,
@@ -83,12 +84,12 @@ const radarData = [
   { skill: "Service", actual: 84, target: 90 },
 ];
 
-const radialData = [
-  { name: "Watches", value: 84, fill: "#7c3aed" },
-  { name: "Jewelry", value: 72, fill: "#f59e0b" },
-  { name: "Fashion", value: 58, fill: "#ec4899" },
-  { name: "Art", value: 46, fill: "#0ea5e9" },
-  { name: "Spirits", value: 38, fill: "#10b981" },
+/** Semicircle radial bars: inner → outer (purple → cyan → green → orange). */
+const quarterlyRadialData = [
+  { name: "Q1", value: 52, fill: "#7c3aed" },
+  { name: "Q2", value: 65, fill: "#0ea5e9" },
+  { name: "Q3", value: 78, fill: "#10b981" },
+  { name: "Q4", value: 94, fill: "#f59e0b" },
 ];
 
 const pieData = [
@@ -240,20 +241,31 @@ export default function RechartsPage() {
           </ResponsiveContainer>
         </div>
 
-        {/* Radial Bar */}
+        {/* Radial Bar — semicircle quarterly goals (matches widget-style reference) */}
         <div className="panel p-5">
-          <PanelTitle title="Radial Bar" desc="Concentric progress rings per category" />
-          <ResponsiveContainer width="100%" height={260}>
-            <RadialBarChart innerRadius="20%" outerRadius="100%" data={radialData} startAngle={90} endAngle={-270}>
-              <RadialBar background dataKey="value" cornerRadius={6} />
-              <Legend
-                iconSize={8}
-                layout="vertical"
-                verticalAlign="middle"
-                align="right"
-                wrapperStyle={{ fontSize: 11 }}
+          <PanelTitle
+            title="Radial Bar — Quarterly Goals"
+            desc="Four concentric semicircles with rounded caps (inner Q1 → outer Q4)."
+          />
+          <ResponsiveContainer width="100%" height={280}>
+            <RadialBarChart
+              data={quarterlyRadialData}
+              cx="50%"
+              cy="50%"
+              innerRadius={28}
+              outerRadius={92}
+              startAngle={180}
+              endAngle={0}
+              margin={{ top: 20, right: 16, bottom: 16, left: 16 }}
+            >
+              <RadialBar dataKey="value" cornerRadius={6} />
+              <Tooltip
+                contentStyle={TOOLTIP_STYLE}
+                formatter={(value, _name, item) => {
+                  const label = (item as { payload?: { name?: string } }).payload?.name;
+                  return [`${Number(value ?? 0)}%`, label ?? "Quarter"];
+                }}
               />
-              <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v) => `${Number(v ?? 0)}%`} />
             </RadialBarChart>
           </ResponsiveContainer>
         </div>
@@ -360,6 +372,18 @@ export default function RechartsPage() {
           </AreaChart>
         </ResponsiveContainer>
       </div>
+
+      <SourceFooter>
+        Composed with{" "}
+        <a className="t-accent-text underline" href="https://recharts.org/" target="_blank" rel="noopener noreferrer">
+          Recharts
+        </a>{" "}
+        (
+        <a className="t-accent-text underline" href="https://github.com/recharts/recharts" target="_blank" rel="noopener noreferrer">
+          GitHub
+        </a>
+        ).
+      </SourceFooter>
     </div>
   );
 }

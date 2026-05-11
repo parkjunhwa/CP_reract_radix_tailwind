@@ -30,7 +30,7 @@ export default function EcommerceProductsListPage() {
                 <td className="px-5 py-3.5 t-text-50 text-xs font-semibold">${r.price.toLocaleString()}</td>
                 <td className="px-5 py-3.5 t-text-50 text-xs">{r.stock}</td>
                 <td className="px-5 py-3.5">
-                  <span className="text-[10px] px-2 py-0.5 rounded-full border bg-violet-500/10 text-violet-400 border-violet-500/20">{r.status}</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full border bg-violet-500/10 text-violet-500 border-violet-500/20">{r.status}</span>
                 </td>
               </tr>
             ))}

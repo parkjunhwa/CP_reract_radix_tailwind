@@ -30,8 +30,9 @@
 
   /* ── Interactive ─────────────────── */
   --t-hover:     rgba(0,0,0,0.04);
-  --t-hover-2:   rgba(0,0,0,0.07);
-  --t-input-bg:  rgba(0,0,0,0.04);
+  --t-hover-2:   rgba(0,0,0,0.08);
+  --t-input-bg:  #ffffff;
+  --t-input-muted-bg: rgba(0,0,0,0.08);
 
   /* ── Accent (indigo/violet) ─────── */
   --t-accent:      #5b21b6;

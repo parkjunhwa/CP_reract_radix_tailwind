@@ -529,7 +529,7 @@ function DemoHoverCard() {
               <p className="t-text-40 text-xs mt-2">Building a Radix playground inside the dashboard.</p>
             </div>
           </div>
-          <HoverCard.Arrow className="fill-[var(--t-surface)]" />
+          <HoverCard.Arrow className="fill-(--t-surface)" />
         </HoverCard.Content>
       </HoverCard.Portal>
     </HoverCard.Root>
@@ -731,7 +731,12 @@ function DemoPopover() {
         <Popover.Content sideOffset={10} className="w-80 rounded-xl border p-4 shadow-xl z-50" style={{ backgroundColor: "var(--t-surface)", borderColor: "var(--t-border-2)" }}>
           <p className="t-text font-semibold text-sm">Quick note</p>
           <p className="t-text-40 text-xs mt-1.5">Popovers are great for contextual information, forms, and lightweight interactions.</p>
-          <Popover.Arrow className="fill-[var(--t-surface)]" />
+          <Popover.Arrow
+            width={12}
+            height={7}
+            className="fill-(--tooltip-bg) stroke-(--tooltip-border)"
+            style={{ strokeWidth: 1 }}
+          />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
@@ -1019,7 +1024,7 @@ function DemoTooltip() {
         <Tooltip.Portal>
           <Tooltip.Content sideOffset={10} className="rounded-lg border px-2.5 py-1.5 text-xs shadow-lg z-50" style={{ backgroundColor: "var(--t-surface)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }}>
             Tooltips are for short, non-interactive hints.
-            <Tooltip.Arrow className="fill-[var(--t-surface)]" />
+            <Tooltip.Arrow className="fill-(--t-surface)" />
           </Tooltip.Content>
         </Tooltip.Portal>
       </Tooltip.Root>

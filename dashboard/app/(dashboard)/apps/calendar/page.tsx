@@ -55,9 +55,14 @@ export default function CalendarPage() {
   const daysInMonth = getDaysInMonth(year, month);
   const firstDay = getFirstDayOfMonth(year, month);
 
-  const cells: (number | null)[] = [
+  const currentMonthCells: (number | null)[] = [
     ...Array(firstDay).fill(null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
+  const trailingEmptyCells = (7 - (currentMonthCells.length % 7)) % 7;
+  const cells: (number | null)[] = [
+    ...currentMonthCells,
+    ...Array(trailingEmptyCells).fill(null),
   ];
 
   const prevMonth = () => setCurrentDate(new Date(year, month - 1, 1));
@@ -73,57 +78,59 @@ export default function CalendarPage() {
           <div className="flex items-center justify-between mb-5">
             <h2 className="t-text font-bold text-base">{MONTHS[month]} {year}</h2>
             <div className="flex items-center gap-2">
-              <button className="w-8 h-8 rounded-lg border flex items-center justify-center t-text-40 hover:t-text-70 hover:bg-[var(--t-hover)] transition-colors" style={{ borderColor: "var(--t-border-2)" }} onClick={prevMonth}>
+              <button aria-label="Previous month" className="w-8 h-8 rounded-lg border border-(--t-border-2) flex items-center justify-center t-text-40 hover:t-text-70 hover:bg-(--t-hover) transition-colors" onClick={prevMonth}>
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              <button className="h-8 px-3 rounded-lg text-xs font-medium border t-text-60 hover:bg-[var(--t-hover)] transition-colors" style={{ borderColor: "var(--t-border-2)" }}
+              <button className="h-8 px-3 rounded-lg text-xs font-medium border border-(--t-border-2) t-text-60 hover:bg-(--t-hover) transition-colors"
                 onClick={() => setCurrentDate(new Date(2026, 4, 1))}>Today</button>
-              <button className="w-8 h-8 rounded-lg border flex items-center justify-center t-text-40 hover:t-text-70 hover:bg-[var(--t-hover)] transition-colors" style={{ borderColor: "var(--t-border-2)" }} onClick={nextMonth}>
+              <button aria-label="Next month" className="w-8 h-8 rounded-lg border border-(--t-border-2) flex items-center justify-center t-text-40 hover:t-text-70 hover:bg-(--t-hover) transition-colors" onClick={nextMonth}>
                 <ChevronRight className="w-4 h-4" />
               </button>
-              <button className="h-8 px-3 rounded-lg text-xs font-medium text-white ml-2 flex items-center gap-1.5" style={{ backgroundColor: "var(--t-accent)" }}>
+              <button className="h-8 px-3 rounded-lg text-xs font-medium text-white ml-2 flex items-center gap-1.5 bg-(--t-accent)">
                 <Plus className="w-3.5 h-3.5" /> Event
               </button>
             </div>
           </div>
 
-          {/* Day headers */}
-          <div className="grid grid-cols-7 mb-2">
-            {DAYS.map(d => (
-              <div key={d} className="text-center text-[10px] font-medium uppercase tracking-wide t-text-30 py-2">{d}</div>
-            ))}
-          </div>
+          <div className="overflow-hidden rounded-xl border border-(--t-border)">
+            {/* Day headers */}
+            <div className="grid grid-cols-7 gap-px">
+              {DAYS.map(d => (
+                <div key={d} className="py-2 text-center text-[10px] font-medium uppercase tracking-wide t-text-30">{d}</div>
+              ))}
+            </div>
 
-          {/* Day cells */}
-          <div className="grid grid-cols-7 gap-1">
-            {cells.map((day, i) => {
-              if (!day) return <div key={`empty-${i}`} />;
-              const dayEvents = getEventsForDay(day);
-              const isToday = day === 7 && month === 4 && year === 2026;
-              const isSelected = day === selectedDay;
-              return (
-                <div key={day} onClick={() => setSelectedDay(day)}
-                  className={cn("rounded-lg p-1.5 min-h-[70px] cursor-pointer transition-colors border",
-                    isSelected ? "border-[var(--t-accent)]" : "border-transparent hover:bg-[var(--t-hover)]"
-                  )}>
-                  <div className={cn("w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium mb-1",
-                    isToday ? "text-white" : "t-text-60"
-                  )} style={isToday ? { backgroundColor: "var(--t-accent)" } : {}}>
-                    {day}
+            {/* Day cells */}
+            <div className="grid grid-cols-7 gap-px border-t border-(--t-border) bg-(--t-border-2)">
+              {cells.map((day, i) => {
+                if (!day) return <div key={`empty-${i}`} className="min-h-[76px] bg-(--t-surface)" />;
+                const dayEvents = getEventsForDay(day);
+                const isToday = day === 7 && month === 4 && year === 2026;
+                const isSelected = day === selectedDay;
+                return (
+                  <div key={day} onClick={() => setSelectedDay(day)}
+                    className={cn("min-h-[76px] cursor-pointer bg-(--t-surface) p-1.5 transition-colors hover:bg-black/1",
+                      isSelected && "ring-1 ring-inset ring-(--t-accent)"
+                    )}>
+                    <div className={cn("w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium mb-1",
+                      isToday ? "text-white bg-(--t-accent)" : "t-text-60"
+                    )}>
+                      {day}
+                    </div>
+                    <div className="space-y-0.5">
+                      {dayEvents.slice(0, 2).map(ev => (
+                        <div key={ev.id} className={cn("text-[9px] px-1 py-0.5 rounded truncate border", colorMap[ev.color])}>
+                          {ev.title}
+                        </div>
+                      ))}
+                      {dayEvents.length > 2 && (
+                        <div className="text-[9px] t-text-30 px-1">+{dayEvents.length - 2} more</div>
+                      )}
+                    </div>
                   </div>
-                  <div className="space-y-0.5">
-                    {dayEvents.slice(0, 2).map(ev => (
-                      <div key={ev.id} className={cn("text-[9px] px-1 py-0.5 rounded truncate border", colorMap[ev.color])}>
-                        {ev.title}
-                      </div>
-                    ))}
-                    {dayEvents.length > 2 && (
-                      <div className="text-[9px] t-text-30 px-1">+{dayEvents.length - 2} more</div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
 
