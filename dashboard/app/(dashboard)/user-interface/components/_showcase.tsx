@@ -13,7 +13,6 @@ import {
   Calendar as CalendarIcon,
   Check,
   ChevronDown,
-  Clock,
   CreditCard,
   Info,
   LayoutGrid,
@@ -41,6 +40,7 @@ import {
 import { Input, InputAddon, InputGroup } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LuxDayPicker } from "@/components/ui/lux-day-picker";
+import { TimeScrollPicker } from "@/components/ui/time-scroll-picker";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -425,11 +425,11 @@ export function DateTimePickerDemo() {
               type="button"
               className={cn(
                 "flex h-9 items-center gap-2 rounded-lg border px-3 text-xs",
-                "border-[color:var(--t-border-2)] bg-[color:var(--t-input-bg)]",
+                "border-[color:var(--t-border-2)] bg-[color:var(--t-input-bg)] text-[color:var(--t-text-70)]",
                 "focus-visible:border-[color:var(--t-accent)] focus-visible:ring-2 focus-visible:ring-[color:var(--t-ring)]/30",
               )}
             >
-              <CalendarIcon className="size-3.5 opacity-50" />
+              <CalendarIcon className="size-3.5 shrink-0 text-[color:var(--t-text-40)]" aria-hidden />
               {date ? format(date, "yyyy-MM-dd") : "Date"}
             </button>
           </Popover.Trigger>
@@ -456,19 +456,7 @@ export function DateTimePickerDemo() {
             </Popover.Content>
           </Popover.Portal>
         </Popover.Root>
-        <div
-          className="relative flex h-9 items-center gap-2 rounded-lg border px-3"
-          style={{ borderColor: "var(--t-border-2)", backgroundColor: "var(--t-input-bg)" }}
-        >
-          <Clock className="size-3.5 opacity-50" />
-          <input
-            type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            className="w-full bg-transparent text-xs outline-none"
-            aria-label="Time"
-          />
-        </div>
+        <TimeScrollPicker value={time} onChange={setTime} />
       </div>
       <p className="text-[10px] t-text-40">
         Preview: {combined ? format(combined, "yyyy-MM-dd HH:mm") : "—"}
