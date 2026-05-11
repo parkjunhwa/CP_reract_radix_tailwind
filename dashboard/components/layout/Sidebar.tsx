@@ -10,7 +10,7 @@ import {
   GraduationCap, Truck, Mail, MessageCircle, ShoppingCart,
   Calendar, Clipboard, FileText, User, Lock, File,
   Layout, CheckSquare, GitMerge, Table2, PieChart,
-  Home, BarChart2, ExternalLink, BarChart, Boxes,
+  Home, BarChart2, ExternalLink, BarChart,
   BookOpen, Navigation, Shield, ListTree,
   Component as ComponentIcon,
 } from "lucide-react";
@@ -214,7 +214,6 @@ const appsSection: NavSectionLabel = {
         { label: "Create Deal",       href: "/pages/wizard-examples/create-deal" },
       ],
     },
-    { label: "Dialog Examples", icon: Boxes, href: "/pages/dialog-examples" },
     {
       label: "Widget Examples", icon: BarChart, href: "#widget-examples",
       children: [
@@ -234,7 +233,6 @@ const formsSection: NavSectionLabel = {
     { label: "Form Layouts",   icon: Layout,      href: "/forms/form-layouts" },
     { label: "Form Validation", icon: CheckSquare, href: "/forms/form-validation" },
     { label: "Form Wizard",    icon: GitMerge,    href: "/forms/form-wizard" },
-    { label: "Radix UI", icon: Diamond, href: "/radix", badge: null },
     {
       label: "Table",
       icon: Table2,
@@ -261,6 +259,7 @@ const userInterfaceSection: NavSectionLabel = {
     },
     { label: "Components",    icon: ComponentIcon, href: "/user-interface/components" },
     { label: "Form Elements", icon: CheckSquare,   href: "/user-interface/form-elements" },
+    { label: "Radix UI",      icon: Diamond,       href: "/radix" },
   ],
 };
 

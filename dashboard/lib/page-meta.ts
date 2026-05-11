@@ -63,7 +63,6 @@ const SEGMENT_LABELS: Record<string, string> = {
   "account-settings": "Account Settings",
   faq: "FAQ",
   pricing: "Pricing",
-  "dialog-examples": "Dialog Examples",
   "widget-examples": "Widget Examples",
   "wizard-examples": "Wizard Examples",
   basic: "Basic",
@@ -151,7 +150,10 @@ const PAGE_META: Record<string, PageMeta> = {
   },
 
   // Radix
-  "/radix": { title: "Radix Primitives", description: "모든 프리미티브 예제" },
+  "/radix": {
+    title: "Radix Primitives",
+    description: "@radix-ui 프리미티브 및 Form(upload · editor) 예제",
+  },
 
   // User Interface
   "/user-interface/foundation": {
@@ -186,7 +188,7 @@ const PAGE_META: Record<string, PageMeta> = {
   "/user-interface/form-elements": {
     title: "Form Elements",
     description:
-      "Live previews of every form primitive available in the LUXE design system.",
+      "LUXE-styled inputs, pickers, and layout patterns. Radix-based controls (select, checkbox, slider, …) live under Radix UI.",
   },
   "/user-interface/mui-table": {
     title: "MUI Table",
@@ -257,7 +259,6 @@ const PAGE_META: Record<string, PageMeta> = {
   "/pages/user-profile": { title: "User Profile" },
   "/pages/faq": { title: "FAQ" },
   "/pages/pricing": { title: "Pricing" },
-  "/pages/dialog-examples": { title: "Dialog Examples" },
   "/pages/widget-examples/basic": { title: "Basic Widgets" },
   "/pages/widget-examples/advanced": { title: "Advanced Widgets" },
   "/pages/widget-examples/statistics": { title: "Statistics Widgets" },

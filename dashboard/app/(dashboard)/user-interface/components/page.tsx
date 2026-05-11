@@ -6,28 +6,58 @@ import {
   Star, Send, Plus, Minus, MoreHorizontal, ChevronRight, ChevronLeft,
 } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import {
-  Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter,
-  DialogHeader, DialogTitle, DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-function Section({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
+import {
+  AutocompleteDemo,
+  AutocompleteMultiDemo,
+  BadgesExtendedDemo,
+  ButtonsExtendedDemo,
+  CalloutDemo,
+  CheckboxCardsDemo,
+  CheckboxListDemo,
+  CollapsibleDemo,
+  DateRangePickerDemo,
+  DateTimePickerDemo,
+  DialogVariantsDemo,
+  DropdownRichDemo,
+  IconButtonsDemo,
+  LabelsDemo,
+  MenubarKitchenDemo,
+  NavigationMenuKitchenDemo,
+  OtpFieldDemo,
+  PopoverKitchenDemo,
+  RadioListDemo,
+  SegmentedControlDemo,
+} from "./_showcase";
+
+function Section({
+  title,
+  description,
+  children,
+  className,
+}: {
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <section className="panel flex h-full flex-col">
+    <section className={cn("panel flex h-full min-h-0 flex-col", className)}>
       <header className="shrink-0 border-b t-border px-5 py-3.5">
         <h3 className="t-text font-semibold text-sm">{title}</h3>
         {description && <p className="t-text-40 text-xs mt-0.5">{description}</p>}
       </header>
-      <div className="flex-1 p-5">{children}</div>
+      <div className="min-h-0 flex-1 overflow-auto p-5">{children}</div>
     </section>
   );
 }
@@ -213,32 +243,6 @@ function Chips() {
   );
 }
 
-function DialogsDemo() {
-  return (
-    <div className="flex flex-wrap gap-2">
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline">Open dialog</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirm action</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to continue? This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button variant="destructive">Confirm</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-}
-
 function ListDemo() {
   const items = [
     { name: "James Worthington", role: "Account Manager",  initials: "JW" },
@@ -266,25 +270,6 @@ function ListDemo() {
         </li>
       ))}
     </ul>
-  );
-}
-
-function MenuDemo() {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline">
-          Open menu <ChevronDown />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
-        <DropdownMenuItem>Team</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>Sign out</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }
 
@@ -530,7 +515,79 @@ function MoreDemo() {
 
 export default function ComponentsPage() {
   return (
-    <div className="grid auto-rows-fr grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
+      <Section title="Autocomplete" description="Searchable combobox-style input.">
+        <AutocompleteDemo />
+      </Section>
+
+      <Section title="Autocomplete (multi)" description="Multi-select with chips.">
+        <AutocompleteMultiDemo />
+      </Section>
+
+      <Section title="Callouts" description="Structured callout blocks with icon and tone.">
+        <CalloutDemo />
+      </Section>
+
+      <Section title="Collapsible" description="Expand / collapse disclosure.">
+        <CollapsibleDemo />
+      </Section>
+
+      <Section title="Checkbox" description="Checkbox group states.">
+        <CheckboxListDemo />
+      </Section>
+
+      <Section title="Checkbox cards" description="Selectable cards with description.">
+        <CheckboxCardsDemo />
+      </Section>
+
+      <Section title="Radio" description="Radio group with stacked options.">
+        <RadioListDemo />
+      </Section>
+
+      <Section title="One-time password" description="OTP input cells (Radix OTP field).">
+        <OtpFieldDemo />
+      </Section>
+
+      <Section title="Date range" description="Calendar range in a popover.">
+        <DateRangePickerDemo />
+      </Section>
+
+      <Section title="Date & time" description="Date picker + time field.">
+        <DateTimePickerDemo />
+      </Section>
+
+      <Section title="Dialogs" description="Basic, wide, and scrollable modals.">
+        <DialogVariantsDemo />
+      </Section>
+
+      <Section title="Dropdown menu" description="Labeled groups, icons, and destructive item.">
+        <DropdownRichDemo />
+      </Section>
+
+      <Section title="Icon buttons" description="Icon-only action buttons.">
+        <IconButtonsDemo />
+      </Section>
+
+      <Section title="Label" description="Field labels and required markers.">
+        <LabelsDemo />
+      </Section>
+
+      <Section title="Menubar" description="Application-style menu bar.">
+        <MenubarKitchenDemo />
+      </Section>
+
+      <Section title="Navigation menu" description="Site nav with dropdown and scroll.">
+        <NavigationMenuKitchenDemo />
+      </Section>
+
+      <Section title="Popover" description="Anchored floating panel.">
+        <PopoverKitchenDemo />
+      </Section>
+
+      <Section title="Segmented control" description="Single-select toggle group.">
+        <SegmentedControlDemo />
+      </Section>
+
       <Section title="Accordion" description="Vertically stacked, collapsible content panels.">
         <Accordion />
       </Section>
@@ -543,12 +600,18 @@ export default function ComponentsPage() {
         <Avatars />
       </Section>
 
-      <Section title="Badges" description="Status pills and counters.">
-        <Badges />
+      <Section title="Badges" description="Variants, tones, and counters.">
+        <div className="space-y-4">
+          <Badges />
+          <BadgesExtendedDemo />
+        </div>
       </Section>
 
-      <Section title="Buttons" description="Variants and sizes.">
-        <Buttons />
+      <Section title="Buttons" description="Variants, sizes, and loading-style patterns.">
+        <div className="space-y-4">
+          <Buttons />
+          <ButtonsExtendedDemo />
+        </div>
       </Section>
 
       <Section title="Button Groups" description="Compose related actions.">
@@ -559,16 +622,8 @@ export default function ComponentsPage() {
         <Chips />
       </Section>
 
-      <Section title="Dialogs" description="Modal interactions for confirmations and forms.">
-        <DialogsDemo />
-      </Section>
-
       <Section title="List" description="Stacked content rows with avatar and trailing actions.">
         <ListDemo />
-      </Section>
-
-      <Section title="Menu" description="Contextual menu surfaced from a trigger.">
-        <MenuDemo />
       </Section>
 
       <Section title="Pagination" description="Navigate through paged collections.">

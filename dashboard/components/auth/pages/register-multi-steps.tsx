@@ -125,7 +125,7 @@ export default function RegisterMultiStepsPage() {
           </nav>
 
           {step === 0 && (
-            <section className="space-y-5" aria-labelledby="step-account-heading">
+            <Form.Root className="space-y-5" aria-labelledby="step-account-heading">
               <div>
                 <h2 id="step-account-heading" className="text-xl font-bold text-[color:var(--t-text)]">
                   Account Information
@@ -193,7 +193,7 @@ export default function RegisterMultiStepsPage() {
                   Next <ChevronRight className="size-4" />
                 </button>
               </div>
-            </section>
+            </Form.Root>
           )}
 
           {step === 1 && (

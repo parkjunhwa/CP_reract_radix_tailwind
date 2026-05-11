@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   getInvoiceById, INVOICE_LINE_ITEMS, STATUS_STYLES, fmtMoney,
 } from "@/lib/invoices";
@@ -24,6 +25,7 @@ export default function InvoicePreviewPage({ params }: { params: Promise<{ id: s
 
   const [paymentDrawerOpen, setPaymentDrawerOpen] = useState(false);
   const [sendDrawerOpen, setSendDrawerOpen] = useState(false);
+  const [paymentDate, setPaymentDate] = useState<Date | undefined>(new Date("2026-05-07"));
 
   const subtotal = INVOICE_LINE_ITEMS.reduce((s, l) => s + l.total, 0);
   const tax = +(subtotal * TAX_RATE).toFixed(2);
@@ -245,7 +247,7 @@ export default function InvoicePreviewPage({ params }: { params: Promise<{ id: s
         <SimpleDrawer title="Add payment" onClose={() => setPaymentDrawerOpen(false)}>
           <DrawerField label="Invoice balance" defaultValue={fmtMoney(invoice.balance || total)} />
           <DrawerField label="Payment amount" defaultValue={fmtMoney(invoice.balance || total)} />
-          <DrawerField label="Payment date" type="date" defaultValue="2026-05-07" />
+          <DrawerDateField label="Payment date" value={paymentDate} onChange={setPaymentDate} />
           <DrawerField label="Payment method" defaultValue="Internet Banking" />
           <DrawerTextarea label="Internal notes" rows={3} placeholder="Optional internal notes…" />
           <div className="flex justify-end gap-2">
@@ -292,6 +294,25 @@ function DrawerField({ label, ...props }: { label: string } & React.InputHTMLAtt
             className,
           )}
         />
+      </Form.Control>
+    </Form.Field>
+  );
+}
+
+function DrawerDateField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: Date | undefined;
+  onChange: (d: Date | undefined) => void;
+}) {
+  return (
+    <Form.Field name={label} className="space-y-1.5">
+      <Form.Label className="t-text-40 text-xs font-medium">{label}</Form.Label>
+      <Form.Control asChild>
+        <DatePicker value={value} onChange={onChange} placeholder="YYYY-MM-DD" />
       </Form.Control>
     </Form.Field>
   );

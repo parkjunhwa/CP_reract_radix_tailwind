@@ -40,6 +40,8 @@ export default function RootLayout({
             {children}
           </TooltipProvider>
         </ThemeProvider>
+        {/* After bundled globals + react-day-picker so unlayered overrides win */}
+        <link rel="stylesheet" href="/calendar-day-picker.css" />
       </body>
     </html>
   );

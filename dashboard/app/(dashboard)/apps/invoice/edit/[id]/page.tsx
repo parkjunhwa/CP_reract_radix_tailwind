@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, use } from "react";
+import { useMemo, useState, use } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Plus, Trash2, Send, DollarSign, Eye, ArrowLeft } from "lucide-react";
@@ -8,6 +8,7 @@ import * as Form from "@radix-ui/react-form";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -46,6 +47,16 @@ export default function InvoiceEditPage({ params }: { params: Promise<{ id: stri
   const [paymentTerms, setPaymentTerms] = useState(true);
   const [clientNotes, setClientNotes] = useState(false);
   const [paymentStub, setPaymentStub] = useState(false);
+  const [invoiceDate, setInvoiceDate] = useState<Date | undefined>(new Date("2026-05-07"));
+  const [dueDate, setDueDate] = useState<Date | undefined>(new Date("2026-05-21"));
+  const invoiceDateStr = useMemo(
+    () => (invoiceDate ? invoiceDate.toISOString().slice(0, 10) : ""),
+    [invoiceDate],
+  );
+  const dueDateStr = useMemo(
+    () => (dueDate ? dueDate.toISOString().slice(0, 10) : ""),
+    [dueDate],
+  );
 
   const addItem = () =>
     setItems([...items, { description: "", details: "", qty: 1, unitPrice: 0 }]);
@@ -115,8 +126,8 @@ export default function InvoiceEditPage({ params }: { params: Promise<{ id: stri
 
             {/* Dates */}
             <div className="grid grid-cols-2 gap-4">
-              <FormField label="Invoice Date" defaultValue="2026-05-07" type="date" />
-              <FormField label="Due Date" defaultValue="2026-05-21" type="date" />
+              <DateFormField label="Invoice Date" value={invoiceDate} onChange={setInvoiceDate} />
+              <DateFormField label="Due Date" value={dueDate} onChange={setDueDate} />
             </div>
 
             {/* Line items */}
@@ -213,6 +224,10 @@ export default function InvoiceEditPage({ params }: { params: Promise<{ id: stri
               />
             </div>
           </Form.Root>
+
+          {/* Hidden inputs to keep same submit shape (demo) */}
+          <input type="hidden" name="invoice-date" value={invoiceDateStr} readOnly />
+          <input type="hidden" name="due-date" value={dueDateStr} readOnly />
         </div>
 
         {/* Side actions */}
@@ -291,6 +306,28 @@ function FormField({
       </Form.Label>
       <Form.Control asChild>
         <Input defaultValue={defaultValue} type={type} className="h-9 text-xs" />
+      </Form.Control>
+    </Form.Field>
+  );
+}
+
+function DateFormField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: Date | undefined;
+  onChange: (d: Date | undefined) => void;
+}) {
+  const name = label.toLowerCase().replace(/\s+/g, "-");
+  return (
+    <Form.Field name={name} className="space-y-1.5">
+      <Form.Label asChild>
+        <Label className="t-text-40 text-xs font-medium">{label}</Label>
+      </Form.Label>
+      <Form.Control asChild>
+        <DatePicker value={value} onChange={onChange} placeholder="YYYY-MM-DD" />
       </Form.Control>
     </Form.Field>
   );

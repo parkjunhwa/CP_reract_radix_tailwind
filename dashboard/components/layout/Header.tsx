@@ -22,7 +22,7 @@ import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 const SEARCH_ITEMS = [
-  { section: "UI",           name: "Radix UI",         url: "/radix" },
+  { section: "User Interface", name: "Radix UI",         url: "/radix" },
   { section: "Dashboards",   name: "CRM",              url: "/dashboards/crm" },
   { section: "Dashboards",   name: "Analytics",        url: "/dashboards/analytics" },
   { section: "Dashboards",   name: "eCommerce",        url: "/dashboards/ecommerce" },
@@ -44,7 +44,6 @@ const SEARCH_ITEMS = [
   { section: "Pages",        name: "Account Settings", url: "/pages/account-settings" },
   { section: "Pages",        name: "FAQ",              url: "/pages/faq" },
   { section: "Pages",        name: "Pricing",          url: "/pages/pricing" },
-  { section: "Pages",        name: "Dialog Examples",  url: "/pages/dialog-examples" },
   { section: "Pages",        name: "Coming Soon",      url: "/pages/misc/coming-soon" },
   { section: "Pages",        name: "404 Not Found",    url: "/pages/misc/404-not-found" },
   { section: "Forms",        name: "Form Layouts",     url: "/forms/form-layouts" },

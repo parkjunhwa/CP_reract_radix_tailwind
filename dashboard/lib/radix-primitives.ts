@@ -6,15 +6,15 @@ export type RadixPrimitive = {
 
 export const RADIX_PRIMITIVES: readonly RadixPrimitive[] = [
   { slug: "accordion", title: "Accordion", description: "Reveal content sections under headings." },
-  { slug: "alert-dialog", title: "Alert Dialog", description: "Interrupt the user with important content." },
+  { slug: "alert-dialog", title: "Alert Dialog", description: "Requires a choice before continuing — ideal for destructive actions." },
   { slug: "aspect-ratio", title: "Aspect Ratio", description: "Maintain content within a desired ratio." },
   { slug: "avatar", title: "Avatar", description: "User image with a fallback." },
   { slug: "checkbox", title: "Checkbox", description: "Toggle between checked and not checked." },
   { slug: "collapsible", title: "Collapsible", description: "Expand/collapse a panel." },
   { slug: "context-menu", title: "Context Menu", description: "Menu triggered by right click or long press." },
-  { slug: "dialog", title: "Dialog", description: "Modal window rendered in a portal." },
+  { slug: "dialog", title: "Dialog", description: "Size variants (sm → fullscreen), forms, and status dialogs." },
   { slug: "dropdown-menu", title: "Dropdown Menu", description: "Actions menu triggered by a button." },
-  { slug: "form", title: "Form", description: "Collect input with validation rules." },
+  { slug: "form", title: "Form", description: "Validation, file upload, and editor patterns with @radix-ui/react-form." },
   { slug: "hover-card", title: "Hover Card", description: "Preview rich content behind a link." },
   { slug: "label", title: "Label", description: "Accessible label for controls." },
   { slug: "menubar", title: "Menubar", description: "Persistent desktop-style command menus." },

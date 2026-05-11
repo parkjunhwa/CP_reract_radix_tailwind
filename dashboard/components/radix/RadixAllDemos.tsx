@@ -4,13 +4,11 @@ import * as React from "react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import * as Accordion from "@radix-ui/react-accordion";
-import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import * as AspectRatio from "@radix-ui/react-aspect-ratio";
 import * as Avatar from "@radix-ui/react-avatar";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import * as ContextMenu from "@radix-ui/react-context-menu";
-import * as Dialog from "@radix-ui/react-dialog";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Form from "@radix-ui/react-form";
 import * as HoverCard from "@radix-ui/react-hover-card";
@@ -46,8 +44,14 @@ import {
   Info,
   Italic,
   Underline,
+  Upload,
   X,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  RadixAlertDialogPanelContent,
+  RadixDialogPanelContent,
+} from "@/components/radix/dialog-showcase";
 import { ExamplePanel } from "@/components/radix/ExamplePanel";
 import { RADIX_PRIMITIVES } from "@/lib/radix-primitives";
 import { cn } from "@/lib/utils";
@@ -220,34 +224,6 @@ function DemoAccordion() {
   );
 }
 
-function DemoAlertDialog() {
-  return (
-    <AlertDialog.Root>
-      <AlertDialog.Trigger className={cn(btn, "hover:bg-[var(--t-hover)]")} style={{ backgroundColor: "var(--t-surface-2)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }}>
-        Delete invoice…
-      </AlertDialog.Trigger>
-      <AlertDialog.Portal>
-        <AlertDialog.Overlay className="fixed inset-0 bg-black/60" />
-        <AlertDialog.Content
-          className="fixed left-1/2 top-1/2 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border p-5 z-[60]"
-          style={{ backgroundColor: "var(--t-surface)", borderColor: "var(--t-border)" }}
-        >
-          <AlertDialog.Title className="t-text font-semibold text-sm">Delete invoice</AlertDialog.Title>
-          <AlertDialog.Description className="t-text-40 text-xs mt-1.5">This action cannot be undone. The invoice will be permanently removed.</AlertDialog.Description>
-          <div className="mt-5 flex items-center justify-end gap-2">
-            <AlertDialog.Cancel className={cn(btn, "hover:bg-[var(--t-hover)]")} style={{ backgroundColor: "var(--t-surface-2)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }}>
-              Cancel
-            </AlertDialog.Cancel>
-            <AlertDialog.Action className={cn(btn)} style={{ backgroundColor: "rgba(239,68,68,0.15)", borderColor: "rgba(239,68,68,0.3)", color: "rgb(248,113,113)" }}>
-              Delete
-            </AlertDialog.Action>
-          </div>
-        </AlertDialog.Content>
-      </AlertDialog.Portal>
-    </AlertDialog.Root>
-  );
-}
-
 function DemoAspectRatio() {
   return (
     <div className="max-w-xl">
@@ -374,63 +350,6 @@ function DemoContextMenu() {
   );
 }
 
-function DemoDialog() {
-  return (
-    <Dialog.Root>
-      <Dialog.Trigger className={cn(btn, "hover:bg-[var(--t-hover)]")} style={{ backgroundColor: "var(--t-surface-2)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }}>
-        Open dialog
-      </Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/60 z-50" />
-        <Dialog.Content
-          className="fixed left-1/2 top-1/2 w-[92vw] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl border p-5 z-[60]"
-          style={{ backgroundColor: "var(--t-surface)", borderColor: "var(--t-border)" }}
-        >
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <Dialog.Title className="t-text font-semibold text-sm">Edit profile</Dialog.Title>
-              <Dialog.Description className="t-text-40 text-xs mt-1">Make changes to your profile here. Click save when you&apos;re done.</Dialog.Description>
-            </div>
-            <Dialog.Close
-              aria-label="Close"
-              className={cn(
-                "w-9 h-9 rounded-lg border flex items-center justify-center",
-                "hover:bg-[var(--t-hover)] transition-colors",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--t-ring)] focus-visible:ring-offset-2"
-              )}
-              style={{ backgroundColor: "var(--t-surface-2)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }}
-            >
-              <X className="w-4 h-4" aria-hidden="true" />
-            </Dialog.Close>
-          </div>
-          <Form.Root className="mt-5 space-y-3">
-            <Form.Field name="displayName" className="space-y-1">
-              <Form.Label className="t-text-50 text-xs">Display name</Form.Label>
-              <Form.Control asChild>
-                <input defaultValue="Junhwa Park" className="w-full h-10 px-3 rounded-lg border text-sm outline-none" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }} />
-              </Form.Control>
-            </Form.Field>
-            <Form.Field name="email" className="space-y-1">
-              <Form.Label className="t-text-50 text-xs">Email</Form.Label>
-              <Form.Control asChild>
-                <input defaultValue="junhwa.park@gmail.com" className="w-full h-10 px-3 rounded-lg border text-sm outline-none" style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }} />
-              </Form.Control>
-            </Form.Field>
-          </Form.Root>
-          <div className="mt-5 flex justify-end gap-2">
-            <Dialog.Close className={cn(btn, "hover:bg-[var(--t-hover)]")} style={{ backgroundColor: "var(--t-surface-2)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }}>
-              Cancel
-            </Dialog.Close>
-            <Dialog.Close className={cn(btn)} style={{ backgroundColor: "var(--t-accent-soft)", borderColor: "var(--t-border-2)", color: "var(--t-accent-text)" }}>
-              Save
-            </Dialog.Close>
-          </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
-  );
-}
-
 function DemoDropdownMenu() {
   const [bookmarked, setBookmarked] = useState(false);
   return (
@@ -460,54 +379,134 @@ function DemoDropdownMenu() {
 
 function DemoForm() {
   const [submitted, setSubmitted] = useState<{ email: string; password: string } | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [editorValue, setEditorValue] = useState(
+    "Welcome to the LUXE editor preview.\n\nUse this space to draft long-form content."
+  );
   return (
-    <>
-      <Form.Root
-        className="max-w-md space-y-3"
-        onSubmit={(e) => {
-          e.preventDefault();
-          const fd = new FormData(e.currentTarget);
-          setSubmitted({ email: String(fd.get("email") ?? ""), password: String(fd.get("password") ?? "") });
-        }}
-      >
-        <Form.Field name="email" className="space-y-1">
-          <Form.Label className="t-text-50 text-xs">Email</Form.Label>
-          <Form.Control asChild>
-            <input type="email" required placeholder="name@company.com" className={inputCls} style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }} />
-          </Form.Control>
-          <Form.Message match="valueMissing" className="text-xs" style={{ color: "rgb(248,113,113)" }}>
-            Please enter your email.
-          </Form.Message>
-          <Form.Message match="typeMismatch" className="text-xs" style={{ color: "rgb(248,113,113)" }}>
-            Please provide a valid email.
-          </Form.Message>
-        </Form.Field>
-        <Form.Field name="password" className="space-y-1">
-          <Form.Label className="t-text-50 text-xs">Password</Form.Label>
-          <Form.Control asChild>
-            <input type="password" required minLength={8} placeholder="At least 8 characters" className={inputCls} style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }} />
-          </Form.Control>
-          <Form.Message match="valueMissing" className="text-xs" style={{ color: "rgb(248,113,113)" }}>
-            Please enter a password.
-          </Form.Message>
-          <Form.Message match="tooShort" className="text-xs" style={{ color: "rgb(248,113,113)" }}>
-            Password must be at least 8 characters.
-          </Form.Message>
-        </Form.Field>
-        <Form.Submit asChild>
-          <button type="submit" className="inline-flex h-10 min-h-10 shrink-0 items-center justify-center px-4 rounded-lg border text-sm font-medium leading-none hover:bg-[var(--t-hover)] transition-colors" style={{ backgroundColor: "var(--t-surface-2)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }}>
-            Submit
-          </button>
-        </Form.Submit>
-      </Form.Root>
-      {submitted && (
-        <div className="mt-4 rounded-lg border p-3" style={{ borderColor: "var(--t-border)" }}>
-          <p className="t-text text-sm font-semibold">Submitted</p>
-          <p className="t-text-40 text-xs mt-1">Email: {submitted.email}</p>
-          <p className="t-text-40 text-xs mt-0.5">Password length: {submitted.password.length}</p>
-        </div>
-      )}
-    </>
+    <div className="space-y-8 max-w-full">
+      <div className="space-y-3">
+        <p className="t-text-50 text-xs font-medium">Validation &amp; submit</p>
+        <Form.Root
+          className="max-w-md space-y-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const fd = new FormData(e.currentTarget);
+            setSubmitted({ email: String(fd.get("email") ?? ""), password: String(fd.get("password") ?? "") });
+          }}
+        >
+          <Form.Field name="email" className="space-y-1">
+            <Form.Label className="t-text-50 text-xs">Email</Form.Label>
+            <Form.Control asChild>
+              <input type="email" required placeholder="name@company.com" className={inputCls} style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }} />
+            </Form.Control>
+            <Form.Message match="valueMissing" className="text-xs" style={{ color: "rgb(248,113,113)" }}>
+              Please enter your email.
+            </Form.Message>
+            <Form.Message match="typeMismatch" className="text-xs" style={{ color: "rgb(248,113,113)" }}>
+              Please provide a valid email.
+            </Form.Message>
+          </Form.Field>
+          <Form.Field name="password" className="space-y-1">
+            <Form.Label className="t-text-50 text-xs">Password</Form.Label>
+            <Form.Control asChild>
+              <input type="password" required minLength={8} placeholder="At least 8 characters" className={inputCls} style={{ backgroundColor: "var(--t-input-bg)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }} />
+            </Form.Control>
+            <Form.Message match="valueMissing" className="text-xs" style={{ color: "rgb(248,113,113)" }}>
+              Please enter a password.
+            </Form.Message>
+            <Form.Message match="tooShort" className="text-xs" style={{ color: "rgb(248,113,113)" }}>
+              Password must be at least 8 characters.
+            </Form.Message>
+          </Form.Field>
+          <Form.Submit asChild>
+            <button type="submit" className="inline-flex h-10 min-h-10 shrink-0 items-center justify-center px-4 rounded-lg border text-sm font-medium leading-none hover:bg-[var(--t-hover)] transition-colors" style={{ backgroundColor: "var(--t-surface-2)", borderColor: "var(--t-border-2)", color: "var(--t-text)" }}>
+              Submit
+            </button>
+          </Form.Submit>
+        </Form.Root>
+        {submitted && (
+          <div className="mt-4 rounded-lg border p-3" style={{ borderColor: "var(--t-border)" }}>
+            <p className="t-text text-sm font-semibold">Submitted</p>
+            <p className="t-text-40 text-xs mt-1">Email: {submitted.email}</p>
+            <p className="t-text-40 text-xs mt-0.5">Password length: {submitted.password.length}</p>
+          </div>
+        )}
+      </div>
+
+      <div className="space-y-3">
+        <p className="t-text-50 text-xs font-medium">File upload</p>
+        <Form.Root className="space-y-3 max-w-2xl">
+          <Form.Field name="files">
+            <Form.Label
+              htmlFor="radix-form-file"
+              className="flex flex-col items-center justify-center gap-2 py-8 rounded-xl cursor-pointer t-hover"
+              style={{ border: "1px dashed var(--t-border-3)" }}
+            >
+              <Upload className="w-6 h-6 t-text-50" aria-hidden="true" />
+              <span className="t-text-60 text-sm">Click to upload or drag &amp; drop</span>
+              <span className="t-text-40 text-xs">PNG, JPG, PDF up to 10MB</span>
+              <Form.Control asChild>
+                <input
+                  id="radix-form-file"
+                  type="file"
+                  multiple
+                  aria-label="Upload files"
+                  className="sr-only"
+                  onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
+                />
+              </Form.Control>
+            </Form.Label>
+          </Form.Field>
+          {files.length > 0 && (
+            <ul className="space-y-1.5">
+              {files.map((f) => (
+                <li
+                  key={f.name}
+                  className="flex items-center justify-between gap-3 px-3 py-2 rounded-lg"
+                  style={{ backgroundColor: "var(--t-surface-2)" }}
+                >
+                  <span className="t-text text-sm truncate">{f.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => setFiles(files.filter((x) => x !== f))}
+                    className="t-text-50 t-hover-2 p-1 rounded"
+                    aria-label={`Remove ${f.name}`}
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Form.Root>
+      </div>
+
+      <div className="space-y-3">
+        <p className="t-text-50 text-xs font-medium">Editor shell</p>
+        <Form.Root className="rounded-lg overflow-hidden max-w-3xl" style={{ border: "1px solid var(--t-border)" }}>
+          <div className="flex items-center gap-1 px-2 py-1.5" style={{ backgroundColor: "var(--t-surface-2)", borderBottom: "1px solid var(--t-border)" }}>
+            {["B", "I", "U", "•", "1.", "—", "\u201d"].map((tok) => (
+              <Button key={tok} variant="ghost" size="icon-xs" aria-label={`Editor action ${tok}`}>
+                <span className="t-text text-xs font-semibold">{tok}</span>
+              </Button>
+            ))}
+          </div>
+          <Form.Field name="editor">
+            <Form.Label className="sr-only">Editor</Form.Label>
+            <Form.Control asChild>
+              <textarea
+                value={editorValue}
+                onChange={(e) => setEditorValue(e.target.value)}
+                rows={6}
+                aria-label="Editor"
+                className="w-full p-3 t-text text-sm bg-transparent outline-none resize-y"
+              />
+            </Form.Control>
+          </Form.Field>
+        </Form.Root>
+      </div>
+    </div>
   );
 }
 
@@ -1030,13 +1029,13 @@ function DemoTooltip() {
 
 const DEMO_BY_SLUG: Record<(typeof RADIX_PRIMITIVES)[number]["slug"], React.ReactNode> = {
   accordion: <DemoAccordion />,
-  "alert-dialog": <DemoAlertDialog />,
+  "alert-dialog": <RadixAlertDialogPanelContent />,
   "aspect-ratio": <DemoAspectRatio />,
   avatar: <DemoAvatar />,
   checkbox: <DemoCheckbox />,
   collapsible: <DemoCollapsible />,
   "context-menu": <DemoContextMenu />,
-  dialog: <DemoDialog />,
+  dialog: <RadixDialogPanelContent />,
   "dropdown-menu": <DemoDropdownMenu />,
   form: <DemoForm />,
   "hover-card": <DemoHoverCard />,

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import * as Form from "@radix-ui/react-form";
 
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -31,7 +32,9 @@ export function KanbanDrawer({
 }) {
   const [title, setTitle] = useState(task.title);
   const [badges, setBadges] = useState((task.badgeText ?? []).join(", "));
-  const [dueDate, setDueDate] = useState(task.dueDate ?? "");
+  const [dueDate, setDueDate] = useState<Date | undefined>(
+    task.dueDate ? new Date(task.dueDate) : undefined,
+  );
   const [attachments, setAttachments] = useState(String(task.attachments ?? 0));
   const [comments, setComments] = useState(String(task.comments ?? 0));
   const [assigned, setAssigned] = useState((task.assigned ?? []).map((a) => a.name).join(", "));
@@ -40,7 +43,7 @@ export function KanbanDrawer({
   useMemo(() => {
     setTitle(task.title);
     setBadges((task.badgeText ?? []).join(", "));
-    setDueDate(task.dueDate ?? "");
+    setDueDate(task.dueDate ? new Date(task.dueDate) : undefined);
     setAttachments(String(task.attachments ?? 0));
     setComments(String(task.comments ?? 0));
     setAssigned((task.assigned ?? []).map((a) => a.name).join(", "));
@@ -80,7 +83,12 @@ export function KanbanDrawer({
                 <Label htmlFor="kb-due">Due date</Label>
               </Form.Label>
               <Form.Control asChild>
-                <Input id="kb-due" type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+                <DatePicker
+                  id="kb-due"
+                  value={dueDate}
+                  onChange={setDueDate}
+                  placeholder="YYYY-MM-DD"
+                />
               </Form.Control>
             </Form.Field>
             <Form.Field name="attachments" className="space-y-1.5">
@@ -137,7 +145,7 @@ export function KanbanDrawer({
               onUpdateTask({
                 title: title.trim() || task.title,
                 badgeText: splitTags(badges),
-                dueDate: dueDate || undefined,
+                dueDate: dueDate ? dueDate.toISOString().slice(0, 10) : undefined,
                 attachments: Number(attachments) || 0,
                 comments: Number(comments) || 0,
                 assigned: splitTags(assigned).map((name) => ({ name })),

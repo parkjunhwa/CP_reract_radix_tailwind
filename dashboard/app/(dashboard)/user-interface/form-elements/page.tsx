@@ -2,32 +2,159 @@
 
 import { useState } from "react";
 import {
-  User, Mail, Lock, Eye, EyeOff, Search, Calendar as CalendarIcon,
-  Upload, X,
+  User, Mail, Lock, Eye, EyeOff, Search,
 } from "lucide-react";
-
-import * as Form from "@radix-ui/react-form";
 
 import { Input, InputAddon, InputGroup } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Switch } from "@/components/ui/switch";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Button } from "@/components/ui/button";
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select";
+import { DatePicker } from "@/components/ui/date-picker";
+import { cn } from "@/lib/utils";
 
-function Section({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
+function Section({
+  title,
+  description,
+  children,
+  className,
+}: {
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <section className="panel flex h-full flex-col">
+    <section className={cn("panel flex h-full min-h-0 flex-col", className)}>
       <header className="shrink-0 border-b t-border px-5 py-3.5">
         <h3 className="t-text font-semibold text-sm">{title}</h3>
         {description && <p className="t-text-40 text-xs mt-0.5">{description}</p>}
       </header>
-      <div className="flex-1 p-5">{children}</div>
+      <div className="min-h-0 flex-1 overflow-auto p-5">{children}</div>
     </section>
+  );
+}
+
+function SpecRow({
+  label,
+  token,
+  children,
+}: {
+  label: string;
+  token: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5 py-3 border-b t-border last:border-b-0">
+      <div className="space-y-0.5">
+        <p className="t-text text-xs font-medium">{label}</p>
+        <code className="t-text-30 block font-mono text-[10px] leading-snug break-all">{token}</code>
+      </div>
+      <div className="min-w-0 w-full">{children}</div>
+    </div>
+  );
+}
+
+/** SM · MD (default) · LG, disabled, read-only, and grouped inputs — quick reference. */
+function InputSizesAndStatesDemo() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 w-full">
+      <div className="min-w-0 flex flex-col gap-3">
+        <p className="t-text-50 text-xs font-semibold uppercase tracking-wide">Standalone · size</p>
+        <div className="rounded-xl border t-border px-4 flex-1 min-h-0">
+          <SpecRow label="SM" token='size="sm" · h-8'>
+            <Input id="fe-sz-sm" size="sm" placeholder="Small input" />
+          </SpecRow>
+          <SpecRow label="MD" token='size="default" (md) · h-9'>
+            <Input id="fe-sz-md" size="default" placeholder="Medium — default height" />
+          </SpecRow>
+          <SpecRow label="LG" token='size="lg" · h-10 text-sm'>
+            <Input id="fe-sz-lg" size="lg" placeholder="Large input" />
+          </SpecRow>
+        </div>
+      </div>
+
+      <div className="min-w-0 flex flex-col gap-3">
+        <p className="t-text-50 text-xs font-semibold uppercase tracking-wide">Standalone · state</p>
+        <div className="rounded-xl border t-border px-4 flex-1 min-h-0">
+          <SpecRow label="Default" token="—">
+            <Input id="fe-st-def" placeholder="Editable value" defaultValue="" />
+          </SpecRow>
+          <SpecRow label="Disabled" token="disabled">
+            <Input id="fe-st-dis" disabled placeholder="Unavailable" defaultValue="Cannot focus" />
+          </SpecRow>
+          <SpecRow label="Read-only" token="readOnly">
+            <Input
+              id="fe-st-ro"
+              readOnly
+              defaultValue="Generated id: INV-2026-042"
+              className="cursor-default"
+            />
+          </SpecRow>
+          <SpecRow label="Invalid" token="invalid (validation error)">
+            <Input id="fe-st-inv" invalid defaultValue="bad@value" aria-invalid />
+          </SpecRow>
+          <SpecRow label="Valid" token="valid (success state)">
+            <Input id="fe-st-val" valid defaultValue="ok@company.com" />
+          </SpecRow>
+        </div>
+      </div>
+
+      <div className="min-w-0 flex flex-col gap-3">
+        <p className="t-text-50 text-xs font-semibold uppercase tracking-wide">InputGroup · size</p>
+        <div className="rounded-xl border t-border px-4 flex-1 min-h-0">
+          <SpecRow label="SM group" token='InputGroup inputSize="sm"'>
+            <InputGroup inputSize="sm">
+              <InputAddon><Search className="shrink-0" /></InputAddon>
+              <Input id="fe-gr-sm" size="sm" placeholder="Search…" />
+            </InputGroup>
+          </SpecRow>
+          <SpecRow label="MD group" token='InputGroup inputSize="default"'>
+            <InputGroup inputSize="default">
+              <InputAddon><Search className="shrink-0" /></InputAddon>
+              <Input id="fe-gr-md" placeholder="Search…" />
+            </InputGroup>
+          </SpecRow>
+          <SpecRow label="LG group" token='InputGroup inputSize="lg"'>
+            <InputGroup inputSize="lg">
+              <InputAddon><Search className="shrink-0" /></InputAddon>
+              <Input id="fe-gr-lg" size="lg" placeholder="Search…" />
+            </InputGroup>
+          </SpecRow>
+        </div>
+      </div>
+
+      <div className="min-w-0 flex flex-col gap-3">
+        <p className="t-text-50 text-xs font-semibold uppercase tracking-wide">InputGroup · state</p>
+        <div className="rounded-xl border t-border px-4 flex-1 min-h-0">
+          <SpecRow label="Disabled" token="disabled on inner Input">
+            <InputGroup>
+              <InputAddon><Mail /></InputAddon>
+              <Input id="fe-gr-dis" type="email" disabled defaultValue="locked@luxe.com" />
+            </InputGroup>
+          </SpecRow>
+          <SpecRow label="Read-only" token="readOnly on inner Input">
+            <InputGroup>
+              <InputAddon><User /></InputAddon>
+              <Input id="fe-gr-ro" readOnly defaultValue="Read-only display" className="cursor-default" />
+            </InputGroup>
+          </SpecRow>
+        </div>
+      </div>
+
+      <div className="min-w-0 flex flex-col gap-3">
+        <p className="t-text-50 text-xs font-semibold uppercase tracking-wide">Textarea · state</p>
+        <div className="rounded-xl border t-border px-4 flex-1 min-h-0">
+          <SpecRow label="Default" token="—">
+            <Textarea id="fe-ta-def" rows={2} placeholder="Notes…" />
+          </SpecRow>
+          <SpecRow label="Disabled" token="disabled">
+            <Textarea id="fe-ta-dis" disabled rows={2} defaultValue="This note cannot be edited." />
+          </SpecRow>
+          <SpecRow label="Read-only" token="readOnly">
+            <Textarea id="fe-ta-ro" readOnly rows={2} defaultValue="Terms accepted on 2026-01-12 — record locked." className="cursor-default" />
+          </SpecRow>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -67,10 +194,6 @@ function TextFieldDemo() {
         <Input id="fe-success" valid defaultValue="great@luxe.com" />
         <p className="text-emerald-500 text-xs">Looks good!</p>
       </div>
-      <div className="space-y-1.5 md:col-span-2">
-        <Label htmlFor="fe-disabled">Disabled</Label>
-        <Input id="fe-disabled" disabled defaultValue="Read only value" />
-      </div>
     </div>
   );
 }
@@ -93,59 +216,6 @@ function PasswordDemo() {
         </button>
       </InputGroup>
     </div>
-  );
-}
-
-function SelectDemo() {
-  const [value, setValue] = useState("");
-  return (
-    <div className="space-y-1.5 max-w-sm">
-      <Label htmlFor="fe-country">Country</Label>
-      <Select value={value} onValueChange={setValue}>
-        <SelectTrigger id="fe-country" className="w-full h-9">
-          <SelectValue placeholder="Select country" />
-        </SelectTrigger>
-        <SelectContent>
-          {["United States", "United Kingdom", "France", "Japan", "Switzerland", "UAE"].map((c) => (
-            <SelectItem key={c} value={c}>{c}</SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
-}
-
-function CheckboxDemo() {
-  return (
-    <div className="space-y-2.5 max-w-sm">
-      {[
-        { id: "fe-cb-1", label: "Subscribe to newsletter", checked: true },
-        { id: "fe-cb-2", label: "Enable weekly digest",     checked: false },
-        { id: "fe-cb-3", label: "Disabled option",          checked: false, disabled: true },
-      ].map((c) => (
-        <div key={c.id} className="flex items-center gap-2.5">
-          <Checkbox id={c.id} defaultChecked={c.checked} disabled={c.disabled} />
-          <Label htmlFor={c.id} className="t-text-60 cursor-pointer">{c.label}</Label>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function RadioDemo() {
-  return (
-    <RadioGroup defaultValue="annual" className="space-y-2.5 max-w-sm">
-      {[
-        { id: "fe-rd-monthly", value: "monthly", label: "Billed monthly" },
-        { id: "fe-rd-annual",  value: "annual",  label: "Billed annually (save 20%)" },
-        { id: "fe-rd-custom",  value: "custom",  label: "Custom contract" },
-      ].map((r) => (
-        <div key={r.id} className="flex items-center gap-2.5">
-          <RadioGroupItem id={r.id} value={r.value} />
-          <Label htmlFor={r.id} className="t-text-60 cursor-pointer">{r.label}</Label>
-        </div>
-      ))}
-    </RadioGroup>
   );
 }
 
@@ -247,10 +317,7 @@ function PickerDemo() {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-3xl">
       <div className="space-y-1.5">
         <Label htmlFor="fe-date">Date</Label>
-        <InputGroup>
-          <InputAddon><CalendarIcon /></InputAddon>
-          <Input id="fe-date" type="date" />
-        </InputGroup>
+        <DatePicker id="fe-date" />
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="fe-time">Time</Label>
@@ -264,150 +331,23 @@ function PickerDemo() {
   );
 }
 
-function SwitchDemo() {
-  return (
-    <div className="space-y-3 max-w-sm">
-      {[
-        { id: "fe-sw-1", label: "Email notifications",   defaultChecked: true },
-        { id: "fe-sw-2", label: "Push notifications",    defaultChecked: false },
-        { id: "fe-sw-3", label: "Weekly summary",        defaultChecked: true },
-        { id: "fe-sw-4", label: "Disabled toggle",       defaultChecked: false, disabled: true },
-      ].map((s) => (
-        <div key={s.id} className="flex items-center justify-between">
-          <Label htmlFor={s.id} className="t-text-60 cursor-pointer">{s.label}</Label>
-          <Switch id={s.id} defaultChecked={s.defaultChecked} disabled={s.disabled} />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function FileUploaderDemo() {
-  const [files, setFiles] = useState<File[]>([]);
-  return (
-    <Form.Root className="space-y-3 max-w-2xl">
-      <Form.Field name="files">
-        <Form.Label
-          htmlFor="fe-file"
-          className="flex flex-col items-center justify-center gap-2 py-8 rounded-xl cursor-pointer t-hover"
-          style={{ border: "1px dashed var(--t-border-3)" }}
-        >
-          <Upload className="w-6 h-6 t-text-50" />
-          <span className="t-text-60 text-sm">Click to upload or drag &amp; drop</span>
-          <span className="t-text-40 text-xs">PNG, JPG, PDF up to 10MB</span>
-          <Form.Control asChild>
-            <input
-              id="fe-file"
-              type="file"
-              multiple
-              aria-label="Upload files"
-              className="sr-only"
-              onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
-            />
-          </Form.Control>
-        </Form.Label>
-      </Form.Field>
-      {files.length > 0 && (
-        <ul className="space-y-1.5">
-          {files.map((f) => (
-            <li
-              key={f.name}
-              className="flex items-center justify-between gap-3 px-3 py-2 rounded-lg"
-              style={{ backgroundColor: "var(--t-surface-2)" }}
-            >
-              <span className="t-text text-sm truncate">{f.name}</span>
-              <button
-                type="button"
-                onClick={() => setFiles(files.filter((x) => x !== f))}
-                className="t-text-50 t-hover-2 p-1 rounded"
-                aria-label={`Remove ${f.name}`}
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </Form.Root>
-  );
-}
-
-function EditorDemo() {
-  const [value, setValue] = useState("Welcome to the LUXE editor preview.\n\nUse this space to draft long-form content.");
-  return (
-    <Form.Root className="rounded-lg overflow-hidden max-w-3xl" style={{ border: "1px solid var(--t-border)" }}>
-      <div className="flex items-center gap-1 px-2 py-1.5" style={{ backgroundColor: "var(--t-surface-2)", borderBottom: "1px solid var(--t-border)" }}>
-        {["B", "I", "U", "•", "1.", "—", "”"].map((tok) => (
-          <Button key={tok} variant="ghost" size="icon-xs" aria-label={`Editor action ${tok}`}>
-            <span className="t-text text-xs font-semibold">{tok}</span>
-          </Button>
-        ))}
-      </div>
-      <Form.Field name="editor">
-        <Form.Label className="sr-only">Editor</Form.Label>
-        <Form.Control asChild>
-          <textarea
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            rows={6}
-            aria-label="Editor"
-            className="w-full p-3 t-text text-sm bg-transparent outline-none resize-y"
-          />
-        </Form.Control>
-      </Form.Field>
-    </Form.Root>
-  );
-}
-
-function SliderDemo() {
-  const [value, setValue] = useState(40);
-  return (
-    <Form.Root className="space-y-3 max-w-sm">
-      <Form.Field name="volume" className="space-y-3">
-        <div className="flex items-center justify-between t-text-60 text-xs">
-          <Form.Label asChild>
-            <Label htmlFor="fe-slider">Volume</Label>
-          </Form.Label>
-          <span className="t-text font-medium">{value}</span>
-        </div>
-        <Form.Control asChild>
-          <input
-            id="fe-slider"
-            type="range"
-            min={0}
-            max={100}
-            value={value}
-            aria-label="Volume"
-            onChange={(e) => setValue(Number(e.target.value))}
-            className="w-full accent-[color:var(--t-accent)]"
-          />
-        </Form.Control>
-      </Form.Field>
-    </Form.Root>
-  );
-}
-
 export default function FormElementsPage() {
   return (
-    <div className="grid auto-rows-fr grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+      <Section
+        className="md:col-span-2 xl:col-span-3"
+        title="Input · sizes & states"
+        description="SM / MD / LG, disabled, read-only, validation, InputGroup and Textarea — API and visuals in one place."
+      >
+        <InputSizesAndStatesDemo />
+      </Section>
+
       <Section title="Text Field" description="Single-line input with adornment, helper, and validation states.">
         <TextFieldDemo />
       </Section>
 
       <Section title="Password" description="Text field with reveal/hide toggle.">
         <PasswordDemo />
-      </Section>
-
-      <Section title="Select" description="Drop-down list of options powered by Radix Select.">
-        <SelectDemo />
-      </Section>
-
-      <Section title="Checkbox" description="Independent boolean choices.">
-        <CheckboxDemo />
-      </Section>
-
-      <Section title="Radio" description="Mutually exclusive choices.">
-        <RadioDemo />
       </Section>
 
       <Section title="Custom Inputs" description="Card-style picker with rich content.">
@@ -424,22 +364,6 @@ export default function FormElementsPage() {
 
       <Section title="Picker" description="Date, time, and month inputs.">
         <PickerDemo />
-      </Section>
-
-      <Section title="Switch" description="On/off toggles for settings.">
-        <SwitchDemo />
-      </Section>
-
-      <Section title="File Uploader" description="Drag-and-drop file selector with file chip list.">
-        <FileUploaderDemo />
-      </Section>
-
-      <Section title="Editor" description="Lightweight rich-text-style editor scaffold.">
-        <EditorDemo />
-      </Section>
-
-      <Section title="Slider" description="Range input with accent fill.">
-        <SliderDemo />
       </Section>
     </div>
   );
