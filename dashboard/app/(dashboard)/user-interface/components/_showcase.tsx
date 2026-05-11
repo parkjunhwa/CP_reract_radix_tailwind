@@ -631,6 +631,15 @@ export function MenubarKitchenDemo() {
   );
 }
 
+const navCatalogLinks = [
+  { href: "/user-interface/form-elements", label: "Form elements" },
+  { href: "/user-interface/components", label: "Components" },
+  { href: "/radix", label: "Radix primitives" },
+  { href: "/user-interface/foundation", label: "Foundation" },
+  { href: "/user-interface/mui-table", label: "MUI table" },
+  { href: "/react-table", label: "React Table" },
+] as const;
+
 export function NavigationMenuKitchenDemo() {
   return (
     <NavigationMenu.Root className="relative z-40 max-w-full">
@@ -654,14 +663,26 @@ export function NavigationMenuKitchenDemo() {
             Catalog <ChevronDown className="size-4 opacity-60" />
           </NavigationMenu.Trigger>
           <NavigationMenu.Content
-            className="absolute top-full left-0 z-50 mt-2 w-[min(400px,92vw)] rounded-xl border p-3 shadow-xl"
+            className="absolute top-full left-0 z-50 mt-2 w-max min-w-52 max-w-[min(18rem,calc(100vw-2rem))] rounded-xl border p-2 shadow-xl"
             style={{ backgroundColor: "var(--t-surface)", borderColor: "var(--t-border-2)" }}
           >
-            <ScrollArea className="h-28">
-              <ul className="t-text-60 space-1 text-xs">
-                <li>Form elements</li>
-                <li>Components</li>
-                <li>Radix primitives</li>
+            <p className="mb-1.5 px-2 text-[10px] font-medium uppercase tracking-wide t-text-40">
+              UI in this app
+            </p>
+            <ScrollArea className="h-36">
+              <ul className="flex flex-col gap-0.5 pr-3">
+                {navCatalogLinks.map((it) => (
+                  <li key={it.href}>
+                    <NavigationMenu.Link asChild>
+                      <Link
+                        href={it.href}
+                        className="block rounded-md px-2 py-1.5 text-xs font-medium text-[color:var(--t-text-70)] outline-none transition-colors hover:bg-[color:var(--t-hover)] focus-visible:ring-2 focus-visible:ring-[color:var(--t-ring)]/40"
+                      >
+                        {it.label}
+                      </Link>
+                    </NavigationMenu.Link>
+                  </li>
+                ))}
               </ul>
             </ScrollArea>
           </NavigationMenu.Content>
